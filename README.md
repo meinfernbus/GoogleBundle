@@ -47,20 +47,20 @@ With twig:
 
 #### Features
 
-* Logging a Default Page View requires no additional code
+##### Logging a Default Page View requires no additional code
 
-* Sending a Custom Page View
+##### Sending a Custom Page View
 
     $this->container()->get('google.analytics')->setCustomPageView('/profile/'.$username);
 
-* Adding to Page View Queue
+##### Adding to Page View Queue
 
-** Note: Page View Queue is always executed before a Custom Page View
+Note: Page View Queue is always executed before a Custom Page View
 
     $this->container()->get('google.analytics')->enqueuePageView('/my-first-page-view-in-queue');
     $this->container()->get('google.analytics')->enqueuePageView('/my-second-page-view-in-queue');
 
-* Ecommerce Tracking
+##### Ecommerce Tracking
 
     $transaction = new \AntiMattr\GoogleBundle\Analytics\Transaction();
     $transaction->setOrderNumber('xxxx');
