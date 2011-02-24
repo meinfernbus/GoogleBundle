@@ -1,0 +1,70 @@
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+
+    {% for key, tracker in google_analytics.trackers %}
+
+    _gaq.push(function() {
+        var {{ tracker.name }} = _gaq._createAsyncTracker('{{ tracker.accountId }}','{{ tracker.name }}');
+    });
+
+    {% if tracker.domain %}
+        _gaq.push(['{{ tracker.name }}._setDomainName', '{{ tracker.domain }}']);
+        _gaq.push(['{{ tracker.name }}._setAllowLinker', {{ google_analytics.getAllowLinker(key) }} ]);
+        _gaq.push(['{{ tracker.name }}._setAllowHash', {{ google_analytics.getAllowHash(key) }} ]);
+    {% endif %}
+
+    {% if google_analytics.hasCustomVariables() %}
+        {% for customVariable in google_analytics.getCustomVariables() %}
+            _gaq.push(['{{ tracker.name }}._setCustomVar', {{ customVariable.index }}, '{{ customVariable.name }}', '{{ customVariable.value }}', {{ customVariable.scope }}]);
+        {% endfor %}
+    {% endif %}
+
+    {% if google_analytics.hasPageViewQueue() %}
+        {% for pageView in google_analytics.getPageViewQueue() %}
+            _gaq.push(['{{ tracker.name }}._trackPageview', '{{ pageView }}']);
+        {% endfor %}
+    {% endif %}
+
+    {% if google_analytics.hasCustomPageView %}
+        _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getCustomPageView() }}']);
+    {% else %}
+        _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() }}']);
+    {% endif %}
+
+    {% if google_analytics.isTransactionValid() %}
+        _gaq.push(['{{ tracker.name }}._addTrans',
+            '{{ google_analytics.transaction.orderNumber | escape('js') }}', // order number required
+            '{{ google_analytics.transaction.affiliation | escape('js') }}', // affiliation optional
+            '{{ google_analytics.transaction.total | escape('js') }}', // total optional
+            '{{ google_analytics.transaction.tax | escape('js') }}', // tax optional
+            '{{ google_analytics.transaction.shipping | escape('js') }}', // shipping optional
+            '{{ google_analytics.transaction.city | escape('js') }}', // city optional
+            '{{ google_analytics.transaction.state | escape('js') }}', // state optional
+            '{{ google_analytics.transaction.country | escape('js') }}' // country optional
+        ]);
+
+        {% if google_analytics.hasItems() %}
+            {% for item in google_analytics.items %}
+                _gaq.push(['{{ tracker.name }}._addItem',
+                    '{{ item.orderNumber | escape('js') }}', // order number required
+                    '{{ item.sku | escape('js') }}', // sku required
+                    '{{ item.name | escape('js') }}', // name optional
+                    '{{ item.category | escape('js') }}', // category optional
+                    '{{ item.price | escape('js') }}', // price required
+                    '{{ item.quantity | escape('js') }}' // quantity required
+                ]);
+            {% endfor %}
+        {% endif %}
+
+        _gaq.push(['{{ tracker.name }}._trackTrans']);
+
+    {% endif %}
+
+{% endfor %}
+
+(function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>

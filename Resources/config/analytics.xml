@@ -1,0 +1,26 @@
+<container xmlns="http://www.symfony-project.org/schema/dic/services"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.symfony-project.org/schema/dic/services http://www.symfony-project.org/schema/dic/services/services-1.0.xsd">
+
+	<parameters>
+		<parameter key="google.analytics.trackers" type="collection" />
+	</parameters>
+
+	<services>
+		<service id="google.analytics" class="AntiMattr\GoogleBundle\Analytics">
+			<argument type="service" id="service_container" />
+			<argument>%google.analytics.trackers%</argument>
+		</service>
+
+		<service id="templating.helper.google_analytics" class="AntiMattr\GoogleBundle\Helper\AnalyticsHelper">
+			<tag name="templating.helper" alias="google_analytics" />
+			<argument type="service" id="google.analytics" />
+		</service>
+
+		<service id="twig.extension.google_analytics" class="AntiMattr\GoogleBundle\Extension\AnalyticsExtension">
+			<tag name="twig.extension" />
+			<argument type="service" id="templating.helper.google_analytics" />
+		</service>
+	</services>
+
+</container>
