@@ -63,55 +63,32 @@ With twig:
 * Ecommerce Tracking
 
     $transaction = new \AntiMattr\GoogleBundle\Analytics\Transaction();
-
     $transaction->setOrderNumber('xxxx');
-
     $transaction->setAffiliation('Store 777');
-
     $transaction->setTotal(100.00);
-
     $transaction->setTax(10.00);
-
     $transaction->setShipping(5.00);
-
     $transaction->setCity("NYC");
-
     $transaction->setState("NY");
-
     $transaction->setCountry("USA");
-
     $this->get('google.analytics')->setTransaction($transaction);
 
     $item = new \AntiMattr\GoogleBundle\Analytics\Item();
-
     $item->setOrderNumber('xxxx');
-
     $item->setSku('zzzz');
-
     $item->setName('Product X');
-
     $item->setCategory('Category A');
-
     $item->setPrice(50.00);
-
     $item->setQuantity(1);
-
     $this->get('google.analytics')->addItem($item);
 
     $item = new \AntiMattr\GoogleBundle\Analytics\Item();
-
     $item->setOrderNumber('bbbb');
-
     $item->setSku('jjjj');
-
     $item->setName('Product Y');
-
     $item->setCategory('Category B');
-
     $item->setPrice(25.00);
-
     $item->setQuantity(2);
-
     $this->get('google.analytics')->addItem($item);
 
 ### Google Adwords
