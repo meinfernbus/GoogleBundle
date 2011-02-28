@@ -1,0 +1,50 @@
+#imports:
+#    - { resource: @CompatAssetsBundle/Resources/config/assets.xml }
+
+parameters:
+    doctrine.odm.mongodb.database_name: test_google
+
+web_profiler:
+    toolbar:             true
+    intercept_redirects: true
+
+services:
+    session.storage: @session.storage.array
+
+framework:
+    charset:       UTF-8
+    error_handler: false
+    test: ~
+    document_root: "%kernel.root_dir%/../web"
+    router:        { resource: "%kernel.root_dir%/config/routing_test.yml" }
+    profiler:      { only_exceptions: false }
+    validation:    { enabled: true, annotations: true }
+    templating:
+        assets_version: 0.1
+        engines:        ['twig']
+    session:
+        default_locale: en
+        lifetime:       3600
+        auto_start:     true
+
+zend:
+    logger:
+        priority: debug
+        path:     %kernel.logs_dir%/%kernel.environment%.log
+
+doctrine_mongo_db:
+    default_database: %doctrine.odm.mongodb.database_name%
+    auto_generate_proxy_classes: true
+    auto_generate_hydrator_classes: true
+
+twig:
+    debug:            %kernel.debug%
+    strict_variables: false
+
+google:
+    analytics:
+        trackers:
+            default:
+                name: MyJavaScriptCompatibleVariableNameWithNoSpaces
+                accountId: xxxxxx
+                domain: .example.com
