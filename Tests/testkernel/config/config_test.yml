@@ -37,3 +37,9 @@ google:
                 name: MyJavaScriptCompatibleVariableNameWithNoSpaces
                 accountId: xxxxxx
                 domain: .example.com
+    adwords:
+        conversions:
+            account_create:
+                id:    111111
+                label: accountCreateLabel
+                value: 0
