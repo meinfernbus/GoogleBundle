@@ -23,7 +23,6 @@ class TestKernel extends Kernel
             new Symfony\Bundle\DoctrineBundle\DoctrineBundle(),
             new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
             new Symfony\Bundle\DoctrineMongoDBBundle\DoctrineMongoDBBundle(),
-#            new Symfony\Bundle\CompatAssetsBundle\CompatAssetsBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
 
