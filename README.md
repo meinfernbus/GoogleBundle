@@ -29,7 +29,7 @@ Add GoogleBundle to the `registerBundles()` method of your application kernel:
 Enable loading of the Google Analytics service by adding the following to
 the application's `config.yml` file:
 
-    google
+    google:
         analytics:
             trackers:
                 default:
@@ -98,16 +98,17 @@ Note: Page View Queue is always executed before a Custom Page View
 Enable loading of the Google Adwords service by adding the following to
 the applications's `config.yml` file:
 
-    google.adwords:
-        conversions:
-            account_create:
-                id:    111111
-                label: accountCreateLabel
-                value: 0
-            checkout_thanks:
-                id:    222222
-                label: checkoutThanksLabel
-                value: 0
+    google:
+        adwords:
+            conversions:
+                account_create:
+                    id:    111111
+                    label: accountCreateLabel
+                    value: 0
+                checkout_thanks:
+                    id:    222222
+                    label: checkoutThanksLabel
+                    value: 0
 
 #### Controller
 
