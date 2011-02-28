@@ -42,6 +42,8 @@ class AdwordsWebTest extends WebTestCase
         $this->assertTrue($this->adwords->hasActiveConversion());
 
         $this->assertNotNull($this->adwords->getActiveConversion());
-        $this->assertNull($this->adwords->getActiveConversion());
+
+        // Object will remain in service for duration of execution
+        $this->assertNotNull($this->adwords->getActiveConversion());
     }
 }
