@@ -63,7 +63,9 @@ class Analytics
      */
     public function getCustomPageView()
     {
-        return $this->get(self::CUSTOM_PAGE_VIEW_KEY);
+        $customPageView = $this->container->get('session')->get(self::CUSTOM_PAGE_VIEW_KEY);
+        $this->container->get('session')->remove(self::CUSTOM_PAGE_VIEW_KEY);
+        return $customPageView;
     }
 
     /**
