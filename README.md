@@ -39,7 +39,7 @@ the application's `config.yml` file:
 
 #### View
 
-Include the Google Analytics Async template in the `head` tag of your layout.
+Include the Google Analytics Async template in the `head` tag or just before the `</body>` of your layout (The template will lazy load _gaq).
 
 With twig:
 
@@ -47,7 +47,9 @@ With twig:
 
 #### Features
 
-##### Logging a Default Page View requires no additional code
+##### Logging a Default Page View
+
+    Requires no additional code
 
 ##### Sending a Custom Page View
 
