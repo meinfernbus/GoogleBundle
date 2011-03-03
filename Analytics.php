@@ -125,7 +125,7 @@ class Analytics
      */
     public function addItem(Item $item)
     {
-        $this->add(self::ITEM_KEY, $item);
+        $this->add(self::ITEMS_KEY, $item);
     }
 
     /**

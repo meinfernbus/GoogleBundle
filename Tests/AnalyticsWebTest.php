@@ -91,8 +91,8 @@ class AnalyticsWebTest extends WebTestCase
         $transaction->setCountry("USA");
         $this->analytics->setTransaction($transaction);
 
-        $this->assertEquals($transaction, $this->analytics->getTransaction());
         $this->assertTrue($this->analytics->isTransactionValid());
+        $this->assertEquals($transaction, $this->analytics->getTransaction());
 
         $transaction = new Transaction();
         $transaction->setAffiliation('Store 777');

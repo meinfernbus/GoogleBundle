@@ -9,8 +9,12 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="../../autoload.php"
->
+         bootstrap="Tests/testkernel/autoload.php"
+         >
+    <php>
+        <server name="KERNEL_DIR" value="Tests/testkernel" />
+        <!-- <server name="VENDOR_LIB" value="/path/to/symfony/vendors/dir" /> -->
+    </php>
     <testsuites>
         <testsuite name="AntiMattr GoogleBundle Test Suite">
             <directory>./Tests/</directory>
