@@ -5,25 +5,34 @@ namespace AntiMattr\GoogleBundle;
 use AntiMattr\GoogleBundle\Analytics\CustomVariable;
 use AntiMattr\GoogleBundle\Analytics\Item;
 use AntiMattr\GoogleBundle\Analytics\Transaction;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Analytics
 {
     const CUSTOM_PAGE_VIEW_KEY = 'google_analytics/page_view';
     const PAGE_VIEW_QUEUE_KEY  = 'google_analytics/page_view/queue';
+    const TRANSACTION_KEY      = 'google_analytics/transaction';
+    const ITEMS_KEY            = 'google_analytics/items';
 
     private $container;
     private $customVariables = array();
-    private $items = array();
     private $pageViewsWithBaseUrl = true;
     private $trackers;
-    private $transaction;
 
     public function __construct(ContainerInterface $container, array $trackers = array())
     {
         $this->container = $container;
         $this->trackers = $trackers;
+    }
+
+    public function excludeBaseUrl()
+    {
+        $this->pageViewsWithBaseUrl = false;
+    }
+
+    public function includeBaseUrl()
+    {
+        $this->pageViewsWithBaseUrl = true;
     }
 
     /**
@@ -116,7 +125,7 @@ class Analytics
      */
     public function addItem(Item $item)
     {
-        $this->items[] = $item;
+        $this->add(self::ITEM_KEY, $item);
     }
 
     /**
@@ -124,10 +133,7 @@ class Analytics
      */
     public function hasItems()
     {
-        if (!empty($this->items)) {
-            return true;
-        }
-        return false;
+        return $this->has(self::ITEMS_KEY);
     }
 
     /**
@@ -136,28 +142,11 @@ class Analytics
      */
     public function hasItem(Item $item)
     {
-        if ($this->items instanceof Collection) {
-            return $this->items->contains($item);
-        } else {
-            return in_array($item, $this->items, true);
+        if (!$this->hasItems()) {
+            return false;
         }
-    }
-
-    /**
-     * @param Item $item
-     * @return Item $item | null
-     */
-    public function removeItem(Item $item)
-    {
-        if (!$this->hasItem($item)) {
-            return null;
-        }
-        if ($this->items instanceof Collection) {
-            return $this->items->removeElement($item);
-        } else {
-            unset($this->items[array_search($item, $this->items, true)]);
-            return $item;
-        }
+        $items = $this->getItemsFromSession();
+        return in_array($item, $items, true);
     }
 
     /**
@@ -165,12 +154,12 @@ class Analytics
      */
     public function setItems($items)
     {
-        $this->items = $items;
+        $this->container->get('session')->set(self::ITEMS_KEY, $items);
     }
 
     public function getItems()
     {
-        return $this->items;
+        return $this->getOnce(self::ITEMS_KEY);
     }
 
     /**
@@ -186,7 +175,7 @@ class Analytics
      */
     public function getPageViewQueue()
     {
-        return $this->get(self::PAGE_VIEW_QUEUE_KEY);
+        return $this->getOnce(self::PAGE_VIEW_QUEUE_KEY);
     }
 
     /**
@@ -248,11 +237,12 @@ class Analytics
      */
     public function isTransactionValid()
     {
-        if (!$this->transaction || !$this->transaction->getOrderNumber()) {
+        if (!$this->hasTransaction() || (null === $this->getTransactionFromSession()->getOrderNumber())) {
             return false;
         }
         if ($this->hasItems()) {
-            foreach ($this->items as $item) {
+            $items = $this->getItemsFromSession();
+            foreach ($items as $item) {
                 if (!$item->getOrderNumber() || !$item->getSku() || !$item->getPrice() || !$item->getQuantity()) {
                     return false;
                 }
@@ -262,29 +252,29 @@ class Analytics
     }
 
     /**
-     * @param Transaction $transaction
-     */
-    public function setTransaction(Transaction $transaction)
-    {
-        $this->transaction = $transaction;
-    }
-
-    /**
      * @return Transaction $transaction
      */
     public function getTransaction()
     {
-        return $this->transaction;
+        $transaction = $this->getTransactionFromSession();
+        $this->container->get('session')->remove(self::TRANSACTION_KEY);
+        return $transaction;
     }
 
-    public function excludeBaseUrl()
+    /**
+     * @return boolean $hasTransaction
+     */
+    public function hasTransaction()
     {
-        $this->pageViewsWithBaseUrl = false;
+        return $this->has(self::TRANSACTION_KEY);
     }
 
-    public function includeBaseUrl()
+    /**
+     * @param Transaction $transaction
+     */
+    public function setTransaction(Transaction $transaction)
     {
-        $this->pageViewsWithBaseUrl = true;
+        $this->container->get('session')->set(self::TRANSACTION_KEY, $transaction);
     }
 
     /**
@@ -314,8 +304,33 @@ class Analytics
      */
     private function get($key)
     {
+        return $this->container->get('session')->get($key, array());
+    }
+
+    /**
+     * @param string $key
+     * @return array $value
+     */
+    private function getOnce($key)
+    {
         $value = $this->container->get('session')->get($key, array());
         $this->container->get('session')->remove($key);
         return $value;
+    }
+
+    /**
+     * @return array $items
+     */
+    private function getItemsFromSession()
+    {
+        return $this->get(self::ITEMS_KEY);
+    }
+
+    /**
+     * @return Transaction $transaction
+     */
+    private function getTransactionFromSession()
+    {
+        return $this->container->get('session')->get(self::TRANSACTION_KEY);
     }
 }
