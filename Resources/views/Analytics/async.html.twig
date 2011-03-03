@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    var _gaq = _gaq || [];
+    if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
 
     {% for key, tracker in google_analytics.trackers %}
 
