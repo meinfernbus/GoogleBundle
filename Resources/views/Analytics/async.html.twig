@@ -32,15 +32,16 @@
     {% endif %}
 
     {% if google_analytics.isTransactionValid() %}
+        {% set transaction = google_analytics.transaction %}
         _gaq.push(['{{ tracker.name }}._addTrans',
-            '{{ google_analytics.transaction.orderNumber | escape('js') }}', // order number required
-            '{{ google_analytics.transaction.affiliation | escape('js') }}', // affiliation optional
-            '{{ google_analytics.transaction.total | escape('js') }}', // total optional
-            '{{ google_analytics.transaction.tax | escape('js') }}', // tax optional
-            '{{ google_analytics.transaction.shipping | escape('js') }}', // shipping optional
-            '{{ google_analytics.transaction.city | escape('js') }}', // city optional
-            '{{ google_analytics.transaction.state | escape('js') }}', // state optional
-            '{{ google_analytics.transaction.country | escape('js') }}' // country optional
+            '{{ transaction.orderNumber | escape('js') }}', // order number required
+            '{{ transaction.affiliation | escape('js') }}', // affiliation optional
+            '{{ transaction.total | escape('js') }}', // total optional
+            '{{ transaction.tax | escape('js') }}', // tax optional
+            '{{ transaction.shipping | escape('js') }}', // shipping optional
+            '{{ transaction.city | escape('js') }}', // city optional
+            '{{ transaction.state | escape('js') }}', // state optional
+            '{{ transaction.country | escape('js') }}' // country optional
         ]);
 
         {% if google_analytics.hasItems() %}
