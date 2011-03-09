@@ -34,14 +34,14 @@ class AnalyticsHelper extends Helper
         return $this->analytics->getCustomPageView();
     }
 
-    public function hasCustomVars()
+    public function hasCustomVariables()
     {
-        return $this->analytics->hasCustomVars();
+        return $this->analytics->hasCustomVariables();
     }
 
-    public function getCustomVars()
+    public function getCustomVariables()
     {
-        return $this->analytics->getCustomVars();
+        return $this->analytics->getCustomVariables();
     }
 
     public function hasItems()

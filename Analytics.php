@@ -114,7 +114,7 @@ class Analytics
      */
     public function hasCustomVariables()
     {
-        if (!empty($this->customVars)) {
+        if (!empty($this->customVariables)) {
             return true;
         }
         return false;
