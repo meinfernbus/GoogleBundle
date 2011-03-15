@@ -35,6 +35,8 @@ class AnalyticsWebTest extends WebTestCase
         $this->assertFalse($this->analytics->hasItems());
         $this->assertNull($this->analytics->getTransaction());
         $this->assertEquals(1, count($this->analytics->getTrackers()));
+        $this->assertTrue($this->analytics->getAllowLinker('default'));
+        $this->assertFalse($this->analytics->getAllowHash('default'));
     }
 
     public function testSetGetCustomPageView()
@@ -132,5 +134,17 @@ class AnalyticsWebTest extends WebTestCase
 
         $this->assertTrue($this->analytics->hasItems());
         $this->assertEquals(2, count($this->analytics->getItems()));
+    }
+
+    public function testSetAllowHash()
+    {
+        $this->analytics->setAllowHash('default', true);
+        $this->assertTrue($this->analytics->getAllowHash('default'));
+    }
+
+    public function testSetAllowLinker()
+    {
+        $this->analytics->setAllowLinker('default', false);
+        $this->assertFalse($this->analytics->getAllowLinker('default'));
     }
 }

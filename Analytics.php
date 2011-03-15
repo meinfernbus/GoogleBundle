@@ -37,18 +37,14 @@ class Analytics
 
     /**
      * @param string $trackerKey
-     * @return boolean $allowLinker
+     * @param boolean $allowHash
      */
-    public function getAllowLinker($trackerKey)
+    public function setAllowHash($trackerKey, $allowHash)
     {
         if (!array_key_exists($trackerKey, $this->trackers)) {
-            return 'true';
+            return;
         }
-        $trackerConfig = $this->trackers[$trackerKey];
-        if (!array_key_exists('allowLinker', $trackerConfig)) {
-            return 'true';
-        }
-        return (string) $trackerConfig['allowLinker'];
+        $this->trackers[$trackerKey]['allowHash'] = $allowHash;
     }
 
     /**
@@ -58,13 +54,41 @@ class Analytics
     public function getAllowHash($trackerKey)
     {
         if (!array_key_exists($trackerKey, $this->trackers)) {
-            return 'false';
+            return false;
+        }
+        $trackerConfig = $this->trackers[$trackerKey];
+        if (!array_key_exists('allowHash', $trackerConfig)) {
+            return false;
+        }
+        return $trackerConfig['allowHash'];
+    }
+
+    /**
+     * @param string $trackerKey
+     * @param boolean $allowLinker
+     */
+    public function setAllowLinker($trackerKey, $allowLinker)
+    {
+        if (!array_key_exists($trackerKey, $this->trackers)) {
+            return;
+        }
+        $this->trackers[$trackerKey]['allowLinker'] = $allowLinker;
+    }
+
+    /**
+     * @param string $trackerKey
+     * @return boolean $allowLinker
+     */
+    public function getAllowLinker($trackerKey)
+    {
+        if (!array_key_exists($trackerKey, $this->trackers)) {
+            return true;
         }
         $trackerConfig = $this->trackers[$trackerKey];
         if (!array_key_exists('allowLinker', $trackerConfig)) {
-            return 'false';
+            return true;
         }
-        return (string) $trackerConfig['allowLinker'];
+        return $trackerConfig['allowLinker'];
     }
 
     /**
