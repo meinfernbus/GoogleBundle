@@ -21,14 +21,14 @@
 	{% endif %}
 	{% endif %}
 
-	{% if google_analytics.hasCustomVariables() %}
-	{% for customVariable in google_analytics.getCustomVariables() %}
+	{% if google_analytics.hasCustomVariables %}
+	{% for customVariable in google_analytics.customVariables %}
 		_gaq.push(['{{ tracker.name }}._setCustomVar', {{ customVariable.index }}, '{{ customVariable.name }}', '{{ customVariable.value }}', {{ customVariable.scope }}]);
 	{% endfor %}
 	{% endif %}
 
-	{% if google_analytics.hasPageViewQueue() %}
-	{% for pageView in google_analytics.getPageViewQueue() %}
+	{% if google_analytics.hasPageViewQueue %}
+	{% for pageView in google_analytics.pageViewQueue %}
 		_gaq.push(['{{ tracker.name }}._trackPageview', '{{ pageView }}']);
 	{% endfor %}
 	{% endif %}
@@ -39,7 +39,7 @@
 	_gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() }}']);
 	{% endif %}
 
-	{% if google_analytics.isTransactionValid() %}
+	{% if google_analytics.isTransactionValid %}
 	{% set transaction = google_analytics.transaction %}
 	_gaq.push(['{{ tracker.name }}._addTrans',
 		'{{ transaction.orderNumber | escape('js') }}', // order number required
@@ -52,7 +52,7 @@
 		'{{ transaction.country | escape('js') }}' // country optional
 	]);
 
-	{% if google_analytics.hasItems() %}
+	{% if google_analytics.hasItems %}
 	{% for item in google_analytics.items %}
 	_gaq.push(['{{ tracker.name }}._addItem',
 		'{{ item.orderNumber | escape('js') }}', // order number required
@@ -69,6 +69,21 @@
 
 	{% endif %}
 	{% endfor %}
+
+	{% if google_analytics.hasEventQueue %}
+	{% for event in google_analytics.eventQueue %}
+    _gaq.push(['{{ tracker.name }}._trackEvent'
+        ,'{{ event.category }}' // category required
+        ,'{{ event.action }}' // action required
+        {% if event.label %}
+        ,'{{ event.label }}' // label optional 
+        {% endif %}
+        {% if event.label and event.value %}
+        ,'{{ event.value }}' // value optional but dependent on label
+        {% endif %}
+    ]);
+	{% endfor %}
+	{% endif %}
 
 	(function() {
 		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;

@@ -1,0 +1,18 @@
+{#
+ # @param string eventName 
+ #}
+{% set eventFunctionName = google_analytics.getEventFunctionName(eventName) %}
+<script type="text/javascript">
+if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
+
+{{ eventFunctionName }} = function(category, action, label, value) {
+	{% for key, tracker in google_analytics.trackers %}
+    _gaq.push(['{{ tracker.name }}._trackEvent'
+        , category // category required
+        , action // action required
+        , label // label optional 
+        , value // value optional but dependent on label
+    ]);
+	{% endfor %}
+}
+</script>

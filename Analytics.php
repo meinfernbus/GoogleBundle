@@ -3,12 +3,14 @@
 namespace AntiMattr\GoogleBundle;
 
 use AntiMattr\GoogleBundle\Analytics\CustomVariable;
+use AntiMattr\GoogleBundle\Analytics\Event;
 use AntiMattr\GoogleBundle\Analytics\Item;
 use AntiMattr\GoogleBundle\Analytics\Transaction;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Analytics
 {
+    const EVENT_QUEUE_KEY  = 'google_analytics/event/queue';
     const CUSTOM_PAGE_VIEW_KEY = 'google_analytics/page_view';
     const PAGE_VIEW_QUEUE_KEY  = 'google_analytics/page_view/queue';
     const TRANSACTION_KEY      = 'google_analytics/transaction';
@@ -142,6 +144,30 @@ class Analytics
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param Event $event
+     */
+    public function enqueueEvent(Event $event)
+    {
+        $this->add(self::EVENT_QUEUE_KEY, $event);
+    }
+
+    /**
+     * @param array $eventQueue
+     */
+    public function getEventQueue()
+    {
+        return $this->getOnce(self::EVENT_QUEUE_KEY);
+    }
+
+    /**
+     * @return boolean $hasEventQueue
+     */
+    public function hasEventQueue()
+    {
+        return $this->has(self::EVENT_QUEUE_KEY);
     }
 
     /**
