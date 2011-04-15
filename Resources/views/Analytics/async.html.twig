@@ -37,7 +37,7 @@
     _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getCustomPageView() }}']);
     {% else %}
     if (window.location.hash) {
-        _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() }}#'+window.location.hash]);
+        _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() }}'+window.location.hash]);
     } else {
         _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() }}']);
     }
