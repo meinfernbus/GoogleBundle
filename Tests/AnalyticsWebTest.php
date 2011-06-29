@@ -147,4 +147,10 @@ class AnalyticsWebTest extends WebTestCase
         $this->analytics->setAllowLinker('default', false);
         $this->assertFalse($this->analytics->getAllowLinker('default'));
     }
+
+    public function testSetTrackPageLoadTime()
+    {
+        $this->analytics->setTrackPageLoadTime('default', true);
+        $this->assertTrue($this->analytics->getTrackPageLoadTime('default'));
+    }
 }

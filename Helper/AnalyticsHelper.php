@@ -25,6 +25,11 @@ class AnalyticsHelper extends Helper
         return $this->analytics->getAllowLinker($trackerKey);
     }
 
+    public function getTrackPageLoadTime($trackerKey)
+    {
+        return $this->analytics->getTrackPageLoadTime($trackerKey);
+    }
+
     public function hasCustomPageView()
     {
         return $this->analytics->hasCustomPageView();

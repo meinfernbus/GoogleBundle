@@ -36,6 +36,7 @@ the application's `config.yml` file:
                     name:      MyJavaScriptCompatibleVariableNameWithNoSpaces
                     accountId: UA-xxxx-x
                     domain:    .mydomain.com
+                    trackPageLoadTime: true
 
 #### View
 

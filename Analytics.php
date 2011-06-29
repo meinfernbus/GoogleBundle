@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Analytics
 {
-    const EVENT_QUEUE_KEY  = 'google_analytics/event/queue';
+    const EVENT_QUEUE_KEY      = 'google_analytics/event/queue';
     const CUSTOM_PAGE_VIEW_KEY = 'google_analytics/page_view';
     const PAGE_VIEW_QUEUE_KEY  = 'google_analytics/page_view/queue';
     const TRANSACTION_KEY      = 'google_analytics/transaction';
@@ -91,6 +91,34 @@ class Analytics
             return true;
         }
         return $trackerConfig['allowLinker'];
+    }
+
+    /**
+     * @param string $trackerKey
+     * @param boolean $trackPageLoadTime
+     */
+    public function setTrackPageLoadTime($trackerKey, $trackPageLoadTime)
+    {
+        if (!array_key_exists($trackerKey, $this->trackers)) {
+            return;
+        }
+        $this->trackers[$trackerKey]['trackPageLoadTime'] = $trackPageLoadTime;
+    }
+
+    /**
+     * @param string $trackerKey
+     * @return boolean $trackPageLoadTime
+     */
+    public function getTrackPageLoadTime($trackerKey)
+    {
+        if (!array_key_exists($trackerKey, $this->trackers)) {
+            return false;
+        }
+        $trackerConfig = $this->trackers[$trackerKey];
+        if (!array_key_exists('trackPageLoadTime', $trackerConfig)) {
+            return false;
+        }
+        return $trackerConfig['trackPageLoadTime'];
     }
 
     /**

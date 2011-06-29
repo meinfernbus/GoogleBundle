@@ -2,29 +2,18 @@ web_profiler:
     toolbar:             true
     intercept_redirects: true
 
-services:
-    session.storage: @session.storage.array
-
 framework:
+    secret:        notasecret
     charset:       UTF-8
-    error_handler: false
     test: ~
-    document_root: "%kernel.root_dir%/../web"
     router:        { resource: "%kernel.root_dir%/config/routing_test.yml" }
     profiler:      { only_exceptions: false }
-    validation:    { enabled: true, annotations: true }
+    validation:    { enabled: true, enable_annotations: true }
     templating:
         assets_version: 0.1
         engines:        ['twig']
     session:
-        default_locale: en
-        lifetime:       3600
-        auto_start:     true
-
-zend:
-    logger:
-        priority: debug
-        path:     %kernel.logs_dir%/%kernel.environment%.log
+        storage_id: session.storage.filesystem
 
 twig:
     debug:            %kernel.debug%
@@ -37,6 +26,9 @@ google:
                 name: MyJavaScriptCompatibleVariableNameWithNoSpaces
                 accountId: xxxxxx
                 domain: .example.com
+                allowHash: false
+                allowLinker: true
+                trackPageLoadTime: false
     adwords:
         conversions:
             account_create:

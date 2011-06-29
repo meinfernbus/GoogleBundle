@@ -43,6 +43,10 @@
     }
 	{% endif %}
 
+    {% if google_analytics.getTrackPageLoadTime(key) %}
+    _gaq.push(['{{ tracker.name }}._trackPageLoadTime']);
+    {% endif %}
+
 	{% if google_analytics.isTransactionValid %}
 	{% set transaction = google_analytics.transaction %}
 	_gaq.push(['{{ tracker.name }}._addTrans',
