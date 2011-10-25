@@ -50,16 +50,6 @@ class AnalyticsHelper extends Helper
         return $this->analytics->getCustomVariables();
     }
 
-    public function getEventFunctionName($eventName)
-    {
-        return 'trackEvent'.ucfirst($eventName);
-    }
-
-    public function addEvent($category, $action, $label = null, $value = null)
-    {
-        $this->analytics->enqueueEvent(new Event($category, $action, $label, $value));
-    }
-
     public function hasEventQueue()
     {
         return $this->analytics->hasEventQueue();

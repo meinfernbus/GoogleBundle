@@ -6,6 +6,7 @@ use DateTime;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use AntiMattr\GoogleBundle\Analytics;
+use AntiMattr\GoogleBundle\Analytics\Event;
 use AntiMattr\GoogleBundle\Analytics\Item;
 use AntiMattr\GoogleBundle\Analytics\Transaction;
 
@@ -73,6 +74,41 @@ class AnalyticsWebTest extends WebTestCase
             ),
             array(
                 array('/page-y', '/page-z'),
+                2
+            )
+        );
+    }
+
+    /**
+     * @dataProvider provideEventsForQueue
+     */
+    public function testEnqueueEvent($eventData, $count)
+    {
+        foreach ($eventData as $data) {
+            $event = new Event($data['category'], $data['action']);
+            $this->analytics->enqueueEvent($event);
+        }
+
+        $this->assertTrue($this->analytics->hasEventQueue());
+        $this->assertEquals($count, count($this->analytics->getEventQueue()));
+    }
+
+    public function provideEventsForQueue()
+    {
+        return array(
+            array(
+                array(
+                    array('category' => 'Category A', 'action' => 'Action A'),
+                    array('category' => 'Category B', 'action' => 'Action B'),
+                    array('category' => 'Category C', 'action' => 'Action C')
+                ),
+                3
+            ),
+            array(
+                array(
+                    array('category' => 'Category D', 'action' => 'Action D'),
+                    array('category' => 'Category E', 'action' => 'Action E'),
+                ),
                 2
             )
         );

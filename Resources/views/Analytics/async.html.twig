@@ -1,101 +1,103 @@
 <script type="text/javascript">
-    if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
+if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
 
-    {% for key, tracker in google_analytics.trackers %}
+{% for key, tracker in google_analytics.trackers %}
     _gaq.push(function() {
         var {{ tracker.name }} = _gaq._createAsyncTracker('{{ tracker.accountId }}','{{ tracker.name }}');
     });
+
     {% if tracker.domain %}
-    _gaq.push(['{{ tracker.name }}._setDomainName', '{{ tracker.domain }}']);
+        _gaq.push(['{{ tracker.name }}._setDomainName', '{{ tracker.domain }}']);
 
-    {% if google_analytics.getAllowLinker(key) %}
-    _gaq.push(['{{ tracker.name }}._setAllowLinker', true ]);
-    {% else %}
-    _gaq.push(['{{ tracker.name }}._setAllowLinker', false ]);
-    {% endif %}
+        {% if google_analytics.getAllowLinker(key) %}
+            _gaq.push(['{{ tracker.name }}._setAllowLinker', true ]);
+        {% else %}
+            _gaq.push(['{{ tracker.name }}._setAllowLinker', false ]);
+        {% endif %}
 
-    {% if google_analytics.getAllowHash(key) %}
-    _gaq.push(['{{ tracker.name }}._setAllowHash', true ]);
-    {% else %}
-    _gaq.push(['{{ tracker.name }}._setAllowHash', false ]);
-    {% endif %}
+        {% if google_analytics.getAllowHash(key) %}
+            _gaq.push(['{{ tracker.name }}._setAllowHash', true ]);
+        {% else %}
+            _gaq.push(['{{ tracker.name }}._setAllowHash', false ]);
+        {% endif %}
     {% endif %}
 
     {% if google_analytics.hasCustomVariables %}
-    {% for customVariable in google_analytics.customVariables %}
-        _gaq.push(['{{ tracker.name }}._setCustomVar', {{ customVariable.index }}, '{{ customVariable.name }}', '{{ customVariable.value }}', {{ customVariable.scope }}]);
-    {% endfor %}
+        {% for customVariable in google_analytics.customVariables %}
+            _gaq.push(['{{ tracker.name }}._setCustomVar', {{ customVariable.index }}, '{{ customVariable.name }}', '{{ customVariable.value }}', {{ customVariable.scope }}]);
+        {% endfor %}
     {% endif %}
 
     {% if google_analytics.hasPageViewQueue %}
-    {% for pageView in google_analytics.pageViewQueue %}
-        _gaq.push(['{{ tracker.name }}._trackPageview', '{{ pageView }}']);
-    {% endfor %}
+        {% for pageView in google_analytics.pageViewQueue %}
+            _gaq.push(['{{ tracker.name }}._trackPageview', '{{ pageView }}']);
+        {% endfor %}
     {% endif %}
 
     {% if google_analytics.hasCustomPageView %}
-    _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getCustomPageView() }}']);
+        _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getCustomPageView() }}']);
     {% else %}
-    if (window.location.hash) {
-        _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() }}'+window.location.hash]);
-    } else {
-        _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() }}']);
-    }
+        if (window.location.hash) {
+            _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() }}'+window.location.hash]);
+        } else {
+            _gaq.push(['{{ tracker.name }}._trackPageview', '{{ google_analytics.getRequestUri() }}']);
+        }
     {% endif %}
 
     {% if google_analytics.getTrackPageLoadTime(key) %}
-    _gaq.push(['{{ tracker.name }}._trackPageLoadTime']);
+        _gaq.push(['{{ tracker.name }}._trackPageLoadTime']);
     {% endif %}
 
     {% if google_analytics.isTransactionValid %}
-    {% set transaction = google_analytics.transaction %}
-    _gaq.push(['{{ tracker.name }}._addTrans',
-        '{{ transaction.orderNumber | escape('js') }}', // order number required
-        '{{ transaction.affiliation | escape('js') }}', // affiliation optional
-        '{{ transaction.total | escape('js') }}', // total optional
-        '{{ transaction.tax | escape('js') }}', // tax optional
-        '{{ transaction.shipping | escape('js') }}', // shipping optional
-        '{{ transaction.city | escape('js') }}', // city optional
-        '{{ transaction.state | escape('js') }}', // state optional
-        '{{ transaction.country | escape('js') }}' // country optional
-    ]);
+        {% set transaction = google_analytics.transaction %}
+        _gaq.push(['{{ tracker.name }}._addTrans',
+            '{{ transaction.orderNumber | escape('js') }}', // order number required
+            '{{ transaction.affiliation | escape('js') }}', // affiliation optional
+            '{{ transaction.total | escape('js') }}', // total optional
+            '{{ transaction.tax | escape('js') }}', // tax optional
+            '{{ transaction.shipping | escape('js') }}', // shipping optional
+            '{{ transaction.city | escape('js') }}', // city optional
+            '{{ transaction.state | escape('js') }}', // state optional
+            '{{ transaction.country | escape('js') }}' // country optional
+        ]);
 
-    {% if google_analytics.hasItems %}
-    {% for item in google_analytics.items %}
-    _gaq.push(['{{ tracker.name }}._addItem',
-        '{{ item.orderNumber | escape('js') }}', // order number required
-        '{{ item.sku | escape('js') }}', // sku required
-        '{{ item.name | escape('js') }}', // name optional
-        '{{ item.category | escape('js') }}', // category optional
-        '{{ item.price | escape('js') }}', // price required
-        '{{ item.quantity | escape('js') }}' // quantity required
-    ]);
-    {% endfor %}
+        {% if google_analytics.hasItems %}
+            {% for item in google_analytics.items %}
+                _gaq.push(['{{ tracker.name }}._addItem',
+                    '{{ item.orderNumber | escape('js') }}', // order number required
+                    '{{ item.sku | escape('js') }}', // sku required
+                    '{{ item.name | escape('js') }}', // name optional
+                    '{{ item.category | escape('js') }}', // category optional
+                    '{{ item.price | escape('js') }}', // price required
+                    '{{ item.quantity | escape('js') }}' // quantity required
+                ]);
+            {% endfor %}
+        {% endif %}
+
+        _gaq.push(['{{ tracker.name }}._trackTrans']);
+
     {% endif %}
-
-    _gaq.push(['{{ tracker.name }}._trackTrans']);
-
-    {% endif %}
-    {% endfor %}
 
     {% if google_analytics.hasEventQueue %}
-    {% for event in google_analytics.eventQueue %}
-    _gaq.push(['{{ tracker.name }}._trackEvent'
-        ,'{{ event.category }}' // category required
-        ,'{{ event.action }}' // action required
-        {% if event.label %}
-        ,'{{ event.label }}' // label optional
-        {% endif %}
-        {% if event.label and event.value %}
-        ,'{{ event.value }}' // value optional but dependent on label
-        {% endif %}
-    ]);
-    {% endfor %}
+        {% for event in google_analytics.eventQueue %}
+            _gaq.push(['{{ tracker.name }}._trackEvent'
+                ,'{{ event.category }}' // category required
+                ,'{{ event.action }}' // action required
+                {% if event.label %}
+                    ,'{{ event.label }}' // label optional
+                {% endif %}
+                {% if event.label and event.value %}
+                    ,'{{ event.value }}' // value optional but dependent on label
+                {% endif %}
+            ]);
+        {% endfor %}
     {% endif %}
 
-    (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
+{% endfor %}
+
+(function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
 </script>
