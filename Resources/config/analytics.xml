@@ -4,12 +4,14 @@
 
     <parameters>
         <parameter key="google.analytics.trackers" type="collection" />
+        <parameter key="google.analytics.whitelist" type="collection" />        
     </parameters>
 
     <services>
         <service id="google.analytics" class="AntiMattr\GoogleBundle\Analytics">
             <argument type="service" id="service_container" />
             <argument>%google.analytics.trackers%</argument>
+            <argument>%google.analytics.whitelist%</argument>
         </service>
 
         <service id="templating.helper.google_analytics" class="AntiMattr\GoogleBundle\Helper\AnalyticsHelper">

@@ -20,11 +20,13 @@ class Analytics
     private $customVariables = array();
     private $pageViewsWithBaseUrl = true;
     private $trackers;
+    private $whitelist;
 
-    public function __construct(ContainerInterface $container, array $trackers = array())
+    public function __construct(ContainerInterface $container, array $trackers = array(), array $whitelist = array())
     {
         $this->container = $container;
         $this->trackers = $trackers;
+        $this->whitelist = $whitelist;
     }
 
     public function excludeBaseUrl()
@@ -273,21 +275,35 @@ class Analytics
     }
 
     /**
-     * If Custom Page view not set,
-     * Then requestUri is used as an alternative
+     * Check and apply base url configuration
+     * If a GET param whitelist is declared,
+     * Then only allow the whitelist
      *
      * @return string $requestUri
      */
     public function getRequestUri()
     {
         $request = $this->getRequest();
-        $requestUri = $request->getRequestUri();
+        $path = $request->getPathInfo();
+
         if (!$this->pageViewsWithBaseUrl) {
             $baseUrl = $request->getBaseUrl();
             if ($baseUrl != '/') {
-                return str_replace($baseUrl, '', $requestUri);
+                $uri = str_replace($baseUrl, '', $path);
             }
-            return $requestUri;
+        }
+
+        $params = $request->query->all();
+        if (!empty($this->whitelist) && !empty($params)) {
+            $whitelist = array_flip($this->whitelist);
+            $params = array_intersect_key($params, $whitelist);
+        }
+
+        $requestUri = $path;
+        $query = http_build_query($params);
+
+        if (isset($query) && '' != trim($query)) {
+            $requestUri .= '?'. $query;
         }
         return $requestUri;
     }

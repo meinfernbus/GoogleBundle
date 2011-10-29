@@ -65,6 +65,9 @@ class GoogleExtension extends Extension
             if (isset($config['trackers'])) {
                 $container->setParameter('google.analytics.trackers', $config['trackers']);
             }
+            if (isset($config['whitelist'])) {
+                $container->setParameter('google.analytics.whitelist', $config['whitelist']);
+            }
         }
     }
 
