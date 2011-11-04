@@ -2,9 +2,7 @@
 if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
 
 {% for key, tracker in google_analytics.trackers %}
-    _gaq.push(function() {
-        var {{ tracker.name }} = _gaq._createAsyncTracker('{{ tracker.accountId }}','{{ tracker.name }}');
-    });
+    _gaq.push(['{{ tracker.name }}._setAccount', '{{ tracker.accountId }}']);
 
     {% if tracker.domain %}
         _gaq.push(['{{ tracker.name }}._setDomainName', '{{ tracker.domain }}']);
