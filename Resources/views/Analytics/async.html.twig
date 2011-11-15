@@ -1,4 +1,29 @@
 <script type="text/javascript">
+if (AntiMattr == null || typeof(AntiMattr) != 'object') { var AntiMattr = window.AntiMattr = {}; }
+AntiMattr.GoogleAnalytics = {};
+
+AntiMattr.GoogleAnalytics.onGatLoad = function(callback) {
+    if (typeof _gat != "undefined") {
+		callback();
+    } else {
+        var listener = this;
+        setTimeout(function(){
+            listener.onGatLoad(callback);					
+        },100);
+    }
+};
+
+AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, label, value) {
+    var event = [tracker + '._trackEvent', category];
+    if (typeof label != 'undefined') {
+	    event.push(label);
+	    if (typeof value != 'undefined') {
+		    event.push(value);
+	    }
+    }
+    _gaq.push(event);
+};
+
 if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
 
 {% for key, tracker in google_analytics.trackers %}
@@ -75,20 +100,13 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
         _gaq.push(['{{ tracker.name }}._trackTrans']);
 
     {% endif %}
-
+    
     {% if google_analytics.hasEventQueue %}
+        AntiMattr.GoogleAnalytics.onGatLoad(function() {
         {% for event in google_analytics.eventQueue %}
-            _gaq.push(['{{ tracker.name }}._trackEvent'
-                ,'{{ event.category }}' // category required
-                ,'{{ event.action }}' // action required
-                {% if event.label %}
-                    ,'{{ event.label }}' // label optional
-                {% endif %}
-                {% if event.label and event.value %}
-                    ,'{{ event.value }}' // value optional but dependent on label
-                {% endif %}
-            ]);
+            AntiMattr.GoogleAnalytics.notifyEvent('{{ tracker.name }}', '{{ event.category }}','{{ event.action }}','{{ event.label }}','{{ event.value }}');
         {% endfor %}
+        });
     {% endif %}
 
 {% endfor %}
