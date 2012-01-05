@@ -9,10 +9,16 @@ use Symfony\Component\Templating\Helper\Helper;
 class AnalyticsHelper extends Helper
 {
     private $analytics;
+    private $sourceHttps;
+    private $sourceHttp;
+    private $sourceEndpoint;
 
-    public function __construct(Analytics $analytics)
+    public function __construct(Analytics $analytics, $sourceHttps, $sourceHttp, $sourceEndpoint)
     {
         $this->analytics = $analytics;
+        $this->sourceHttps = $sourceHttps;
+        $this->sourceHttp = $sourceHttp;
+        $this->sourceEndpoint = $sourceEndpoint;
     }
 
     public function getAllowHash($trackerKey)
@@ -83,6 +89,21 @@ class AnalyticsHelper extends Helper
     public function getPageViewQueue()
     {
         return $this->analytics->getPageViewQueue();
+    }
+
+    public function getSourceHttps()
+    {
+        return $this->sourceHttps;
+    }
+
+    public function getSourceHttp()
+    {
+        return $this->sourceHttp;
+    }
+
+    public function getSourceEndpoint()
+    {
+        return $this->sourceEndpoint;
     }
 
     public function getTrackers(array $trackers = array())
