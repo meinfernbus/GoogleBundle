@@ -4,7 +4,7 @@
 
     <parameters>
         <parameter key="google.analytics.trackers" type="collection" />
-        <parameter key="google.analytics.whitelist" type="collection" />        
+        <parameter key="google.analytics.whitelist" type="collection" />
     </parameters>
 
     <services>
