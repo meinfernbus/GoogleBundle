@@ -120,6 +120,13 @@ class StaticMap extends AbstractMap
     public function render()
     {
         $request  = static::API_ENDPOINT;
+
+        // Using router object would be better, but as this is a static class...
+        // Checks according to php manual, regarding IIS
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+            $request = 'https' . substr($request, 4);
+        }
+
         if ($this->hasMeta()) {
             foreach ($this->getMeta() as $key => $val) {
                 $request .= $key.'='.$val.'&';
