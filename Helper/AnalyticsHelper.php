@@ -36,6 +36,11 @@ class AnalyticsHelper extends Helper
         return $this->analytics->getTrackPageLoadTime($trackerKey);
     }
 
+    public function getAnonymizeIp($trackerKey)
+    {
+        return $this->analytics->getAnonymizeIp($trackerKey);
+    }
+
     public function hasCustomPageView()
     {
         return $this->analytics->hasCustomPageView();
