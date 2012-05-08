@@ -97,6 +97,35 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     * @param boolean $anonymizeIp
+     */
+    public function setAnonymizeIp($trackerKey, $anonymizeIp)
+    {
+        if (!array_key_exists($trackerKey, $this->trackers)) {
+            return;
+        }
+        $this->trackers[$trackerKey]['anonymizeIp'] = $anonymizeIp;
+    }
+
+    /**
+     * @param string $trackerKey
+     *
+     * @return boolean
+     */
+    public function getAnonymizeIp($trackerKey)
+    {
+        if (!array_key_exists($trackerKey, $this->trackers)) {
+            return false;
+        }
+        $trackerConfig = $this->trackers[$trackerKey];
+        if (!array_key_exists('anonymizeIp', $trackerConfig)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param string $trackerKey
      * @param boolean $trackPageLoadTime
      */
     public function setTrackPageLoadTime($trackerKey, $trackPageLoadTime)

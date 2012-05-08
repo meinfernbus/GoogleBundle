@@ -45,9 +45,14 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
         {% endif %}
     {% endif %}
 
+    {% if google_analytics.getAnonymizeIp(key) %}
+        _gaq.push (['_gat._anonymizeIp']);
+    {% endif %}
+
+
     {% if google_analytics.hasCustomVariables %}
         {% for customVariable in google_analytics.customVariables %}
-            _gaq.push(['{{ tracker.name }}._setCustomVar', {{ customVariable.index }}, '{{ customVariable.name }}', '{{ customVariable.value }}', {{ customVariable.scope }}]);
+        _gaq.push(['{{ tracker.name }}._setCustomVar', {{ customVariable.index }}, '{{ customVariable.name }}', '{{ customVariable.value }}', {{ customVariable.scope }}]);
         {% endfor %}
     {% endif %}
 
