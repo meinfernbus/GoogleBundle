@@ -8,6 +8,8 @@
         'clientId':'{{ google_analytics.clientId }}',
         'tableId': '{{ google_analytics.tableId }}'
     });
-    
-    gadash.initCallback = {{ initCallback }};
+
+    {% if initCallback is defined %}
+        gadash.initCallback = {{ initCallback }};
+    {% endif %}
 </script>
