@@ -1,7 +1,6 @@
 <?php
 
 namespace AntiMattr\GoogleBundle;
-
 use AntiMattr\GoogleBundle\Analytics\CustomVariable;
 use AntiMattr\GoogleBundle\Analytics\Event;
 use AntiMattr\GoogleBundle\Analytics\Item;
@@ -10,23 +9,30 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Analytics
 {
-    const EVENT_QUEUE_KEY      = 'google_analytics/event/queue';
+    const EVENT_QUEUE_KEY = 'google_analytics/event/queue';
     const CUSTOM_PAGE_VIEW_KEY = 'google_analytics/page_view';
-    const PAGE_VIEW_QUEUE_KEY  = 'google_analytics/page_view/queue';
-    const TRANSACTION_KEY      = 'google_analytics/transaction';
-    const ITEMS_KEY            = 'google_analytics/items';
+    const PAGE_VIEW_QUEUE_KEY = 'google_analytics/page_view/queue';
+    const TRANSACTION_KEY = 'google_analytics/transaction';
+    const ITEMS_KEY = 'google_analytics/items';
 
     private $container;
     private $customVariables = array();
     private $pageViewsWithBaseUrl = true;
     private $trackers;
     private $whitelist;
+    private $api_key;
+    private $client_id;
+    private $table_id;
 
-    public function __construct(ContainerInterface $container, array $trackers = array(), array $whitelist = array())
+    public function __construct(ContainerInterface $container,
+            array $trackers = array(), array $whitelist = array(), array $dashboard = array())
     {
         $this->container = $container;
         $this->trackers = $trackers;
         $this->whitelist = $whitelist;
+        $this->api_key = isset($dashboard['api_key']) ? $dashboard['api_key'] : '';
+        $this->client_id = isset($dashboard['client_id']) ? $dashboard['client_id'] : '';
+        $this->table_id = isset($dashboard['table_id']) ? $dashboard['table_id'] : '';        
     }
 
     public function excludeBaseUrl()
@@ -128,7 +134,8 @@ class Analytics
      */
     public function getCustomPageView()
     {
-        $customPageView = $this->container->get('session')->get(self::CUSTOM_PAGE_VIEW_KEY);
+        $customPageView = $this->container->get('session')
+                ->get(self::CUSTOM_PAGE_VIEW_KEY);
         $this->container->get('session')->remove(self::CUSTOM_PAGE_VIEW_KEY);
         return $customPageView;
     }
@@ -146,7 +153,8 @@ class Analytics
      */
     public function setCustomPageView($customPageView)
     {
-        $this->container->get('session')->set(self::CUSTOM_PAGE_VIEW_KEY, $customPageView);
+        $this->container->get('session')
+                ->set(self::CUSTOM_PAGE_VIEW_KEY, $customPageView);
     }
 
     /**
@@ -303,7 +311,7 @@ class Analytics
         $query = http_build_query($params);
 
         if (isset($query) && '' != trim($query)) {
-            $requestUri .= '?'. $query;
+            $requestUri .= '?' . $query;
         }
         return $requestUri;
     }
@@ -331,13 +339,17 @@ class Analytics
      */
     public function isTransactionValid()
     {
-        if (!$this->hasTransaction() || (null === $this->getTransactionFromSession()->getOrderNumber())) {
+        if (!$this->hasTransaction()
+                || (null
+                        === $this->getTransactionFromSession()
+                                ->getOrderNumber())) {
             return false;
         }
         if ($this->hasItems()) {
             $items = $this->getItemsFromSession();
             foreach ($items as $item) {
-                if (!$item->getOrderNumber() || !$item->getSku() || !$item->getPrice() || !$item->getQuantity()) {
+                if (!$item->getOrderNumber() || !$item->getSku()
+                        || !$item->getPrice() || !$item->getQuantity()) {
                     return false;
                 }
             }
@@ -368,7 +380,8 @@ class Analytics
      */
     public function setTransaction(Transaction $transaction)
     {
-        $this->container->get('session')->set(self::TRANSACTION_KEY, $transaction);
+        $this->container->get('session')
+                ->set(self::TRANSACTION_KEY, $transaction);
     }
 
     /**
@@ -426,5 +439,31 @@ class Analytics
     private function getTransactionFromSession()
     {
         return $this->container->get('session')->get(self::TRANSACTION_KEY);
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return $this->api_key;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getClientId()
+    {
+        return $this->client_id;
+    }
+
+    /**
+     * @return string 
+     */
+    public function getTableId()
+    {
+        return $this->table_id;
     }
 }
