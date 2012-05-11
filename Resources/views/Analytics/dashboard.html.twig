@@ -1,56 +1,13 @@
 <script src="https://www.google.com/jsapi"></script>
 <script src="{{ asset('/bundles/google/js/gdash-1.0.js') }}"></script>
-<script src="https://apis.google.com/js/client.js?onload={% block gadashinit %}gadashInit{% endblock %}"></script>
+<script src="https://apis.google.com/js/client.js?onload=gadashInit"></script>
 
 <script>
-
     gadash.configKeys({
         'apiKey': '{{ google_analytics.apiKey }}',
-        'clientId':'{{ google_analytics.clientId }}'
+        'clientId':'{{ google_analytics.clientId }}',
+        'tableId': '{{ google_analytics.tableId }}'
     });
     
-    // Base chart configuration. Used for all charts.
-    var baseConfig = {
-    	    'last-n-days': 30,
-    	    'query': {
-    	        'metrics': 'ga:visitors, ga:visits, ga:pageviews',
-            },
-            'chartOptions': {
-                width: 700
-            }
-    };
-
-    baseConfig.query.ids = '{{ google_analytics.tableId }}';    
-
-    // Create new Chart.
-    var dataOverTime = new gadash.Chart();
-    
-    // Configuration for data over time graph.
-    var dataOverTimeConfig = {
-        'divContainer': 'dataOverTimeConfig',
-        'type': 'LineChart',
-        'query': {
-          'dimensions': 'ga:date',
-          'sort': 'ga:date'
-        },
-        'chartOptions': {
-            height: 300,
-            legend: {position: 'bottom'},
-            hAxis: {title:'Date'},
-            curveType: 'function'
-        }
-    };
-    
-    /**
-    * Handler for the run demo button.
-    * Uses the table ID in the form to update the baseConfig object. Then
-    * sets baseConfig into each of the charts. Then each chart's specific
-    * configuration parameters are set. Finally all are rendered.
-    */
-    function renderGraph() {
-        dataOverTime.set(baseConfig).set(dataOverTimeConfig).render();
-        // Display UI.
-        document.getElementById('ui').style.display = 'block';
-    }
-    
+    gadash.initCallback = {{ initCallback }};
 </script>

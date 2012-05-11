@@ -65,9 +65,14 @@ gadash.commandQueue = [];
 window.gadashInit = function() {
   gapi.client.setApiKey(gadash.apiKey);
   window.setTimeout(gadash.checkAuth, 1);
-  renderGraph();
+  gadash.initCallback();
 };
 
+
+gadash.initCallback = function() {
+	
+	
+}
 
 /**
  * Sets the API key and Client ID passed by the user.
@@ -77,6 +82,7 @@ window.gadashInit = function() {
 gadash.configKeys = function(settings) {
   gadash.apiKey = settings.apiKey;
   gadash.clientId = settings.clientId;
+  gadash.tableId = settings.tableId;
 };
 
 
@@ -124,8 +130,17 @@ gadash.handleAuthorized = function() {
   authorizeButton.style.visibility = 'hidden';
 
   gadash.executeCommandQueue();
+  gadash.onAuthorized();
+  
 };
 
+/**
+ * Callback when the user is authorized
+ */
+gadash.onAuthorized = function() {
+	
+	
+}
 
 /**
  * Updates the UI if a user has not yet authorized this script to access
@@ -137,8 +152,16 @@ gadash.handleUnAuthorized = function() {
   var authorizeButton = document.getElementById('authorize-button');
   authorizeButton.style.visibility = '';
   authorizeButton.onclick = gadash.handleAuthClick;
+  gadash.onUnauthorized();
 };
 
+/**
+ * Callback when the user is not authorized
+ */
+gadash.onUnauthorized = function() {
+	
+	
+}
 
 /**
  * Checks to see if user is authenticated, calls handleAuthResult
@@ -318,8 +341,16 @@ gadash.Chart.prototype.defaultOnSuccess = function(resp) {
   var dataTable = gadash.util.getDataTable(resp);
   var chart = gadash.util.getChart(this.config.divContainer, this.config.type);
   gadash.util.draw(chart, dataTable, this.config.chartOptions);
+  gadash.onSuccess();
 };
 
+/**
+ * Callback when a chart has been rendered
+ */
+gadash.onSuccess = function()
+{
+	
+}
 
 /**
  * Creates a DataTable object using a GA response.
