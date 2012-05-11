@@ -1,6 +1,7 @@
 <?php
 
 namespace AntiMattr\GoogleBundle;
+
 use AntiMattr\GoogleBundle\Analytics\CustomVariable;
 use AntiMattr\GoogleBundle\Analytics\Event;
 use AntiMattr\GoogleBundle\Analytics\Item;
