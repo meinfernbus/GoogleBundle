@@ -83,6 +83,7 @@ gadash.configKeys = function(settings) {
   gadash.apiKey = settings.apiKey;
   gadash.clientId = settings.clientId;
   gadash.tableId = settings.tableId;
+  gadash.authorizeButton = settings.authorizeButton || 'authorize-button';
 };
 
 
@@ -126,7 +127,7 @@ gadash.handleAuthResult = function(authResult) {
  * command queue only happens once.
  */
 gadash.handleAuthorized = function() {
-  var authorizeButton = document.getElementById('authorize-button');
+  var authorizeButton = document.getElementById(gadash.authorizeButton);
   authorizeButton.style.visibility = 'hidden';
 
   gadash.executeCommandQueue();
@@ -149,7 +150,7 @@ gadash.onAuthorized = function() {
  * click handler to the authorize-button.
  */
 gadash.handleUnAuthorized = function() {
-  var authorizeButton = document.getElementById('authorize-button');
+  var authorizeButton = document.getElementById(gadash.authorizeButton);
   authorizeButton.style.visibility = '';
   authorizeButton.onclick = gadash.handleAuthClick;
   gadash.onUnauthorized();

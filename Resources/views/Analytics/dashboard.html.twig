@@ -3,13 +3,21 @@
 <script src="https://apis.google.com/js/client.js?onload=gadashInit"></script>
 
 <script>
-    gadash.configKeys({
-        'apiKey': '{{ google_analytics.apiKey }}',
-        'clientId':'{{ google_analytics.clientId }}',
-        'tableId': '{{ google_analytics.tableId }}'
-    });
 
+    var config = {
+            'apiKey': '{{ google_analytics.apiKey }}',
+            'clientId':'{{ google_analytics.clientId }}',
+            'tableId': '{{ google_analytics.tableId }}'
+    };
+    
+    {% if authorizeButton is defined %}
+        config.authorizeButton = '{{ authorizeButton }}';
+    {% endif %}
+    
+    gadash.configKeys(config);
+    
     {% if initCallback is defined %}
         gadash.initCallback = {{ initCallback }};
     {% endif %}
+
 </script>
