@@ -14,7 +14,7 @@ AntiMattr.GoogleAnalytics.onGatLoad = function(callback) {
 };
 
 AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, label, value) {
-    var event = [tracker + '._trackEvent', category];
+    var event = [tracker + '._trackEvent', category, action];
     if (typeof label != 'undefined') {
 	    event.push(label);
 	    if (typeof value != 'undefined') {
