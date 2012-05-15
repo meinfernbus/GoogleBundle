@@ -21,12 +21,19 @@ class Analytics
     private $pageViewsWithBaseUrl = true;
     private $trackers;
     private $whitelist;
+    private $api_key;
+    private $client_id;
+    private $table_id;
 
-    public function __construct(ContainerInterface $container, array $trackers = array(), array $whitelist = array())
+    public function __construct(ContainerInterface $container,
+            array $trackers = array(), array $whitelist = array(), array $dashboard = array())
     {
         $this->container = $container;
         $this->trackers = $trackers;
         $this->whitelist = $whitelist;
+        $this->api_key = isset($dashboard['api_key']) ? $dashboard['api_key'] : '';
+        $this->client_id = isset($dashboard['client_id']) ? $dashboard['client_id'] : '';
+        $this->table_id = isset($dashboard['table_id']) ? $dashboard['table_id'] : '';        
     }
 
     public function excludeBaseUrl()
@@ -426,5 +433,31 @@ class Analytics
     private function getTransactionFromSession()
     {
         return $this->container->get('session')->get(self::TRANSACTION_KEY);
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return $this->api_key;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getClientId()
+    {
+        return $this->client_id;
+    }
+
+    /**
+     * @return string 
+     */
+    public function getTableId()
+    {
+        return $this->table_id;
     }
 }
