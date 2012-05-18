@@ -15,6 +15,7 @@
             <argument type="service" id="service_container" />
             <argument>%google.analytics.trackers%</argument>
             <argument>%google.analytics.whitelist%</argument>
+            <argument>%google.analytics.dashboard%</argument>
         </service>
 
         <service id="templating.helper.google_analytics" class="AntiMattr\GoogleBundle\Helper\AnalyticsHelper">

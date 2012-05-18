@@ -110,6 +110,21 @@ class AnalyticsHelper extends Helper
     {
         return $this->analytics->getTrackers($trackers);
     }
+    
+    public function getApiKey()
+    {
+        return $this->analytics->getApiKey();
+    }
+    
+    public function getClientId()
+    {
+        return $this->analytics->getClientId();
+    }
+    
+    public function getTableId()
+    {
+        return $this->analytics->getTableId();
+    }
 
     public function isTransactionValid()
     {
