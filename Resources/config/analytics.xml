@@ -3,6 +3,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <parameter key="google.analytics.dashboard" type="collection" />
         <parameter key="google.analytics.trackers" type="collection" />
         <parameter key="google.analytics.whitelist" type="collection" />
         <parameter key="google.analytics.js_source_https">https://ssl</parameter>
