@@ -116,6 +116,45 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     * @param boolean $includeNamePrefix
+     */
+    public function setIncludeNamePrefix($trackerKey, $includeNamePrefix)
+    {
+        $this->setTrackerProperty($trackerKey, 'includeNamePrefix', $includeNamePrefix);
+    }
+
+    /**
+     * @param string $trackerKey
+     * @return boolean $includeNamePrefix (default:true)
+     */
+    public function getIncludeNamePrefix($trackerKey)
+    {
+        if (null === ($property = $this->getTrackerProperty($trackerKey, 'includeNamePrefix'))) {
+            return true;
+        }
+        return $property;
+    }
+
+    /**
+     * @param string $trackerKey
+     * @param boolean $name
+     */
+    public function setTrackerName($trackerKey, $name)
+    {
+        $this->setTrackerProperty($trackerKey, 'name', $name);
+    }
+
+    /**
+     * @param string $trackerKey
+     * @return string $name
+     */
+    public function getTrackerName($trackerKey)
+    {
+        return $this->getTrackerProperty($trackerKey, 'name');
+    }
+
+    /**
+     * @param string $trackerKey
      * @param boolean $trackPageLoadTime
      */
     public function setTrackPageLoadTime($trackerKey, $trackPageLoadTime)

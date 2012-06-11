@@ -31,6 +31,14 @@ class AnalyticsHelper extends Helper
         return $this->analytics->getAllowLinker($trackerKey);
     }
 
+    public function getTrackerName($trackerKey)
+    {
+        if ($this->analytics->getIncludeNamePrefix($trackerKey)) {
+            return $this->analytics->getTrackerName($trackerKey).'.';
+        }
+        return "";
+    }
+
     public function getTrackPageLoadTime($trackerKey)
     {
         return $this->analytics->getTrackPageLoadTime($trackerKey);

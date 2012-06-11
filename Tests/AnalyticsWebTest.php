@@ -38,6 +38,8 @@ class AnalyticsWebTest extends WebTestCase
         $this->assertEquals(1, count($this->analytics->getTrackers()));
         $this->assertTrue($this->analytics->getAllowLinker('default'));
         $this->assertFalse($this->analytics->getAllowHash('default'));
+        $this->assertTrue($this->analytics->getIncludeNamePrefix('default'));
+        $this->assertTrue(0 < strlen($this->analytics->getTrackerName('default')));
     }
 
     /**
@@ -190,6 +192,18 @@ class AnalyticsWebTest extends WebTestCase
     {
         $this->analytics->setAllowLinker('default', false);
         $this->assertFalse($this->analytics->getAllowLinker('default'));
+    }
+
+    public function testSetIncludeNamePrefix()
+    {
+        $this->analytics->setIncludeNamePrefix('default', false);
+        $this->assertFalse($this->analytics->getIncludeNamePrefix('default'));
+    }
+
+    public function testSetTrackerName()
+    {
+        $this->analytics->setTrackerName('default', 'a-different-name');
+        $this->assertEquals('a-different-name', $this->analytics->getTrackerName('default'));
     }
 
     public function testSetTrackPageLoadTime()
