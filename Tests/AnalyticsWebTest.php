@@ -40,6 +40,14 @@ class AnalyticsWebTest extends WebTestCase
         $this->assertFalse($this->analytics->getAllowHash('default'));
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExpectedInvalidArgumentException()
+    {
+        $this->analytics->getAllowLinker('not-a-tracker');
+    }
+
     public function testSetGetCustomPageView()
     {
         $customPageView = '/profile/mattfitz';
