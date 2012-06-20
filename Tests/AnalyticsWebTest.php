@@ -182,6 +182,12 @@ class AnalyticsWebTest extends WebTestCase
         $this->assertEquals(2, count($this->analytics->getItems()));
     }
 
+    public function testSetAllowAnchor()
+    {
+        $this->analytics->setAllowAnchor('default', false);
+        $this->assertFalse($this->analytics->getAllowAnchor('default'));
+    }
+
     public function testSetAllowHash()
     {
         $this->analytics->setAllowHash('default', true);

@@ -21,6 +21,11 @@ class AnalyticsHelper extends Helper
         $this->sourceEndpoint = $sourceEndpoint;
     }
 
+    public function getAllowAnchor($trackerKey)
+    {
+        return $this->analytics->getAllowAnchor($trackerKey);
+    }
+
     public function getAllowHash($trackerKey)
     {
         return $this->analytics->getAllowHash($trackerKey);

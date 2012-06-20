@@ -32,6 +32,12 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
     {% if tracker.domain %}
         _gaq.push(['{{ google_analytics.trackerName(key) }}_setDomainName', '{{ tracker.domain }}']);
 
+        {% if google_analytics.getAllowAnchor(key) %}
+            _gaq.push(['{{ google_analytics.trackerName(key) }}_setAllowAnchor', true ]);
+        {% else %}
+            _gaq.push(['{{ google_analytics.trackerName(key) }}_setAllowAnchor', false ]);
+        {% endif %}
+
         {% if google_analytics.getAllowLinker(key) %}
             _gaq.push(['{{ google_analytics.trackerName(key) }}_setAllowLinker', true ]);
         {% else %}
