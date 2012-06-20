@@ -74,6 +74,27 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     * @param boolean $allowAnchor
+     */
+    public function setAllowAnchor($trackerKey, $allowAnchor)
+    {
+        $this->setTrackerProperty($trackerKey, 'allowAnchor', $allowAnchor);
+    }
+
+    /**
+     * @param string $trackerKey
+     * @return boolean $allowAnchor (default:false)
+     */
+    public function getAllowAnchor($trackerKey)
+    {
+        if (null === ($property = $this->getTrackerProperty($trackerKey, 'allowAnchor'))) {
+            return false;
+        }
+        return $property;
+    }
+
+    /**
+     * @param string $trackerKey
      * @param boolean $allowHash
      */
     public function setAllowHash($trackerKey, $allowHash)
