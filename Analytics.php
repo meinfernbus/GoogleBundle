@@ -33,7 +33,7 @@ class Analytics
         $this->whitelist = $whitelist;
         $this->api_key = isset($dashboard['api_key']) ? $dashboard['api_key'] : '';
         $this->client_id = isset($dashboard['client_id']) ? $dashboard['client_id'] : '';
-        $this->table_id = isset($dashboard['table_id']) ? $dashboard['table_id'] : '';        
+        $this->table_id = isset($dashboard['table_id']) ? $dashboard['table_id'] : '';
     }
 
     public function excludeBaseUrl()
@@ -46,32 +46,51 @@ class Analytics
         $this->pageViewsWithBaseUrl = true;
     }
 
+    private function isValidConfigKey($trackerKey)
+    {
+        if (!array_key_exists($trackerKey, $this->trackers)) {
+            throw new \InvalidArgumentException(sprintf('There is no tracker configuration assigned with the key "%s".', $trackerKey));
+        }
+        return true;
+    }
+
+    private function setTrackerProperty($tracker, $property, $value)
+    {
+        if ($this->isValidConfigKey($tracker)) {
+            $this->trackers[$tracker][$property] = $value;
+        }
+    }
+
+    private function getTrackerProperty($tracker, $property)
+    {
+        if (!$this->isValidConfigKey($tracker)) {
+            return;
+        }
+
+        if (array_key_exists($property, $this->trackers[$tracker])) {
+            return $this->trackers[$tracker][$property];
+        }
+    }
+
     /**
      * @param string $trackerKey
      * @param boolean $allowHash
      */
     public function setAllowHash($trackerKey, $allowHash)
     {
-        if (!array_key_exists($trackerKey, $this->trackers)) {
-            return;
-        }
-        $this->trackers[$trackerKey]['allowHash'] = $allowHash;
+        $this->setTrackerProperty($trackerKey, 'allowHash', $allowHash);
     }
 
     /**
      * @param string $trackerKey
-     * @return boolean $allowHash
+     * @return boolean $allowHash (default:false)
      */
     public function getAllowHash($trackerKey)
     {
-        if (!array_key_exists($trackerKey, $this->trackers)) {
+        if (null === ($property = $this->getTrackerProperty($trackerKey, 'allowHash'))) {
             return false;
         }
-        $trackerConfig = $this->trackers[$trackerKey];
-        if (!array_key_exists('allowHash', $trackerConfig)) {
-            return false;
-        }
-        return $trackerConfig['allowHash'];
+        return $property;
     }
 
     /**
@@ -80,26 +99,58 @@ class Analytics
      */
     public function setAllowLinker($trackerKey, $allowLinker)
     {
-        if (!array_key_exists($trackerKey, $this->trackers)) {
-            return;
-        }
-        $this->trackers[$trackerKey]['allowLinker'] = $allowLinker;
+        $this->setTrackerProperty($trackerKey, 'allowLinker', $allowLinker);
     }
 
     /**
      * @param string $trackerKey
-     * @return boolean $allowLinker
+     * @return boolean $allowLinker (default:true)
      */
     public function getAllowLinker($trackerKey)
     {
-        if (!array_key_exists($trackerKey, $this->trackers)) {
+        if (null === ($property = $this->getTrackerProperty($trackerKey, 'allowLinker'))) {
             return true;
         }
-        $trackerConfig = $this->trackers[$trackerKey];
-        if (!array_key_exists('allowLinker', $trackerConfig)) {
+        return $property;
+    }
+
+    /**
+     * @param string $trackerKey
+     * @param boolean $includeNamePrefix
+     */
+    public function setIncludeNamePrefix($trackerKey, $includeNamePrefix)
+    {
+        $this->setTrackerProperty($trackerKey, 'includeNamePrefix', $includeNamePrefix);
+    }
+
+    /**
+     * @param string $trackerKey
+     * @return boolean $includeNamePrefix (default:true)
+     */
+    public function getIncludeNamePrefix($trackerKey)
+    {
+        if (null === ($property = $this->getTrackerProperty($trackerKey, 'includeNamePrefix'))) {
             return true;
         }
-        return $trackerConfig['allowLinker'];
+        return $property;
+    }
+
+    /**
+     * @param string $trackerKey
+     * @param boolean $name
+     */
+    public function setTrackerName($trackerKey, $name)
+    {
+        $this->setTrackerProperty($trackerKey, 'name', $name);
+    }
+
+    /**
+     * @param string $trackerKey
+     * @return string $name
+     */
+    public function getTrackerName($trackerKey)
+    {
+        return $this->getTrackerProperty($trackerKey, 'name');
     }
 
     /**
@@ -108,26 +159,19 @@ class Analytics
      */
     public function setTrackPageLoadTime($trackerKey, $trackPageLoadTime)
     {
-        if (!array_key_exists($trackerKey, $this->trackers)) {
-            return;
-        }
-        $this->trackers[$trackerKey]['trackPageLoadTime'] = $trackPageLoadTime;
+        $this->setTrackerProperty($trackerKey, 'trackPageLoadTime', $trackPageLoadTime);
     }
 
     /**
      * @param string $trackerKey
-     * @return boolean $trackPageLoadTime
+     * @return boolean $trackPageLoadTime (default:false)
      */
     public function getTrackPageLoadTime($trackerKey)
     {
-        if (!array_key_exists($trackerKey, $this->trackers)) {
+        if (null === ($property = $this->getTrackerProperty($trackerKey, 'trackPageLoadTime'))) {
             return false;
         }
-        $trackerConfig = $this->trackers[$trackerKey];
-        if (!array_key_exists('trackPageLoadTime', $trackerConfig)) {
-            return false;
-        }
-        return $trackerConfig['trackPageLoadTime'];
+        return $property;
     }
 
     /**
