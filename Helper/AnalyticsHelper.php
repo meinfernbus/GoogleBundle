@@ -44,9 +44,9 @@ class AnalyticsHelper extends Helper
         return "";
     }
 
-    public function getTrackPageLoadTime($trackerKey)
+    public function getSiteSpeedSampleRate($trackerKey)
     {
-        return $this->analytics->getTrackPageLoadTime($trackerKey);
+        return $this->analytics->getSiteSpeedSampleRate($trackerKey);
     }
 
     public function hasCustomPageView()

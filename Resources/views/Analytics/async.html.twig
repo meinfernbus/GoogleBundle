@@ -57,6 +57,11 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
         {% endfor %}
     {% endif %}
 
+    {% set siteSpeedSampleRate = google_analytics.getSiteSpeedSampleRate(key) %}
+    {% if siteSpeedSampleRate is defined and siteSpeedSampleRate is not null %}
+        _gaq.push(['{{ google_analytics.trackerName(key) }}_setSiteSpeedSampleRate', {{ siteSpeedSampleRate }}]);
+    {% endif %}
+
     {% if google_analytics.hasPageViewQueue %}
         {% for pageView in google_analytics.pageViewQueue %}
             _gaq.push(['{{ google_analytics.trackerName(key) }}_trackPageview', '{{ pageView }}']);
@@ -71,10 +76,6 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
         } else {
             _gaq.push(['{{ google_analytics.trackerName(key) }}_trackPageview', '{{ google_analytics.getRequestUri() | raw }}']);
         }
-    {% endif %}
-
-    {% if google_analytics.getTrackPageLoadTime(key) %}
-        _gaq.push(['{{ google_analytics.trackerName(key) }}_trackPageLoadTime']);
     {% endif %}
 
     {% if google_analytics.isTransactionValid %}

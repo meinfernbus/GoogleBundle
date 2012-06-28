@@ -212,9 +212,10 @@ class AnalyticsWebTest extends WebTestCase
         $this->assertEquals('a-different-name', $this->analytics->getTrackerName('default'));
     }
 
-    public function testSetTrackPageLoadTime()
+    public function testSetSiteSpeedSampleRate()
     {
-        $this->analytics->setTrackPageLoadTime('default', true);
-        $this->assertTrue($this->analytics->getTrackPageLoadTime('default'));
+        $this->assertNull($this->analytics->getSiteSpeedSampleRate('default'));
+        $this->analytics->setSiteSpeedSampleRate('default', '6');
+        $this->assertEquals(6, $this->analytics->getSiteSpeedSampleRate('default'));
     }
 }

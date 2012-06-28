@@ -176,23 +176,22 @@ class Analytics
 
     /**
      * @param string $trackerKey
-     * @param boolean $trackPageLoadTime
+     * @param int $siteSpeedSampleRate
      */
-    public function setTrackPageLoadTime($trackerKey, $trackPageLoadTime)
+    public function setSiteSpeedSampleRate($trackerKey, $siteSpeedSampleRate)
     {
-        $this->setTrackerProperty($trackerKey, 'trackPageLoadTime', $trackPageLoadTime);
+        $this->setTrackerProperty($trackerKey, 'setSiteSpeedSampleRate', $siteSpeedSampleRate);
     }
 
     /**
      * @param string $trackerKey
-     * @return boolean $trackPageLoadTime (default:false)
+     * @return int $siteSpeedSampleRate (default:null)
      */
-    public function getTrackPageLoadTime($trackerKey)
+    public function getSiteSpeedSampleRate($trackerKey)
     {
-        if (null === ($property = $this->getTrackerProperty($trackerKey, 'trackPageLoadTime'))) {
-            return false;
+        if (null != ($property = $this->getTrackerProperty($trackerKey, 'setSiteSpeedSampleRate'))) {
+            return (int) $property;
         }
-        return $property;
     }
 
     /**
