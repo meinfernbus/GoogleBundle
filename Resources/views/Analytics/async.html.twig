@@ -4,7 +4,7 @@ AntiMattr.GoogleAnalytics = {};
 
 AntiMattr.GoogleAnalytics.onGatLoad = function(callback) {
     if (typeof _gat != "undefined") {
-		callback();
+        callback();
     } else {
         var listener = this;
         setTimeout(function(){
@@ -16,10 +16,10 @@ AntiMattr.GoogleAnalytics.onGatLoad = function(callback) {
 AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, label, value) {
     var event = [tracker + '_trackEvent', category, action];
     if (typeof label != 'undefined') {
-	    event.push(label);
-	    if (typeof value != 'undefined') {
-		    event.push(value);
-	    }
+        event.push(label);
+        if (typeof value != 'undefined') {
+            event.push(value);
+        }
     }
     _gaq.push(event);
 };
@@ -107,7 +107,7 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
         _gaq.push(['{{ google_analytics.trackerName(key) }}_trackTrans']);
 
     {% endif %}
-    
+
     {% if google_analytics.hasEventQueue %}
         AntiMattr.GoogleAnalytics.onGatLoad(function() {
         {% for event in google_analytics.eventQueue %}
