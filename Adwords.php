@@ -31,7 +31,7 @@ class Adwords
         if (array_key_exists($key, $this->conversions)) {
             $session->set(self::CONVERSION_KEY, $key);
             if (!is_null($value)) {
-                $session->set(self::CONVERSION_VALUE, $key);
+                $session->set(self::CONVERSION_VALUE, $value);
             } else {
                 $session->remove(self::CONVERSION_VALUE);
             }
