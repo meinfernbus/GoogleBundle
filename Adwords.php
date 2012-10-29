@@ -7,7 +7,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Adwords
 {
-    const CONVERSION_KEY = 'google_adwords/conversion';
+    const CONVERSION_KEY   = 'google_adwords/conversion';
+    const CONVERSION_VALUE = 'google_adwords/conversion_value';
 
     private $activeConversion;
     private $container;
@@ -21,11 +22,19 @@ class Adwords
 
     /**
      * @param string $key
+     * @param float  $value
      */
-    public function activateConversionByKey($key)
+    public function activateConversionByKey($key, $value = null)
     {
+        /** @var $session \Symfony\Component\HttpFoundation\Session */
+        $session = $this->container->get('session');
         if (array_key_exists($key, $this->conversions)) {
-            $this->container->get('session')->set(self::CONVERSION_KEY, $key);
+            $session->set(self::CONVERSION_KEY, $key);
+            if (!is_null($value)) {
+                $session->set(self::CONVERSION_VALUE, $key);
+            } else {
+                $session->remove(self::CONVERSION_VALUE);
+            }
         }
     }	
 
@@ -34,10 +43,15 @@ class Adwords
      */
     public function getActiveConversion()
     {
+        /** @var $session \Symfony\Component\HttpFoundation\Session */
+        $session = $this->container->get('session');
         if ($this->hasActiveConversion()) {
-            $key = $this->container->get('session')->get(self::CONVERSION_KEY);
-            $this->container->get('session')->remove(self::CONVERSION_KEY);
+            $key = $session->get(self::CONVERSION_KEY);
+            $session->remove(self::CONVERSION_KEY);
             $config = $this->conversions[$key];
+            if ($session->has(self::CONVERSION_VALUE)) {
+                $config['value'] = $session->get(self::CONVERSION_VALUE);
+            }
             $this->activeConversion = new Conversion($config['id'], $config['label'], $config['value']);
         }
         return $this->activeConversion;
