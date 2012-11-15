@@ -7,12 +7,14 @@ class Conversion
     private $id;
     private $label;
     private $value;
+    private $remarketing;
 
-    public function __construct($id, $label, $value)
+    public function __construct($id, $label, $value, $remarketing = false)
     {
         $this->id = $id;
         $this->label = $label;
         $this->value = $value;
+        $this->remarketing = $remarketing;
     }
 
     public function getId()
@@ -28,5 +30,10 @@ class Conversion
     public function getValue()
     {
         return $this->value;
+    }
+
+    public function getRemarketing()
+    {
+        return $this->remarketing;
     }
 }
