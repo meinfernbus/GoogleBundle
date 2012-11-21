@@ -7,18 +7,22 @@ to your application. These include Google Analytics, Adwords and Static Maps.
 
 ### Initialize Submodule
 
+```shell
     git submodule add git@github.com:antimattr/GoogleBundle.git src/AntiMattr/GoogleBundle
+```
 
 ### Application Kernel
 
 Add GoogleBundle to the `registerBundles()` method of your application kernel:
 
+```php
     public function registerBundles()
     {
         return array(
             new AntiMattr\GoogleBundle\GoogleBundle(),
         );
     }
+```
 
 ## Configuration
 
@@ -29,6 +33,7 @@ Add GoogleBundle to the `registerBundles()` method of your application kernel:
 Enable loading of the Google Analytics service by adding the following to
 the application's `config.yml` file:
 
+```yaml
     google:
         analytics:
             trackers:
@@ -37,6 +42,7 @@ the application's `config.yml` file:
                     accountId: UA-xxxx-x
                     domain:    .mydomain.com
                     trackPageLoadTime: true
+```
 
 #### View
 
@@ -44,7 +50,9 @@ Include the Google Analytics Async template in the `head` tag or just before the
 
 With twig:
 
+```twig
     {% include "GoogleBundle:Analytics:async.html.twig" %}
+```
 
 #### Features
 
@@ -54,17 +62,22 @@ With twig:
 
 ##### Sending a Custom Page View
 
+```php
     $this->container()->get('google.analytics')->setCustomPageView('/profile/'.$username);
+```
 
 ##### Adding to Page View Queue
 
 Note: Page View Queue is always executed before a Custom Page View
 
+```php
     $this->container()->get('google.analytics')->enqueuePageView('/my-first-page-view-in-queue');
     $this->container()->get('google.analytics')->enqueuePageView('/my-second-page-view-in-queue');
+```
 
 ##### Ecommerce Tracking
 
+```php
     $transaction = new \AntiMattr\GoogleBundle\Analytics\Transaction();
     $transaction->setOrderNumber('xxxx');
     $transaction->setAffiliation('Store 777');
@@ -93,6 +106,7 @@ Note: Page View Queue is always executed before a Custom Page View
     $item->setPrice(25.00);
     $item->setQuantity(2);
     $this->get('google.analytics')->addItem($item);
+```
 
 ### Google Adwords
 
@@ -101,6 +115,7 @@ Note: Page View Queue is always executed before a Custom Page View
 Enable loading of the Google Adwords service by adding the following to
 the applications's `config.yml` file:
 
+```yaml
     google:
         adwords:
             conversions:
@@ -112,47 +127,63 @@ the applications's `config.yml` file:
                     id:    222222
                     label: checkoutThanksLabel
                     value: 0
+```
 
 #### Controller
 
+```php
     $this->get('google.adwords')->activateConversionByKey('account_create');
+```
 
 #### View
 
 Include the Google Adwords tracking template like this
 
+```twig
     {% include "GoogleBundle:Adwords:track.html.twig" %}
+```
 
 ### Google Maps - Static Map
 
 #### Application config.yml
 
 Enable loading of the Google Maps Static service by adding the following to
-the applications's `config.yml` file (The static service does NOT require an API Key):
+the applications's `config.yml` file:
 
-    google:
-        maps: ~
+```yaml
+google:
+    maps:
+        config:
+            key: YOUR-API-KEY-FROM-GOOGLE
+```
+
+Get your key at https://code.google.com/apis/console/
 
 #### Controller
 
+```php
     use AntiMattr\GoogleBundle\Maps\StaticMap;
     use AntiMattr\GoogleBundle\Maps\Marker;
 
     ...
 
-    $map = new StaticMap();
+    /** @var \AntiMattr\GoogleBundle\MapsManager $googleContainer */
+    $googleContainer = $this->container->get('google.maps');
+    $map = $googleContainer->createStaticMap();
     $map->setId("Paul");
     $map->setSize("512x512");
     $marker = new Marker();
     $marker->setLatitude(40.596631);
     $marker->setLongitude(-73.972359);
     $map->addMarker($marker);
-    $this->container->get('google.maps')->addMap($map);
+    $googleContainer->addMap($map);
+```
 
 #### View
 
 Include the Google Maps in your template like this:
 
+```twig
     {% if google_maps.hasMaps() %}
 		{% for map in google_maps.getMaps() %}
 			{% autoescape false %}
@@ -160,3 +191,4 @@ Include the Google Maps in your template like this:
 			{% endautoescape %}
 		{% endfor %}
 	{% endif %}
+```
