@@ -7,7 +7,7 @@ to your application. These include Google Analytics, Adwords and Static Maps.
 
 ### Initialize Submodule
 
-```shell
+```sh
     git submodule add git@github.com:antimattr/GoogleBundle.git src/AntiMattr/GoogleBundle
 ```
 
@@ -123,10 +123,17 @@ the applications's `config.yml` file:
                     id:    111111
                     label: accountCreateLabel
                     value: 0
+                    remarketing: false
                 checkout_thanks:
                     id:    222222
                     label: checkoutThanksLabel
                     value: 0
+                    remarketing: false
+                remarketing:
+                    id:    333333
+                    label: "google-assigned-remarketing-label"
+                    value: 0
+                    remarketing: true
 ```
 
 #### Controller
