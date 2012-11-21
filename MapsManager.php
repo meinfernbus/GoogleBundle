@@ -49,6 +49,16 @@ class MapsManager
         $this->maps[] = $map;
     }
 
+    public function createStaticMap()
+    {
+        $map = new Maps\StaticMap();
+        if (isset($this->config['key'])) {
+            $map->setKey($this->config['key']);
+        }
+
+        return $map;
+    }
+
     public function removeMap(MapInterface $map)
     {
         if (!$this->hasMap($map)) {

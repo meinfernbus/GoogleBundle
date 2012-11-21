@@ -30,6 +30,11 @@ class StaticMap extends AbstractMap
         $this->meta['center'] = (string) $center;
     }
 
+    public function setKey($key)
+    {
+        $this->meta['key'] = (string) $key;
+    }
+
     public function getCenter()
     {
         if (array_key_exists('center', $this->meta)) {
