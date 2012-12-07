@@ -116,7 +116,7 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
                 , '{{ event.category }}'
                 , '{{ event.action }}'
                 {% if event.label is not null %}, '{{ event.label }}'{% endif %}
-                {% if event.value is not null %}, '{{ event.value }}'{% endif %}
+                {% if event.value is not null %}, {{ event.value }}{% endif %}
             );
         {% endfor %}
         });
