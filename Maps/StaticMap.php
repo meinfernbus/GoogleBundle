@@ -6,6 +6,8 @@ class StaticMap extends AbstractMap
 {
     const API_ENDPOINT = 'http://maps.google.com/maps/api/staticmap?';
     const TYPE_ROADMAP = 'roadmap';
+    const CACHE_DIR = 'maps/';
+    const SUFFIX = '.png';
 
     protected $height;
     protected $width;
@@ -124,12 +126,18 @@ class StaticMap extends AbstractMap
 
     public function render()
     {
-        $request  = static::API_ENDPOINT;
+        $prefix  = static::API_ENDPOINT;
+        $request = '';
+        $cachePrefix = 'http://';
+        if (!empty($_SERVER['SERVER_NAME'])) {
+            $cachePrefix .= $_SERVER['SERVER_NAME'];
+        }
 
         // Using router object would be better, but as this is a static class...
         // Checks according to php manual, regarding IIS
         if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
-            $request = 'https' . substr($request, 4);
+            $prefix = 'https' . substr($prefix, 4);
+            $cachePrefix = 'https' . substr($cachePrefix, 4);
         }
 
         if ($this->hasMeta()) {
@@ -156,10 +164,43 @@ class StaticMap extends AbstractMap
                 if ($longitude = $marker->getLongitude()) {
                     $request .= ','.$longitude;
                 }
-            }	
+            }
         }
         $request = rtrim($request, "& ");
+
+        $targetFile = str_replace(array('.',',','|','|',':','=','&'), '_', $request);
+
+        if (!is_dir($this->getUploadRootDir())) {
+            mkdir($this->getUploadRootDir());
+        }
+        if (is_dir($this->getUploadRootDir())) {
+            $targetFilePath = $this->getAbsolutePath($targetFile);
+            if (!file_exists($targetFilePath) || (filemtime($targetFilePath) + 86400) < time()) {
+                file_put_contents($targetFilePath, file_get_contents($prefix . $request));
+                $request = $cachePrefix . $this->getWebPath($targetFile);
+            } else {
+                $request = $cachePrefix . $this->getWebPath($targetFile);
+            }
+        } else {
+            $request = $prefix . $request;
+        }
         $out = '<img id="'.$this->getId().'" src="'.$request.'" />';
+
         return $out;
+    }
+
+    protected function getAbsolutePath($filename)
+    {
+        return $this->getUploadRootDir() . $filename . self::SUFFIX;
+    }
+
+    protected function getWebPath($filename)
+    {
+        return '/' . self::CACHE_DIR . $filename . self::SUFFIX;
+    }
+
+    protected function getUploadRootDir()
+    {
+        return __DIR__ . '/../../../../../web/' . self::CACHE_DIR;
     }
 }
