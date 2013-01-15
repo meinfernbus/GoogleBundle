@@ -139,20 +139,23 @@ class StaticMap extends AbstractMap
             $prefix = 'https' . substr($prefix, 4);
             $cachePrefix = 'https' . substr($cachePrefix, 4);
         }
-
+        $queryData = array();
         if ($this->hasMeta()) {
-            foreach ($this->getMeta() as $key => $val) {
-                $request .= $key.'='.$val.'&';
-            }
+            $queryData = $this->getMeta();
         }
-        if ($this->getSensor()) {
-            $request .= 'sensor=true&';
+        $queryData['sensor'] = ((bool)$this->getSensor()) ? 'true' : 'false';
+
+        if (isset($queryData['key'])) {
+            $apiKey = $queryData['key'];
+            unset($queryData['key']);
         } else {
-            $request .= 'sensor=false&';
+            $apiKey = '';
         }
+        $request .= http_build_query($queryData);
+
         if ($this->hasMarkers()) {
             foreach ($this->getMarkers() as $marker) {
-                $request .= 'markers=';
+                $request .= '&markers=';
                 if ($marker->hasMeta()) {
                     foreach ($marker->getMeta() as $mkey => $mval) {
                         $request .= $mkey.':'.$mval.'|';
@@ -166,9 +169,9 @@ class StaticMap extends AbstractMap
                 }
             }
         }
-        $request = rtrim($request, "& ");
 
         $targetFile = str_replace(array('.',',','|','|',':','=','&'), '_', $request);
+        $request .= $apiKey . '=' . $apiKey;
 
         if (!is_dir($this->getUploadRootDir())) {
             mkdir($this->getUploadRootDir());
