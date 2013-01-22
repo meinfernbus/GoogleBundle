@@ -171,7 +171,7 @@ class StaticMap extends AbstractMap
         }
 
         $targetFile = str_replace(array('.',',','|','|',':','=','&'), '_', $request);
-        $request .= $apiKey . '=' . $apiKey;
+        $request .= '&key' . '=' . $apiKey;
 
         if (!is_dir($this->getUploadRootDir())) {
             mkdir($this->getUploadRootDir());
