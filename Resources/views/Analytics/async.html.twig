@@ -72,9 +72,9 @@ if ( _gaq == null || typeof(_gaq) != 'array') { var _gaq = window._gaq = []; }
         _gaq.push(['{{ google_analytics.trackerName(key) }}_trackPageview', '{{ google_analytics.getCustomPageView() | raw }}']);
     {% else %}
         if (window.location.hash) {
-            _gaq.push(['{{ google_analytics.trackerName(key) }}_trackPageview', '{{ google_analytics.getRequestUri() | raw }}'+window.location.hash]);
+            _gaq.push(['{{ google_analytics.trackerName(key) }}_trackPageview', '{{ google_analytics.getRequestUri() | json_encode | raw }}'+window.location.hash]);
         } else {
-            _gaq.push(['{{ google_analytics.trackerName(key) }}_trackPageview', '{{ google_analytics.getRequestUri() | raw }}']);
+            _gaq.push(['{{ google_analytics.trackerName(key) }}_trackPageview', '{{ google_analytics.getRequestUri() | json_encode |raw }}']);
         }
     {% endif %}
 
