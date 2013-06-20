@@ -38,6 +38,16 @@ class AnalyticsWebTest extends WebTestCase
         $this->assertEquals(1, count($this->analytics->getTrackers()));
         $this->assertTrue($this->analytics->getAllowLinker('default'));
         $this->assertFalse($this->analytics->getAllowHash('default'));
+        $this->assertTrue($this->analytics->getIncludeNamePrefix('default'));
+        $this->assertTrue(0 < strlen($this->analytics->getTrackerName('default')));
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testExpectedInvalidArgumentException()
+    {
+        $this->analytics->getAllowLinker('not-a-tracker');
     }
 
     public function testSetGetCustomPageView()
@@ -172,6 +182,12 @@ class AnalyticsWebTest extends WebTestCase
         $this->assertEquals(2, count($this->analytics->getItems()));
     }
 
+    public function testSetAllowAnchor()
+    {
+        $this->analytics->setAllowAnchor('default', false);
+        $this->assertFalse($this->analytics->getAllowAnchor('default'));
+    }
+
     public function testSetAllowHash()
     {
         $this->analytics->setAllowHash('default', true);
@@ -184,9 +200,22 @@ class AnalyticsWebTest extends WebTestCase
         $this->assertFalse($this->analytics->getAllowLinker('default'));
     }
 
-    public function testSetTrackPageLoadTime()
+    public function testSetIncludeNamePrefix()
     {
-        $this->analytics->setTrackPageLoadTime('default', true);
-        $this->assertTrue($this->analytics->getTrackPageLoadTime('default'));
+        $this->analytics->setIncludeNamePrefix('default', false);
+        $this->assertFalse($this->analytics->getIncludeNamePrefix('default'));
+    }
+
+    public function testSetTrackerName()
+    {
+        $this->analytics->setTrackerName('default', 'a-different-name');
+        $this->assertEquals('a-different-name', $this->analytics->getTrackerName('default'));
+    }
+
+    public function testSetSiteSpeedSampleRate()
+    {
+        $this->assertNull($this->analytics->getSiteSpeedSampleRate('default'));
+        $this->analytics->setSiteSpeedSampleRate('default', '6');
+        $this->assertEquals(6, $this->analytics->getSiteSpeedSampleRate('default'));
     }
 }

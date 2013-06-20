@@ -21,6 +21,11 @@ class AnalyticsHelper extends Helper
         $this->sourceEndpoint = $sourceEndpoint;
     }
 
+    public function getAllowAnchor($trackerKey)
+    {
+        return $this->analytics->getAllowAnchor($trackerKey);
+    }
+
     public function getAllowHash($trackerKey)
     {
         return $this->analytics->getAllowHash($trackerKey);
@@ -31,9 +36,17 @@ class AnalyticsHelper extends Helper
         return $this->analytics->getAllowLinker($trackerKey);
     }
 
-    public function getTrackPageLoadTime($trackerKey)
+    public function getTrackerName($trackerKey)
     {
-        return $this->analytics->getTrackPageLoadTime($trackerKey);
+        if ($this->analytics->getIncludeNamePrefix($trackerKey)) {
+            return $this->analytics->getTrackerName($trackerKey).'.';
+        }
+        return "";
+    }
+
+    public function getSiteSpeedSampleRate($trackerKey)
+    {
+        return $this->analytics->getSiteSpeedSampleRate($trackerKey);
     }
 
     public function getAnonymizeIp($trackerKey)
@@ -114,6 +127,21 @@ class AnalyticsHelper extends Helper
     public function getTrackers(array $trackers = array())
     {
         return $this->analytics->getTrackers($trackers);
+    }
+    
+    public function getApiKey()
+    {
+        return $this->analytics->getApiKey();
+    }
+    
+    public function getClientId()
+    {
+        return $this->analytics->getClientId();
+    }
+    
+    public function getTableId()
+    {
+        return $this->analytics->getTableId();
     }
 
     public function isTransactionValid()
