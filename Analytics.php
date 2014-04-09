@@ -459,6 +459,9 @@ class Analytics
      */
     private function has($key)
     {
+        if(!$this->container->get('session')->isStarted())
+            return false;
+
         $bucket = $this->container->get('session')->get($key, array());
         return !empty($bucket);
     }
