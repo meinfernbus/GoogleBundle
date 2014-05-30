@@ -42,6 +42,7 @@ the application's `config.yml` file:
                     accountId: UA-xxxx-x
                     domain:    .mydomain.com
                     trackPageLoadTime: true
+                    anonymizeIp: false
 ```
 
 #### View
