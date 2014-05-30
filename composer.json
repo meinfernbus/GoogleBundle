@@ -1,18 +1,26 @@
 {
-    "name": "antimattr/google-bundle",
-    "description": "The GoogleBundle adds the ability to add various google-related services to your application. These include Google Analytics, Adwords and Static Maps.",
-    "keywords": ["google", "analytics", "adwords", "maps"],
+    "name": "meinfernbus/google-bundle",
+    "description": "Fork of AntiMattr GoogleBundle. Static Google maps with caching, Adwords with remarketing & lots of other fixes.",
+    "keywords": ["google", "analytics", "adwords", "maps", "antimattr"],
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
         {
             "name":     "antimattr",
             "homepage": "https://github.com/antimattr"
+        },
+        {
+            "name":     "EricReiche",
+            "homepage": "https://github.com/EricReiche"
+        },
+        {
+            "name":     "MeinFernbus",
+            "homepage": "https://github.com/MeinFernbus"
         }
     ],
     "require": {
         "php":             ">=5.3.0",
-        "symfony/symfony": ">=2.0"
+        "symfony/symfony": ">=2.1"
     },
     "autoload": {
         "psr-0": {
