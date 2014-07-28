@@ -8,10 +8,12 @@ class StaticMap extends AbstractMap
     const TYPE_ROADMAP = 'roadmap';
     const CACHE_DIR    = 'maps/';
     const SUFFIX       = '.png';
+    const DEFAULT_ALT = 'Google map';
+
 
     protected $height;
     protected $width;
-    protected $imgAlt = '';
+    protected $imgAlt = null;
     protected $sensor = false;
 
     static protected $typeChoices = array(
@@ -127,6 +129,10 @@ class StaticMap extends AbstractMap
 
     public function getImgAlt()
     {
+        if (null === $this->imgAlt) {
+            return self::DEFAULT_ALT;
+        }
+
         return $this->imgAlt;
     }
 
@@ -203,10 +209,10 @@ class StaticMap extends AbstractMap
         }
 
         $out = sprintf(
-            '<img id="%d" src="%s" %s />',
+            '<img id="%d" src="%s" alt="%s" />',
             $this->getId(),
             $request,
-            $this->imgAlt == '' ? '' : 'alt="' . $this->imgAlt .'"'
+            $this->getImgAlt()
         );
 
         return $out;
