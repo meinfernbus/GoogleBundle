@@ -10,7 +10,6 @@ class StaticMap extends AbstractMap
     const SUFFIX       = '.png';
     const DEFAULT_ALT = 'Google map';
 
-
     protected $height;
     protected $width;
     protected $imgAlt = null;
