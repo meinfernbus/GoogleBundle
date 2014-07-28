@@ -6,11 +6,12 @@ class StaticMap extends AbstractMap
 {
     const API_ENDPOINT = 'http://maps.google.com/maps/api/staticmap?';
     const TYPE_ROADMAP = 'roadmap';
-    const CACHE_DIR = 'maps/';
-    const SUFFIX = '.png';
+    const CACHE_DIR    = 'maps/';
+    const SUFFIX       = '.png';
 
     protected $height;
     protected $width;
+    protected $imgAlt = '';
     protected $sensor = false;
 
     static protected $typeChoices = array(
@@ -64,6 +65,7 @@ class StaticMap extends AbstractMap
         return $this->sensor;
     }
 
+
     public function setSize($size)
     {
         $arr = explode('x', $size);
@@ -82,15 +84,15 @@ class StaticMap extends AbstractMap
             return $this->meta['size'];
         }
         if (($height = $this->getHeight()) && ($width = $this->getWidth())) {
-            return $width.'x'.$height;
+            return $width . 'x' . $height;
         }
     }
 
     public function setType($type)
     {
         $type = (string) $type;
-        if (FALSE === $this->isTypeValid($type)) {
-            throw new \InvalidArgumentException($type.' is not a valid Static Map Type.');
+        if (false === $this->isTypeValid($type)) {
+            throw new \InvalidArgumentException($type . ' is not a valid Static Map Type.');
         }
         $this->meta['type'] = $type;
     }
@@ -124,10 +126,20 @@ class StaticMap extends AbstractMap
         }
     }
 
+    public function getImgAlt()
+    {
+        return $this->imgAlt;
+    }
+
+    public function setImgAlt($imgAlt)
+    {
+        $this->imgAlt = $imgAlt;
+    }
+
     public function render()
     {
-        $prefix  = static::API_ENDPOINT;
-        $request = '';
+        $prefix      = static::API_ENDPOINT;
+        $request     = '';
         $cachePrefix = 'http://';
         if (!empty($_SERVER['SERVER_NAME'])) {
             $cachePrefix .= $_SERVER['SERVER_NAME'];
@@ -136,14 +148,14 @@ class StaticMap extends AbstractMap
         // Using router object would be better, but as this is a static class...
         // Checks according to php manual, regarding IIS
         if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
-            $prefix = 'https' . substr($prefix, 4);
+            $prefix      = 'https' . substr($prefix, 4);
             $cachePrefix = 'https' . substr($cachePrefix, 4);
         }
         $queryData = array();
         if ($this->hasMeta()) {
             $queryData = $this->getMeta();
         }
-        $queryData['sensor'] = ((bool)$this->getSensor()) ? 'true' : 'false';
+        $queryData['sensor'] = ((bool) $this->getSensor()) ? 'true' : 'false';
 
         if (isset($queryData['key'])) {
             $apiKey = $queryData['key'];
@@ -158,24 +170,24 @@ class StaticMap extends AbstractMap
                 $request .= '&markers=';
                 if ($marker->hasMeta()) {
                     foreach ($marker->getMeta() as $mkey => $mval) {
-                        $request .= $mkey.':'.$mval.'|';
+                        $request .= $mkey . ':' . $mval . '|';
                     }
                 }
                 if ($latitude = $marker->getLatitude()) {
                     $request .= $latitude;
                 }
                 if ($longitude = $marker->getLongitude()) {
-                    $request .= ','.$longitude;
+                    $request .= ',' . $longitude;
                 }
             }
         }
 
-        $targetFile = str_replace(array('.',',','|','|',':','=','&'), '_', $request);
+        $targetFile = str_replace(array('.', ',', '|', '|', ':', '=', '&'), '_', $request);
         if (!empty($apiKey)) {
             $request .= '&key' . '=' . $apiKey;
         }
 
-	//var_dump('rootDir: ', $this->getUploadRootDir());die;
+        //var_dump('rootDir: ', $this->getUploadRootDir());die;
         if (!is_dir($this->getUploadRootDir())) {
             mkdir($this->getUploadRootDir());
         }
@@ -190,7 +202,13 @@ class StaticMap extends AbstractMap
         } else {
             $request = $prefix . $request;
         }
-        $out = '<img id="'.$this->getId().'" src="'.$request.'" />';
+
+        $out = sprintf(
+            '<img id="%d" src="%s" %s />',
+            $this->getId(),
+            $request,
+            $this->imgAlt == '' ? '' : 'alt="' . $this->imgAlt .'"'
+        );
 
         return $out;
     }
