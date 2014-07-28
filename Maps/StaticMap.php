@@ -65,7 +65,6 @@ class StaticMap extends AbstractMap
         return $this->sensor;
     }
 
-
     public function setSize($size)
     {
         $arr = explode('x', $size);
