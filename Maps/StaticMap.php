@@ -186,7 +186,7 @@ class StaticMap extends AbstractMap
             }
         }
 
-        $targetFile = str_replace(array('.', ',', '|', '|', ':', '=', '&'), '_', $request);
+        $targetFile = str_replace(array('.', ',', '|', '|', ':', '=', '&', '/', '?'), '_', $request);
         if (!empty($apiKey)) {
             $request .= '&key' . '=' . $apiKey;
         }
