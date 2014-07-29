@@ -8,7 +8,7 @@ class StaticMap extends AbstractMap
     const TYPE_ROADMAP = 'roadmap';
     const CACHE_DIR    = 'maps/';
     const SUFFIX       = '.png';
-    const DEFAULT_ALT = 'Google map';
+    const DEFAULT_ALT  = 'Google map';
 
     protected $height;
     protected $width;
@@ -186,7 +186,7 @@ class StaticMap extends AbstractMap
             }
         }
 
-        $targetFile = str_replace(array('.', ',', '|', '|', ':', '=', '&'), '_', $request);
+        $targetFile = str_replace(array('.', ',', '|', '|', ':', '=', '&', '/', '?'), '_', $request);
         if (!empty($apiKey)) {
             $request .= '&key' . '=' . $apiKey;
         }

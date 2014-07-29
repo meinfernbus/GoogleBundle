@@ -20,6 +20,18 @@ class Marker
         }
     }
 
+    public function setIcon($icon)
+    {
+        $this->meta['icon'] = (string) $icon;
+    }
+
+    public function getIcon()
+    {
+        if (array_key_exists('icon', $this->meta)) {
+            return $this->meta['icon'];
+        }
+    }
+
     public function setLabel($label)
     {
         $this->meta['label'] = (string) $label;
