@@ -47,7 +47,7 @@
 
         {% if google_analytics.hasEventQueue %}
             {% for event in google_analytics.eventQueue %}
-                ga('{{ google_analytics.trackerName(key) }}send', 'event', '{{ event.category }}', '{{ event.action }}'{% if event.label is not null %}, '{{ event.label }}'{% if event.value is not null %}, {{ event.value }}{% endif %}{% endif %}{% if event.options is not empty %}, {{ json_encode(event.options) }}{% endif %});
+                ga('{{ google_analytics.trackerName(key) }}send', 'event', '{{ event.category }}', '{{ event.action }}'{% if event.label is not null %}, '{{ event.label }}'{% if event.value is not null %}, {{ event.value }}{% endif %}{% endif %}{% if event.options is not empty %}, {{ event.options|json_encode|raw }}{% endif %});
             {% endfor %}
         {% endif %}
     {% endfor %}
