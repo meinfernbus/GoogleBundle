@@ -5,51 +5,51 @@
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
     {% for key, tracker in google_analytics.trackers %}
-    ga('create', '{{ tracker.accountId }}', '{{ tracker.domain }}', {'name': '{{ google_analytics.trackerName(key)|trim('.') }}'});
-    ga('{{ google_analytics.trackerName(key) }}require', 'displayfeatures');
-    ga('{{ google_analytics.trackerName(key) }}send', 'pageview');
-    ga('{{ google_analytics.trackerName(key) }}set', 'anonymizeIp', {% if tracker.anonymizeIp %}true{% else %}false{% endif %});
+        ga('create', '{{ tracker.accountId }}', '{{ tracker.domain }}', {'name': '{{ google_analytics.trackerName(key)|trim('.') }}'});
+        ga('{{ google_analytics.trackerName(key) }}require', 'displayfeatures');
+        ga('{{ google_analytics.trackerName(key) }}send', 'pageview');
+        ga('{{ google_analytics.trackerName(key) }}set', 'anonymizeIp', {% if tracker.anonymizeIp %}true{% else %}false{% endif %});
 
-    {% if google_analytics.hasCustomVariables %}
-    {% for customVariable in google_analytics.customVariables %}
-    ga('{{ google_analytics.trackerName(key) }}set', 'dimension{{customVariable.index}}', '{{ customVariable.value }}');
-    {% endfor %}
-    {% endif %}
+        {% if google_analytics.hasCustomVariables %}
+            {% for customVariable in google_analytics.customVariables %}
+                ga('{{ google_analytics.trackerName(key) }}set', 'dimension{{customVariable.index}}', '{{ customVariable.value }}');
+            {% endfor %}
+        {% endif %}
 
-    {% if google_analytics.isTransactionValid %}
-    ga('{{ google_analytics.trackerName(key) }}require', 'ecommerce', 'ecommerce.js');
+        {% if google_analytics.isTransactionValid %}
+            ga('{{ google_analytics.trackerName(key) }}require', 'ecommerce', 'ecommerce.js');
 
-    {% set transaction = google_analytics.transaction %}
+            {% set transaction = google_analytics.transaction %}
 
-    ga('{{ google_analytics.trackerName(key) }}ecommerce:addTransaction', {
-        'id': '{{ transaction.orderNumber | escape('js') }}',
-        'affiliation': '{{ transaction.affiliation | escape('js') }}',
-        'revenue': '{{ transaction.total | escape('js') }}',
-        'shipping': '{{ transaction.shipping | escape('js') }}',
-        'tax': '{{ transaction.tax | escape('js') }}'
-    });
+            ga('{{ google_analytics.trackerName(key) }}ecommerce:addTransaction', {
+                'id': '{{ transaction.orderNumber | escape('js') }}',
+                'affiliation': '{{ transaction.affiliation | escape('js') }}',
+                'revenue': '{{ transaction.total | escape('js') }}',
+                'shipping': '{{ transaction.shipping | escape('js') }}',
+                'tax': '{{ transaction.tax | escape('js') }}'
+            });
 
-    {% if google_analytics.hasItems %}
-    {% for item in google_analytics.items %}
-    ga('{{ google_analytics.trackerName(key) }}ecommerce:addItem', {
-        'id': '{{ item.orderNumber | escape('js') }}',
-        'name': '{{ item.name | escape('js') }}',
-        'sku': '{{ item.sku | escape('js') }}',
-        'category': '{{ item.category | escape('js') }}',
-        'price': '{{ item.price | escape('js') }}',
-        'quantity': '{{ item.quantity | escape('js') }}'
-    });
-    {% endfor %}
-    {% endif %}
+            {% if google_analytics.hasItems %}
+                {% for item in google_analytics.items %}
+                    ga('{{ google_analytics.trackerName(key) }}ecommerce:addItem', {
+                        'id': '{{ item.orderNumber | escape('js') }}',
+                        'name': '{{ item.name | escape('js') }}',
+                        'sku': '{{ item.sku | escape('js') }}',
+                        'category': '{{ item.category | escape('js') }}',
+                        'price': '{{ item.price | escape('js') }}',
+                        'quantity': '{{ item.quantity | escape('js') }}'
+                    });
+                {% endfor %}
+            {% endif %}
 
-    ga('{{ google_analytics.trackerName(key) }}ecommerce:send');
-    {% endif %}
+            ga('{{ google_analytics.trackerName(key) }}ecommerce:send');
+        {% endif %}
 
-    {% if google_analytics.hasEventQueue %}
-    {% for event in google_analytics.eventQueue %}
-    ga('{{ google_analytics.trackerName(key) }}send', 'event', '{{ event.category }}', '{{ event.action }}'{% if event.label is not null %}, '{{ event.label }}'{% if event.value is not null %}, {{ event.value }}{% endif %}{% endif %}{% if event.options is not empty %}, {{ json_encode(event.options) }}{% endif %});
-    {% endfor %}
-    {% endif %}
+        {% if google_analytics.hasEventQueue %}
+            {% for event in google_analytics.eventQueue %}
+                ga('{{ google_analytics.trackerName(key) }}send', 'event', '{{ event.category }}', '{{ event.action }}'{% if event.label is not null %}, '{{ event.label }}'{% if event.value is not null %}, {{ event.value }}{% endif %}{% endif %}{% if event.options is not empty %}, {{ json_encode(event.options) }}{% endif %});
+            {% endfor %}
+        {% endif %}
     {% endfor %}
 
 </script>
