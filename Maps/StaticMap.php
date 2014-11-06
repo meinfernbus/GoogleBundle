@@ -140,8 +140,8 @@ class StaticMap extends AbstractMap
         $prefix      = static::API_ENDPOINT;
         $request     = '';
         $cachePrefix = 'http://';
-        if (!empty($_SERVER['SERVER_NAME'])) {
-            $cachePrefix .= $_SERVER['SERVER_NAME'];
+        if (!empty($_SERVER['HTTP_HOST'])) {
+            $cachePrefix .= $_SERVER['HTTP_HOST'];
         }
 
         // Using router object would be better, but as this is a static class...
