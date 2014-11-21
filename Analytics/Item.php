@@ -70,4 +70,44 @@ class Item
     {
         return $this->sku;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'category' => $this->category,
+            'name' => $this->name,
+            'orderNumber' => $this->orderNumber,
+            'price' => $this->price,
+            'quantity' => $this->quantity,
+            'sku' => $this->sku
+        );
+    }
+
+    /**
+     * @param array
+     */
+    public function fromArray(array $data)
+    {
+        if (isset($data['category'])) {
+            $this->category = $data['category'];
+        }
+        if (isset($data['name'])) {
+            $this->name = $data['name'];
+        }
+        if (isset($data['orderNumber'])) {
+            $this->orderNumber = $data['orderNumber'];
+        }        
+        if (isset($data['price'])) {
+            $this->price = $data['price'];
+        }
+        if (isset($data['quantity'])) {
+            $this->quantity = $data['quantity'];
+        }        
+        if (isset($data['sku'])) {
+            $this->sku = $data['sku'];
+        }  
+    }      
 }

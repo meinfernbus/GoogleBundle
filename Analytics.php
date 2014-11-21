@@ -252,7 +252,8 @@ class Analytics
      */
     public function enqueueEvent(Event $event)
     {
-        $this->add(self::EVENT_QUEUE_KEY, $event);
+        $eventArray = $event->toArray();        
+        $this->add(self::EVENT_QUEUE_KEY, $eventArray);
     }
 
     /**
@@ -260,7 +261,19 @@ class Analytics
      */
     public function getEventQueue()
     {
-        return $this->getOnce(self::EVENT_QUEUE_KEY);
+        $eventArray = $this->getOnce(self::EVENT_QUEUE_KEY);
+        $hydratedEvents = array();        
+        foreach ($eventArray as $value) {
+            if (is_object($value)) {
+                $hydratedEvents[] = $value;
+                continue;
+            }
+            $event = new Event();
+            $event->fromArray($value);
+            $hydratedEvents[] = $event;
+        }
+        return $hydratedEvents;
+
     }
 
     /**
@@ -276,7 +289,8 @@ class Analytics
      */
     public function addItem(Item $item)
     {
-        $this->add(self::ITEMS_KEY, $item);
+        $itemArray = $item->toArray();        
+        $this->add(self::ITEMS_KEY, $itemArray);
     }
 
     /**
@@ -305,12 +319,28 @@ class Analytics
      */
     public function setItems($items)
     {
-        $this->container->get('session')->set(self::ITEMS_KEY, $items);
+        $itemsArray = array();
+        foreach ($items as $item) {
+            $itemArray = $item->toArray();
+            $itemsArray[] = $itemArray;
+        }
+        $this->container->get('session')->set(self::ITEMS_KEY, $itemsArray);
     }
 
     public function getItems()
     {
-        return $this->getOnce(self::ITEMS_KEY);
+        $itemArray = $this->getOnce(self::ITEMS_KEY);
+        $hydratedItems = array();        
+        foreach ($itemArray as $value) {
+            if (is_object($value)) {
+                $hydratedItems[] = $value;
+                continue;
+            }
+            $item = new Item();
+            $item->fromArray($value);
+            $hydratedItems[] = $item;
+        }
+        return $hydratedItems;
     }
 
     /**
@@ -439,7 +469,8 @@ class Analytics
      */
     public function setTransaction(Transaction $transaction)
     {
-        $this->container->get('session')->set(self::TRANSACTION_KEY, $transaction);
+        $transactionArray = $transaction->toArray();
+        $this->container->get('session')->set(self::TRANSACTION_KEY, $transactionArray);
     }
 
     /**
@@ -459,9 +490,7 @@ class Analytics
      */
     private function has($key)
     {
-        if(!$this->container->get('session')->isStarted())
-            return false;
-
+        if(!$this->container->get('session')->isStarted()) return false;        
         $bucket = $this->container->get('session')->get($key, array());
         return !empty($bucket);
     }
@@ -491,7 +520,18 @@ class Analytics
      */
     private function getItemsFromSession()
     {
-        return $this->get(self::ITEMS_KEY);
+        $itemArray = $this->get(self::ITEMS_KEY);
+        $hydratedItems = array();        
+        foreach ($itemArray as $value) {
+            if (is_object($value)) {
+                $hydratedItems[] = $value;
+                continue;
+            }
+            $item = new Item();
+            $item->fromArray($value);
+            $hydratedItems[] = $item;
+        }
+        return $hydratedItems;
     }
 
     /**
@@ -499,7 +539,14 @@ class Analytics
      */
     private function getTransactionFromSession()
     {
-        return $this->container->get('session')->get(self::TRANSACTION_KEY);
+        $transactionArray = $this->container->get('session')->get(self::TRANSACTION_KEY);
+        if (empty($transactionArray) || is_object($transactionArray)) {
+            return $transactionArray;
+        }
+
+        $transaction = new Transaction();
+        $transaction->fromArray($transactionArray);
+        return $transaction;
     }
 
     /**
