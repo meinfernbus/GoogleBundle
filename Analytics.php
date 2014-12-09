@@ -19,6 +19,7 @@ class Analytics
     private $container;
     private $customVariables = array();
     private $pageViewsWithBaseUrl = true;
+    private $sessionAutoStarted = false;
     private $trackers;
     private $whitelist;
     private $api_key;
@@ -26,9 +27,10 @@ class Analytics
     private $table_id;
 
     public function __construct(ContainerInterface $container,
-            array $trackers = array(), array $whitelist = array(), array $dashboard = array())
+            array $trackers = array(), array $whitelist = array(), array $dashboard = array(), $sessionAutoStarted = false)
     {
         $this->container = $container;
+        $this->sessionAutoStarted = $sessionAutoStarted;
         $this->trackers = $trackers;
         $this->whitelist = $whitelist;
         $this->api_key = isset($dashboard['api_key']) ? $dashboard['api_key'] : '';
@@ -490,7 +492,10 @@ class Analytics
      */
     private function has($key)
     {
-        if(!$this->container->get('session')->isStarted()) return false;        
+        if(!$this->sessionAutoStarted && !$this->container->get('session')->isStarted()) {
+            return false; 
+        }
+        
         $bucket = $this->container->get('session')->get($key, array());
         return !empty($bucket);
     }
