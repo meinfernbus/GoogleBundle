@@ -4,6 +4,7 @@
 
     <parameters>
         <parameter key="google.analytics.dashboard" type="collection" />
+        <parameter key="google.analytics.session_auto_started">false</parameter>   
         <parameter key="google.analytics.trackers" type="collection" />
         <parameter key="google.analytics.whitelist" type="collection" />
         <parameter key="google.analytics.js_source_https">https://ssl</parameter>
@@ -17,6 +18,7 @@
             <argument>%google.analytics.trackers%</argument>
             <argument>%google.analytics.whitelist%</argument>
             <argument>%google.analytics.dashboard%</argument>
+            <argument>%google.analytics.session_auto_started%</argument>
         </service>
 
         <service id="templating.helper.google_analytics" class="AntiMattr\GoogleBundle\Helper\AnalyticsHelper">

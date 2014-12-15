@@ -12,12 +12,12 @@ class Event
     private $label;
     private $value;
 
-    public function __construct($category, $action, $label = null, $value = null)
+    public function __construct($category = null, $action = null, $label = null, $value = null)
     {
-    	$this->action   = $action;
-    	$this->category = $category;
-    	$this->label    = $label;
-    	$this->value    = $value;
+        $this->action   = $action;
+        $this->category = $category;
+        $this->label    = $label;
+        $this->value    = $value;
     }
 
     /**
@@ -50,5 +50,37 @@ class Event
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'action' => $this->action,
+            'category' => $this->category,
+            'label' => $this->label,
+            'value' => $this->value
+        );
+    }
+
+    /**
+     * @param array
+     */
+    public function fromArray(array $data)
+    {
+        if (isset($data['action'])) {
+            $this->action = $data['action'];
+        }        
+        if (isset($data['category'])) {
+            $this->category = $data['category'];
+        }
+        if (isset($data['label'])) {
+            $this->label = $data['label'];
+        }
+        if (isset($data['value'])) {
+            $this->value = $data['value'];
+        }
     }
 }
