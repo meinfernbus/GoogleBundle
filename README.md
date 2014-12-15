@@ -1,42 +1,63 @@
-# GoogleBundle
+GoogleBundle
+============
 
-The GoogleBundle adds the ability to add various google-related services
-to your application. These include Google Analytics, Adwords and Static Maps.
+The GoogleBundle adds the ability to add various Google services to your application.
+These include Google Analytics, Adwords and Static Maps.
 
-## Installation
+Installation
+============
 
-### Initialize Submodule
+Add the following to your composer.json file:
 
-    git submodule add git@github.com:antimattr/GoogleBundle.git src/AntiMattr/GoogleBundle
-
-### Application Kernel
-
-Add GoogleBundle to the `registerBundles()` method of your application kernel:
-
-    public function registerBundles()
-    {
-        return array(
-            new AntiMattr\GoogleBundle\GoogleBundle(),
-        );
+```json
+{
+    "require": {
+        "antimattr/google-bundle": "~1.0@stable"
     }
+}
+```
 
-## Configuration
+Install the libraries by running:
 
-### Google Analytics
+```bash
+composer install
+```
 
-#### Application config.yml
+If everything worked, the Content MongoDB Bundle can now be found at vendor/antimattr/google-bundle.
 
-Enable loading of the Google Analytics service by adding the following to
-the application's `config.yml` file:
+Finally, be sure to enable the bundle in AppKernel.php by including the following:
 
-    google:
-        analytics:
-            trackers:
-                default:
-                    name:      MyJavaScriptCompatibleVariableNameWithNoSpaces
-                    accountId: UA-xxxx-x
-                    domain:    .mydomain.com
-                    trackPageLoadTime: true
+```php
+// app/AppKernel.php
+public function registerBundles()
+{
+    $bundles = array(
+        //...
+        new AntiMattr\GoogleBundle\GoogleBundle(),
+    );
+}
+```
+
+Configuration
+=============
+
+Google Analytics
+
+```yaml
+google:
+    analytics:
+        session_auto_started: true
+        trackers:
+            shop:
+                name: MyJavaScriptCompatibleVariableNameWithNoSpaces
+                accountId: UA-xxxxxx-xx
+                domain: .mdomain.com
+                setSiteSpeedSampleRate: 5
+                allowAnchor: true
+                allowHash: true
+                includeNamePrefix: false
+        whitelist: [ 'q', 'utm_source', 'utm_medium', 'utm_term', 'utm_content', 'utm_campaign' ]
+```
 
 #### View
 
