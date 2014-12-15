@@ -9,7 +9,7 @@ class CustomVariable
     private $value;
     private $scope = 1;
 
-    public function __construct($index, $name, $value, $scope = 1)
+    public function __construct($index = null, $name = null, $value = null, $scope = 1)
     {
         $this->index = $index;
         $this->name = $name;
@@ -36,4 +36,36 @@ class CustomVariable
     {
         return $this->scope;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'index' => $this->index,
+            'name' => $this->name,
+            'value' => $this->value,
+            'scope' => $this->scope
+        );
+    }
+
+    /**
+     * @param array
+     */
+    public function fromArray(array $data)
+    {
+        if (isset($data['index'])) {
+            $this->index = $data['index'];
+        }
+        if (isset($data['name'])) {
+            $this->name = $data['name'];
+        }
+        if (isset($data['value'])) {
+            $this->value = $data['value'];
+        }        
+        if (isset($data['scope'])) {
+            $this->scope = $data['scope'];
+        }
+    }       
 }
