@@ -23,7 +23,7 @@ Install the libraries by running:
 composer install
 ```
 
-If everything worked, the Content MongoDB Bundle can now be found at vendor/antimattr/google-bundle.
+If everything worked, the Google Bundle can now be found at vendor/antimattr/google-bundle.
 
 Finally, be sure to enable the bundle in AppKernel.php by including the following:
 
