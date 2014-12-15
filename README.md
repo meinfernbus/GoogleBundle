@@ -12,7 +12,7 @@ Add the following to your composer.json file:
 ```json
 {
     "require": {
-        "antimattr/google-bundle": "~1.0@stable"
+        "antimattr/google-bundle": "~2.0@stable"
     }
 }
 ```
@@ -65,7 +65,7 @@ Include the Google Analytics Async template in the `head` tag or just before the
 
 With twig:
 
-    {% include "GoogleBundle:Analytics:async.html.twig" %}
+    {% include "GoogleBundle:Analytics:async_universal.html.twig" %}
 
 #### Features
 
