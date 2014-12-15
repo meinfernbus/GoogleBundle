@@ -65,7 +65,7 @@ Include the Google Analytics Async template in the `head` tag or just before the
 
 With twig:
 
-    {% include "GoogleBundle:Analytics:async.html.twig" %}
+    {% include "GoogleBundle:Analytics:async_universal.html.twig" %}
 
 #### Features
 
