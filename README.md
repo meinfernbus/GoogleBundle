@@ -12,7 +12,7 @@ Add the following to your composer.json file:
 ```json
 {
     "require": {
-        "antimattr/google-bundle": "~1.0@stable"
+        "antimattr/google-bundle": "~2.0@stable"
     }
 }
 ```

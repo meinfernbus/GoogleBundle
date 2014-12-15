@@ -1,4 +1,4 @@
-UPGRADE FROM 1.0.1 to 1.0.2
+UPGRADE FROM 1.0.1 to 2.0.0
 ===========================
 
 ### General
