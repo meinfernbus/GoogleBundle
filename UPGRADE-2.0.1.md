@@ -8,6 +8,8 @@ UPGRADE FROM 2.0.0 to 2.0.1
     ```yaml
     google:
         analytics:
-            plugins:
-            	- 'linkid'
+            trackers:
+                default:
+                    plugins:
+            	        - 'linkid'
     ```

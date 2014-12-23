@@ -19,7 +19,6 @@ class Analytics
     private $container;
     private $customVariables = array();
     private $pageViewsWithBaseUrl = true;
-    private $plugins = array();
     private $sessionAutoStarted = false;
     private $trackers;
     private $whitelist;
@@ -32,12 +31,10 @@ class Analytics
         array $trackers = array(), 
         array $whitelist = array(),
         array $dashboard = array(), 
-        $sessionAutoStarted = false,
-        array $plugins = array())
+        $sessionAutoStarted = false)
     {
         $this->container = $container;
         $this->sessionAutoStarted = $sessionAutoStarted;
-        $this->plugins = $plugins;
         $this->trackers = $trackers;
         $this->whitelist = $whitelist;
         $this->api_key = isset($dashboard['api_key']) ? $dashboard['api_key'] : '';
@@ -377,11 +374,24 @@ class Analytics
     }
 
     /**
-     * @return array $plugins
+     * @param string $trackerKey
+     * @param array $plugins
      */
-    public function getPlugins()
+    public function setPlugins($trackerKey, $plugins)
     {
-        return $this->plugins;
+        $this->setTrackerProperty($trackerKey, 'plugins', $plugins);
+    }
+
+    /**
+     * @param string $trackerKey
+     * @return array $plugins array()
+     */
+    public function getPlugins($trackerKey)
+    {
+        if (null === ($property = $this->getTrackerProperty($trackerKey, 'plugins'))) {
+            return array();
+        }
+        return $property;
     }
 
     /**
