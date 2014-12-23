@@ -27,12 +27,12 @@ AntiMattr.GoogleAnalytics.onGatLoad = function(callback) {
  */
 AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, label, value, nonInteraction, callback) {
     var eventTracker = tracker,
-    var eventCategory = String(category);
-    var eventAction = String(action);
-    var eventLabel = null;
-    var eventValue = null;
-    var eventNonInteraction = 0;
-    var eventCallback = null;
+        eventCategory = String(category),
+        eventAction = String(action),
+        eventLabel = null,
+        eventValue = null,
+        eventNonInteraction = 0,
+        eventCallback = null;
 
     if (typeof label != 'undefined') {
         eventLabel = String(label);
