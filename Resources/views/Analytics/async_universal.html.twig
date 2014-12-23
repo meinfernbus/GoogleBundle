@@ -14,16 +14,63 @@ AntiMattr.GoogleAnalytics.onGatLoad = function(callback) {
     }
 };
 
-AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, label, value) {
-    var eventLabel = null;
-    var eventValue = null;
+/**
+ * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+ * 
+ * @param string   tracker   
+ * @param string   category
+ * @param string   action
+ * @param string   label [optional]
+ * @param integer  value [optional and dependent on label]
+ * @param bool     nonInteraction
+ * @param function callback Execute callback when ga(send) done
+ */
+AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, label, value, nonInteraction, callback) {
+    var eventTracker = tracker,
+        eventCategory = String(category),
+        eventAction = String(action),
+        eventLabel = null,
+        eventValue = null,
+        eventNonInteraction = 0,
+        eventCallback = null;
+
     if (typeof label != 'undefined') {
         eventLabel = String(label);
     }
     if (typeof value != 'undefined') {
         eventValue = parseInt(value);
     }
-    ga(tracker + 'send', 'event', String(category), String(action), eventLabel, eventValue);
+    if (typeof nonInteraction != 'undefined') {
+        eventNonInteraction = Number(nonInteraction);
+    }
+    if (typeof eventCallback != 'undefined') {
+        eventCallback = eventCallback;
+    }               
+
+    if (typeof ga == "undefined") {
+        var listener = this;
+        setTimeout(function(){
+            listener.notifyEvent(
+                eventTracker,
+                eventCategory,
+                eventAction,
+                eventLabel,
+                eventValue,
+                eventNonInteraction,
+                eventCallback
+            );
+        },100);
+        return;
+    }
+
+    ga(tracker + 'send', 'event', {
+      'eventCategory': eventCategory,
+      'eventAction': eventAction,
+      'eventLabel': eventLabel,
+      'eventValue': eventValue,
+      'hitCallback': eventCallback,
+      'nonInteraction': eventNonInteraction
+    });
 };
 
 {% if app.debug %}
@@ -60,6 +107,12 @@ config['userId'] = '{{ app.user.id }}';
 {% endif %}
 ga('create', '{{ tracker.accountId | raw }}', 'auto', config);
 
+// Plugins
+// @see https://developers.google.com/analytics/devguides/collection/analyticsjs/plugins
+{% for plugin in google_analytics.plugins(key) %}
+ga('{{ google_analytics.trackerName(key) }}require', '{{ plugin }}');
+{% endfor %}
+
 // Custom Variables on pageview
 // @see http://misterphilip.com/universal-analytics/migration/variables
 {% if google_analytics.hasCustomVariables %}
@@ -91,7 +144,7 @@ if (window.location.hash) {
 // Note: Classic Transaction do have a native send method, so they do not need to be initialized prior to page views
 {% if google_analytics.isTransactionValid %}
 {% set transaction = google_analytics.transaction %}
-ga('require', 'ecommerce');
+ga('{{ google_analytics.trackerName(key) }}require', 'ecommerce');
 ga('{{ google_analytics.trackerName(key) }}ecommerce:addTransaction', {
   'id': '{{ transaction.orderNumber | escape('js') }}',          // Transaction ID. Required
   'affiliation': '{{ transaction.affiliation | escape('js') }}', // Affiliation or store name OPTIONAL

@@ -4,7 +4,7 @@
 
     <parameters>
         <parameter key="google.analytics.dashboard" type="collection" />
-        <parameter key="google.analytics.session_auto_started">false</parameter>   
+        <parameter key="google.analytics.session_auto_started">false</parameter>
         <parameter key="google.analytics.trackers" type="collection" />
         <parameter key="google.analytics.whitelist" type="collection" />
         <parameter key="google.analytics.js_source_https">https://ssl</parameter>

@@ -48,7 +48,7 @@ google:
     analytics:
         session_auto_started: true
         trackers:
-            shop:
+            default:
                 name: MyJavaScriptCompatibleVariableNameWithNoSpaces
                 accountId: UA-xxxxxx-xx
                 domain: .mdomain.com
@@ -56,6 +56,8 @@ google:
                 allowAnchor: true
                 allowHash: true
                 includeNamePrefix: false
+                plugins:
+                    - 'linkid'
         whitelist: [ 'q', 'utm_source', 'utm_medium', 'utm_term', 'utm_content', 'utm_campaign' ]
 ```
 
