@@ -19,6 +19,7 @@ class Analytics
     private $container;
     private $customVariables = array();
     private $pageViewsWithBaseUrl = true;
+    private $plugins = array();
     private $sessionAutoStarted = false;
     private $trackers;
     private $whitelist;
@@ -26,11 +27,17 @@ class Analytics
     private $client_id;
     private $table_id;
 
-    public function __construct(ContainerInterface $container,
-            array $trackers = array(), array $whitelist = array(), array $dashboard = array(), $sessionAutoStarted = false)
+    public function __construct(
+        ContainerInterface $container,
+        array $trackers = array(), 
+        array $whitelist = array(),
+        array $dashboard = array(), 
+        $sessionAutoStarted = false,
+        array $plugins = array())
     {
         $this->container = $container;
         $this->sessionAutoStarted = $sessionAutoStarted;
+        $this->plugins = $plugins;
         $this->trackers = $trackers;
         $this->whitelist = $whitelist;
         $this->api_key = isset($dashboard['api_key']) ? $dashboard['api_key'] : '';
@@ -367,6 +374,14 @@ class Analytics
     public function hasPageViewQueue()
     {
         return $this->has(self::PAGE_VIEW_QUEUE_KEY);
+    }
+
+    /**
+     * @return array $plugins
+     */
+    public function getPlugins()
+    {
+        return $this->plugins;
     }
 
     /**

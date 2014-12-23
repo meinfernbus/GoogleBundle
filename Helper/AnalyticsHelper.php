@@ -104,6 +104,11 @@ class AnalyticsHelper extends Helper
         return $this->analytics->getPageViewQueue();
     }
 
+    public function getPlugins()
+    {
+        return $this->analytics->getPlugins();
+    }
+
     public function getSourceHttps()
     {
         return $this->sourceHttps;

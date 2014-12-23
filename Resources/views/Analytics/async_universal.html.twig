@@ -107,6 +107,12 @@ config['userId'] = '{{ app.user.id }}';
 {% endif %}
 ga('create', '{{ tracker.accountId | raw }}', 'auto', config);
 
+// Plugins
+// @see https://developers.google.com/analytics/devguides/collection/analyticsjs/plugins
+{% for plugin in google_analytics.plugins %}
+ga('require', '{{ plugin }}');
+{% endfor %}
+
 // Custom Variables on pageview
 // @see http://misterphilip.com/universal-analytics/migration/variables
 {% if google_analytics.hasCustomVariables %}
