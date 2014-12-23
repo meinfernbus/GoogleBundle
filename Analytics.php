@@ -26,8 +26,12 @@ class Analytics
     private $client_id;
     private $table_id;
 
-    public function __construct(ContainerInterface $container,
-            array $trackers = array(), array $whitelist = array(), array $dashboard = array(), $sessionAutoStarted = false)
+    public function __construct(
+        ContainerInterface $container,
+        array $trackers = array(),
+        array $whitelist = array(),
+        array $dashboard = array(),
+        $sessionAutoStarted = false)
     {
         $this->container = $container;
         $this->sessionAutoStarted = $sessionAutoStarted;
@@ -254,7 +258,7 @@ class Analytics
      */
     public function enqueueEvent(Event $event)
     {
-        $eventArray = $event->toArray();        
+        $eventArray = $event->toArray();
         $this->add(self::EVENT_QUEUE_KEY, $eventArray);
     }
 
@@ -264,7 +268,7 @@ class Analytics
     public function getEventQueue()
     {
         $eventArray = $this->getOnce(self::EVENT_QUEUE_KEY);
-        $hydratedEvents = array();        
+        $hydratedEvents = array();
         foreach ($eventArray as $value) {
             if (is_object($value)) {
                 $hydratedEvents[] = $value;
@@ -275,7 +279,6 @@ class Analytics
             $hydratedEvents[] = $event;
         }
         return $hydratedEvents;
-
     }
 
     /**
@@ -291,7 +294,7 @@ class Analytics
      */
     public function addItem(Item $item)
     {
-        $itemArray = $item->toArray();        
+        $itemArray = $item->toArray();
         $this->add(self::ITEMS_KEY, $itemArray);
     }
 
@@ -313,7 +316,14 @@ class Analytics
             return false;
         }
         $items = $this->getItemsFromSession();
-        return in_array($item, $items, true);
+
+        $itemSku = $item->getSku();
+        foreach ($items as $itemFromSession) {
+            if ($itemSku == $itemFromSession->getSku()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -332,7 +342,7 @@ class Analytics
     public function getItems()
     {
         $itemArray = $this->getOnce(self::ITEMS_KEY);
-        $hydratedItems = array();        
+        $hydratedItems = array();
         foreach ($itemArray as $value) {
             if (is_object($value)) {
                 $hydratedItems[] = $value;
@@ -367,6 +377,27 @@ class Analytics
     public function hasPageViewQueue()
     {
         return $this->has(self::PAGE_VIEW_QUEUE_KEY);
+    }
+
+    /**
+     * @param string $trackerKey
+     * @param array $plugins
+     */
+    public function setPlugins($trackerKey, $plugins)
+    {
+        $this->setTrackerProperty($trackerKey, 'plugins', $plugins);
+    }
+
+    /**
+     * @param string $trackerKey
+     * @return array $plugins array()
+     */
+    public function getPlugins($trackerKey)
+    {
+        if (null === ($property = $this->getTrackerProperty($trackerKey, 'plugins'))) {
+            return array();
+        }
+        return $property;
     }
 
     /**
@@ -492,8 +523,8 @@ class Analytics
      */
     private function has($key)
     {
-        if(!$this->sessionAutoStarted && !$this->container->get('session')->isStarted()) {
-            return false; 
+        if (!$this->sessionAutoStarted && !$this->container->get('session')->isStarted()) {
+            return false;
         }
         
         $bucket = $this->container->get('session')->get($key, array());
@@ -526,7 +557,7 @@ class Analytics
     private function getItemsFromSession()
     {
         $itemArray = $this->get(self::ITEMS_KEY);
-        $hydratedItems = array();        
+        $hydratedItems = array();
         foreach ($itemArray as $value) {
             if (is_object($value)) {
                 $hydratedItems[] = $value;
@@ -555,7 +586,7 @@ class Analytics
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getApiKey()
@@ -564,7 +595,7 @@ class Analytics
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getClientId()
@@ -573,7 +604,7 @@ class Analytics
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getTableId()
     {

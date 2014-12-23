@@ -1,23 +1,37 @@
 {
     "name": "antimattr/google-bundle",
-    "description": "The GoogleBundle adds the ability to add various google-related services to your application. These include Google Analytics, Adwords and Static Maps.",
-    "keywords": ["google", "analytics", "adwords", "maps"],
     "type": "symfony-bundle",
+    "description": "Google Bundle for Symfony2",
+    "keywords": ["adwords", "analytics", "ecommerce", "enhanced ecommerce", "google", "maps", "symfony"],
+    "homepage": "http://github.com/antimattr/content-mongodb-bundle",
     "license": "MIT",
     "authors": [
-        {
-            "name":     "antimattr",
-            "homepage": "https://github.com/antimattr"
-        }
+        {"name": "Matthew Fitzgerald", "email": "matthewfitz@gmail.com"}
     ],
     "require": {
-        "php":             ">=5.3.0",
-        "symfony/symfony": ">=2.0"
+        "php": ">=5.3.0",
+        "antimattr/common-product": "dev-master"
+    },
+    "require-dev": {
+        "antimattr/test-case": "~1.0@stable",
+        "phpunit/phpunit": "~4.0",
+        "fabpot/php-cs-fixer": "dev-master",
+        "symfony/dependency-injection": "~2.3",
+        "symfony/http-foundation": "~2.3"
     },
     "autoload": {
         "psr-0": {
             "AntiMattr\\GoogleBundle": ""
         }
+    },
+    "autoload-dev": {
+        "psr-0": { 
+            "AntiMattr\\TestCase\\": "vendor/antimattr/test-case/src",
+            "AntiMattr\\GoogleBundle\\Tests\\": "Tests/"
+        }
+    },
+    "archive": {
+        "exclude": ["bin", "Tests", "*phpunit.xml"]
     },
     "target-dir" : "AntiMattr/GoogleBundle"
 }

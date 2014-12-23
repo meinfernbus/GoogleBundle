@@ -2,31 +2,32 @@
 
 namespace AntiMattr\GoogleBundle\Tests;
 
-use DateTime;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use AntiMattr\GoogleBundle\Analytics;
 use AntiMattr\GoogleBundle\Analytics\Event;
 use AntiMattr\GoogleBundle\Analytics\Item;
 use AntiMattr\GoogleBundle\Analytics\Transaction;
+use AntiMattr\TestCase\AntiMattrTestCase;
 
-class AnalyticsWebTest extends WebTestCase
+class AnalyticsWebTest extends AntiMattrGoogleTestCase
 {
     private $analytics;
-    private $client;
+    private $configuration;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->client = static::createClient();
-        $this->analytics = static::$kernel->getContainer()->get('google.analytics');
-    }
 
-    protected function tearDown()
-    {
-        $this->analytics = null;
-        $this->client = null;
-        parent::tearDown();
+        $this->configuration = array(
+            'default' => array(
+                'name' => 'MyJavaScriptCompatibleVariableNameWithNoSpaces',
+                'accountId' => 'xxxxxx',
+                'domain' => '.example.com',
+                'allowHash' => false,
+                'allowLinker' => true,
+                'trackPageLoadTime' => false
+            )
+        );
+        $this->analytics = new Analytics($this->container, $this->configuration);
     }
 
     public function testConstructor()
