@@ -14,16 +14,63 @@ AntiMattr.GoogleAnalytics.onGatLoad = function(callback) {
     }
 };
 
-AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, label, value) {
+/**
+ * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+ * 
+ * @param string   tracker   
+ * @param string   category
+ * @param string   action
+ * @param string   label [optional]
+ * @param integer  value [optional and dependent on label]
+ * @param bool     nonInteraction
+ * @param function callback Execute callback when ga(send) done
+ */
+AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, label, value, nonInteraction, callback) {
+    var eventTracker = tracker,
+    var eventCategory = String(category);
+    var eventAction = String(action);
     var eventLabel = null;
     var eventValue = null;
+    var eventNonInteraction = 0;
+    var eventCallback = null;
+
     if (typeof label != 'undefined') {
         eventLabel = String(label);
     }
     if (typeof value != 'undefined') {
         eventValue = parseInt(value);
     }
-    ga(tracker + 'send', 'event', String(category), String(action), eventLabel, eventValue);
+    if (typeof nonInteraction != 'undefined') {
+        eventNonInteraction = Number(nonInteraction);
+    }
+    if (typeof eventCallback != 'undefined') {
+        eventCallback = eventCallback;
+    }               
+
+    if (typeof ga == "undefined") {
+        var listener = this;
+        setTimeout(function(){
+            listener.notifyEvent(
+                eventTracker,
+                eventCategory,
+                eventAction,
+                eventLabel,
+                eventValue,
+                eventNonInteraction,
+                eventCallback
+            );
+        },100);
+        return;
+    }
+
+    ga(tracker + 'send', 'event', {
+      'eventCategory': eventCategory,
+      'eventAction': eventAction,
+      'eventLabel': eventLabel,
+      'eventValue': eventValue,
+      'hitCallback': eventCallback,
+      'nonInteraction': eventNonInteraction
+    });
 };
 
 {% if app.debug %}
