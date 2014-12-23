@@ -10,7 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Analytics
 {
-    const EC_PRODUCTS_KEY      = 'google_analytics/ec/products';
     const EVENT_QUEUE_KEY      = 'google_analytics/event/queue';
     const CUSTOM_PAGE_VIEW_KEY = 'google_analytics/page_view';
     const PAGE_VIEW_QUEUE_KEY  = 'google_analytics/page_view/queue';
