@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Analytics
 {
+    const EC_PRODUCTS_KEY      = 'google_analytics/ec/products';
     const EVENT_QUEUE_KEY      = 'google_analytics/event/queue';
     const CUSTOM_PAGE_VIEW_KEY = 'google_analytics/page_view';
     const PAGE_VIEW_QUEUE_KEY  = 'google_analytics/page_view/queue';
@@ -28,9 +29,9 @@ class Analytics
 
     public function __construct(
         ContainerInterface $container,
-        array $trackers = array(), 
+        array $trackers = array(),
         array $whitelist = array(),
-        array $dashboard = array(), 
+        array $dashboard = array(),
         $sessionAutoStarted = false)
     {
         $this->container = $container;
@@ -258,7 +259,7 @@ class Analytics
      */
     public function enqueueEvent(Event $event)
     {
-        $eventArray = $event->toArray();        
+        $eventArray = $event->toArray();
         $this->add(self::EVENT_QUEUE_KEY, $eventArray);
     }
 
@@ -268,7 +269,7 @@ class Analytics
     public function getEventQueue()
     {
         $eventArray = $this->getOnce(self::EVENT_QUEUE_KEY);
-        $hydratedEvents = array();        
+        $hydratedEvents = array();
         foreach ($eventArray as $value) {
             if (is_object($value)) {
                 $hydratedEvents[] = $value;
@@ -279,7 +280,6 @@ class Analytics
             $hydratedEvents[] = $event;
         }
         return $hydratedEvents;
-
     }
 
     /**
@@ -295,7 +295,7 @@ class Analytics
      */
     public function addItem(Item $item)
     {
-        $itemArray = $item->toArray();        
+        $itemArray = $item->toArray();
         $this->add(self::ITEMS_KEY, $itemArray);
     }
 
@@ -317,7 +317,14 @@ class Analytics
             return false;
         }
         $items = $this->getItemsFromSession();
-        return in_array($item, $items, true);
+
+        $itemSku = $item->getSku();
+        foreach ($items as $itemFromSession) {
+            if ($itemSku == $itemFromSession->getSku()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -336,7 +343,7 @@ class Analytics
     public function getItems()
     {
         $itemArray = $this->getOnce(self::ITEMS_KEY);
-        $hydratedItems = array();        
+        $hydratedItems = array();
         foreach ($itemArray as $value) {
             if (is_object($value)) {
                 $hydratedItems[] = $value;
@@ -517,8 +524,8 @@ class Analytics
      */
     private function has($key)
     {
-        if(!$this->sessionAutoStarted && !$this->container->get('session')->isStarted()) {
-            return false; 
+        if (!$this->sessionAutoStarted && !$this->container->get('session')->isStarted()) {
+            return false;
         }
         
         $bucket = $this->container->get('session')->get($key, array());
@@ -551,7 +558,7 @@ class Analytics
     private function getItemsFromSession()
     {
         $itemArray = $this->get(self::ITEMS_KEY);
-        $hydratedItems = array();        
+        $hydratedItems = array();
         foreach ($itemArray as $value) {
             if (is_object($value)) {
                 $hydratedItems[] = $value;
@@ -580,7 +587,7 @@ class Analytics
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getApiKey()
@@ -589,7 +596,7 @@ class Analytics
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getClientId()
@@ -598,7 +605,7 @@ class Analytics
     }
 
     /**
-     * @return string 
+     * @return string
      */
     public function getTableId()
     {

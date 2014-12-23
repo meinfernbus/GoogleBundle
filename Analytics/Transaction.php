@@ -117,7 +117,7 @@ class Transaction
     {
         if (isset($data['affiliation'])) {
             $this->affiliation = $data['affiliation'];
-        }        
+        }
         if (isset($data['city'])) {
             $this->city = $data['city'];
         }
@@ -132,9 +132,12 @@ class Transaction
         }
         if (isset($data['state'])) {
             $this->state = $data['state'];
-        }                
+        }
+        if (isset($data['tax'])) {
+            $this->tax = $data['tax'];
+        }
         if (isset($data['total'])) {
             $this->total = $data['total'];
         }
-    }    
+    }
 }

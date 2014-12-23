@@ -70,7 +70,7 @@ class GoogleExtension extends Extension
             }
             if (isset($config['dashboard'])) {
                 $container->setParameter('google.analytics.dashboard', $config['dashboard']);
-            }          
+            }
             if (isset($config['whitelist'])) {
                 $container->setParameter('google.analytics.whitelist', $config['whitelist']);
             }
