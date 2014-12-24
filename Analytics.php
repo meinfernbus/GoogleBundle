@@ -5,11 +5,13 @@ namespace AntiMattr\GoogleBundle;
 use AntiMattr\GoogleBundle\Analytics\CustomVariable;
 use AntiMattr\GoogleBundle\Analytics\Event;
 use AntiMattr\GoogleBundle\Analytics\Item;
+use AntiMattr\GoogleBundle\Analytics\Product;
 use AntiMattr\GoogleBundle\Analytics\Transaction;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Analytics
 {
+    const EC_PRODUCTS_KEY      = 'google_analytics/ec/products';
     const EVENT_QUEUE_KEY      = 'google_analytics/event/queue';
     const CUSTOM_PAGE_VIEW_KEY = 'google_analytics/page_view';
     const PAGE_VIEW_QUEUE_KEY  = 'google_analytics/page_view/queue';
@@ -42,40 +44,20 @@ class Analytics
         $this->table_id = isset($dashboard['table_id']) ? $dashboard['table_id'] : '';
     }
 
+    /**
+     * @return boolean
+     */
     public function excludeBaseUrl()
     {
         $this->pageViewsWithBaseUrl = false;
     }
 
+    /**
+     * @return boolean
+     */
     public function includeBaseUrl()
     {
         $this->pageViewsWithBaseUrl = true;
-    }
-
-    private function isValidConfigKey($trackerKey)
-    {
-        if (!array_key_exists($trackerKey, $this->trackers)) {
-            throw new \InvalidArgumentException(sprintf('There is no tracker configuration assigned with the key "%s".', $trackerKey));
-        }
-        return true;
-    }
-
-    private function setTrackerProperty($tracker, $property, $value)
-    {
-        if ($this->isValidConfigKey($tracker)) {
-            $this->trackers[$tracker][$property] = $value;
-        }
-    }
-
-    private function getTrackerProperty($tracker, $property)
-    {
-        if (!$this->isValidConfigKey($tracker)) {
-            return;
-        }
-
-        if (array_key_exists($property, $this->trackers[$tracker])) {
-            return $this->trackers[$tracker][$property];
-        }
     }
 
     /**
@@ -89,6 +71,7 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     *
      * @return boolean $allowAnchor (default:false)
      */
     public function getAllowAnchor($trackerKey)
@@ -110,6 +93,7 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     *
      * @return boolean $allowHash (default:false)
      */
     public function getAllowHash($trackerKey)
@@ -131,6 +115,7 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     *
      * @return boolean $allowLinker (default:true)
      */
     public function getAllowLinker($trackerKey)
@@ -152,6 +137,7 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     *
      * @return boolean $includeNamePrefix (default:true)
      */
     public function getIncludeNamePrefix($trackerKey)
@@ -164,6 +150,7 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     *
      * @param boolean $name
      */
     public function setTrackerName($trackerKey, $name)
@@ -173,6 +160,7 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     *
      * @return string $name
      */
     public function getTrackerName($trackerKey)
@@ -182,6 +170,7 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     *
      * @param int $siteSpeedSampleRate
      */
     public function setSiteSpeedSampleRate($trackerKey, $siteSpeedSampleRate)
@@ -191,6 +180,7 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     *
      * @return int $siteSpeedSampleRate (default:null)
      */
     public function getSiteSpeedSampleRate($trackerKey)
@@ -227,7 +217,7 @@ class Analytics
     }
 
     /**
-     * @param CustomVariable $customVariable
+     * @param AntiMattr\GoogleBundle\Analytics\CustomVariable $customVariable
      */
     public function addCustomVariable(CustomVariable $customVariable)
     {
@@ -235,7 +225,7 @@ class Analytics
     }
 
     /**
-     * @return array $customVariables
+     * @return array[] AntiMattr\GoogleBundle\Analytics\CustomVariable $customVariables
      */
     public function getCustomVariables()
     {
@@ -243,7 +233,7 @@ class Analytics
     }
 
     /**
-     * @return boolean $hasCustomVariables
+     * @return boolean
      */
     public function hasCustomVariables()
     {
@@ -254,7 +244,7 @@ class Analytics
     }
 
     /**
-     * @param Event $event
+     * @param AntiMattr\GoogleBundle\Analytics\Event $event
      */
     public function enqueueEvent(Event $event)
     {
@@ -263,7 +253,7 @@ class Analytics
     }
 
     /**
-     * @param array $eventQueue
+     * @param array[] AntiMattr\GoogleBundle\Analytics\Event $eventQueue
      */
     public function getEventQueue()
     {
@@ -282,7 +272,7 @@ class Analytics
     }
 
     /**
-     * @return boolean $hasEventQueue
+     * @return boolean
      */
     public function hasEventQueue()
     {
@@ -290,7 +280,7 @@ class Analytics
     }
 
     /**
-     * @param Item $item
+     * @param AntiMattr\GoogleBundle\Analytics\Item $item
      */
     public function addItem(Item $item)
     {
@@ -299,7 +289,7 @@ class Analytics
     }
 
     /**
-     * @return boolean $hasItems
+     * @return boolean
      */
     public function hasItems()
     {
@@ -307,7 +297,8 @@ class Analytics
     }
 
     /**
-     * @param Item $item
+     * @param AntiMattr\GoogleBundle\Analytics\Item $item
+     *
      * @return boolean $hasItem
      */
     public function hasItem(Item $item)
@@ -327,7 +318,7 @@ class Analytics
     }
 
     /**
-     * @param array $items
+     * @param array[] AntiMattr\GoogleBundle\Analytics\Item $items
      */
     public function setItems($items)
     {
@@ -339,6 +330,9 @@ class Analytics
         $this->container->get('session')->set(self::ITEMS_KEY, $itemsArray);
     }
 
+    /**
+     * @return array[] AntiMattr\GoogleBundle\Analytics\Item
+     */
     public function getItems()
     {
         $itemArray = $this->getOnce(self::ITEMS_KEY);
@@ -353,6 +347,78 @@ class Analytics
             $hydratedItems[] = $item;
         }
         return $hydratedItems;
+    }
+
+
+
+    /**
+     * @param AntiMattr\GoogleBundle\Analytics\Product $product
+     */
+    public function addProduct(Product $product)
+    {
+        $productArray = $product->toArray();
+        $this->add(self::EC_PRODUCTS_KEY, $productArray);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasProducts()
+    {
+        return $this->has(self::EC_PRODUCTS_KEY);
+    }
+
+    /**
+     * @param AntiMattr\GoogleBundle\Analytics\Product $product
+     *
+     * @return boolean
+     */
+    public function hasProduct(Product $product)
+    {
+        if (!$this->hasProducts()) {
+            return false;
+        }
+        $products = $this->getProductsFromSession();
+
+        $productSku = $product->getSku();
+        foreach ($products as $productFromSession) {
+            if ($productSku == $productFromSession->getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param array[] AntiMattr\GoogleBundle\Analytics\Product $products
+     */
+    public function setProducts($products)
+    {
+        $productsArray = array();
+        foreach ($products as $product) {
+            $productArray = $product->toArray();
+            $productsArray[] = $productArray;
+        }
+        $this->container->get('session')->set(self::EC_PRODUCTS_KEY, $productsArray);
+    }
+
+    /**
+     * @return array[] AntiMattr\GoogleBundle\Analytics\Product
+     */
+    public function getProducts()
+    {
+        $productArray = $this->getOnce(self::EC_PRODUCTS_KEY);
+        $hydratedProducts = array();
+        foreach ($productArray as $value) {
+            if (is_object($value)) {
+                $hydratedProducts[] = $value;
+                continue;
+            }
+            $product = new Product();
+            $product->fromArray($value);
+            $hydratedProducts[] = $product;
+        }
+        return $hydratedProducts;
     }
 
     /**
@@ -390,6 +456,7 @@ class Analytics
 
     /**
      * @param string $trackerKey
+     *
      * @return array $plugins array()
      */
     public function getPlugins($trackerKey)
@@ -507,6 +574,50 @@ class Analytics
     }
 
     /**
+     * @param string
+     *
+     * @return boolean
+     *
+     * @throws InvalidArgumentException
+     */
+    private function isValidConfigKey($trackerKey)
+    {
+        if (!array_key_exists($trackerKey, $this->trackers)) {
+            throw new \InvalidArgumentException(sprintf('There is no tracker configuration assigned with the key "%s".', $trackerKey));
+        }
+        return true;
+    }
+
+    /**
+     * @param string $tracker
+     * @param string $property
+     * @param string $value
+     */
+    private function setTrackerProperty($tracker, $property, $value)
+    {
+        if ($this->isValidConfigKey($tracker)) {
+            $this->trackers[$tracker][$property] = $value;
+        }
+    }
+
+    /**
+     * @param string $tracker
+     * @param string $property
+     *
+     * @return mixed
+     */
+    private function getTrackerProperty($tracker, $property)
+    {
+        if (!$this->isValidConfigKey($tracker)) {
+            return;
+        }
+
+        if (array_key_exists($property, $this->trackers[$tracker])) {
+            return $this->trackers[$tracker][$property];
+        }
+    }
+
+    /**
      * @param string $key
      * @param mixed $value
      */
@@ -519,6 +630,7 @@ class Analytics
 
     /**
      * @param string $key
+     *
      * @return boolean $hasKey
      */
     private function has($key)
@@ -533,6 +645,7 @@ class Analytics
 
     /**
      * @param string $key
+     *
      * @return array $value
      */
     private function get($key)
@@ -542,6 +655,7 @@ class Analytics
 
     /**
      * @param string $key
+     *
      * @return array $value
      */
     private function getOnce($key)
@@ -552,7 +666,7 @@ class Analytics
     }
 
     /**
-     * @return array $items
+     * @return array[] AntiMattr\GoogleBundle\Analytics\Item $items
      */
     private function getItemsFromSession()
     {
@@ -571,7 +685,26 @@ class Analytics
     }
 
     /**
-     * @return Transaction $transaction
+     * @return array[] AntiMattr\GoogleBundle\Analytics\Product $products
+     */
+    private function getProductsFromSession()
+    {
+        $productArray = $this->get(self::EC_PRODUCTS_KEY);
+        $hydratedProducts = array();
+        foreach ($productArray as $value) {
+            if (is_object($value)) {
+                $hydratedProducts[] = $value;
+                continue;
+            }
+            $product = new Product();
+            $product->fromArray($value);
+            $hydratedProducts[] = $product;
+        }
+        return $hydratedProducts;
+    }
+
+    /**
+     * @return AntiMattr\GoogleBundle\Analytics\Transaction $transaction
      */
     private function getTransactionFromSession()
     {

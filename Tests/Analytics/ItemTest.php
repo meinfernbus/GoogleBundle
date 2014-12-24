@@ -3,21 +3,15 @@
 namespace AntiMattr\GoogleBundle\Tests\Analytics;
 
 use AntiMattr\GoogleBundle\Analytics\Item;
+use AntiMattr\TestCase\AntiMattrTestCase;
 
-class ItemTest extends \PHPUnit_Framework_TestCase
+class ItemTest extends AntiMattrTestCase
 {
     private $item;
 
     public function setUp()
     {
-        parent::setup();
         $this->item = new Item();
-    }
-
-    public function tearDown()
-    {
-        $this->item = null;
-        parent::tearDown();
     }
 
     public function testConstructor()

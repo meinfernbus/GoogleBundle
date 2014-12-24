@@ -5,10 +5,11 @@ namespace AntiMattr\GoogleBundle\Tests;
 use AntiMattr\GoogleBundle\Analytics;
 use AntiMattr\GoogleBundle\Analytics\Event;
 use AntiMattr\GoogleBundle\Analytics\Item;
+use AntiMattr\GoogleBundle\Analytics\Product;
 use AntiMattr\GoogleBundle\Analytics\Transaction;
 use AntiMattr\TestCase\AntiMattrTestCase;
 
-class AnalyticsWebTest extends AntiMattrGoogleTestCase
+class AnalyticsTest extends AntiMattrGoogleTestCase
 {
     private $analytics;
     private $configuration;
@@ -35,6 +36,7 @@ class AnalyticsWebTest extends AntiMattrGoogleTestCase
         $this->assertFalse($this->analytics->hasPageViewQueue());
         $this->assertFalse($this->analytics->hasCustomVariables());
         $this->assertFalse($this->analytics->hasItems());
+        $this->assertFalse($this->analytics->hasProducts());
         $this->assertNull($this->analytics->getTransaction());
         $this->assertEquals(1, count($this->analytics->getTrackers()));
         $this->assertTrue($this->analytics->getAllowLinker('default'));
@@ -181,6 +183,36 @@ class AnalyticsWebTest extends AntiMattrGoogleTestCase
 
         $this->assertTrue($this->analytics->hasItems());
         $this->assertEquals(2, count($this->analytics->getItems()));
+    }
+
+    public function testAddGetProducts()
+    {
+        $product = new Product();
+        $product->setSku('zzzz');
+        $product->setTitle('Product X');
+        $product->setCategory('Category A');
+        $product->setBrand('Brand A');
+        $product->setPrice(50.00);
+        $product->setQuantity(1);
+        $product->setPosition(1);
+
+        $this->analytics->addProduct($product);
+        $this->assertTrue($this->analytics->hasProduct($product));
+
+        $product = new Product();
+        $product->setSku('jjjj');
+        $product->setTitle('Product J');
+        $product->setCategory('Category B');
+        $product->setBrand('Brand B');
+        $product->setPrice(25.00);
+        $product->setQuantity(2);
+        $product->setPosition(2);
+
+        $this->analytics->addProduct($product);
+        $this->assertTrue($this->analytics->hasProduct($product));
+
+        $this->assertTrue($this->analytics->hasProducts());
+        $this->assertEquals(2, count($this->analytics->getProducts()));
     }
 
     public function testSetAllowAnchor()
