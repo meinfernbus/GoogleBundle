@@ -36,6 +36,11 @@ class AnalyticsHelper extends Helper
         return $this->analytics->getAllowLinker($trackerKey);
     }
 
+    public function isEnhancedEcommerce()
+    {
+        return $this->analytics->isEnhancedEcommerce();
+    }
+
     public function getTrackerName($trackerKey)
     {
         if ($this->analytics->getIncludeNamePrefix($trackerKey)) {
