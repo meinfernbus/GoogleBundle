@@ -87,7 +87,7 @@ class Transaction
      */
     public function getRevenue()
     {
-        return $this->revenue;
+        return ($this->revenue) ? $this->revenue : $this->total;
     }
 
     public function setShipping($shipping)
