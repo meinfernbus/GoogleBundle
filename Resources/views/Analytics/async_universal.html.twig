@@ -73,93 +73,28 @@ AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, labe
     });
 };
 
-{% if app.debug %}
-window.ga_debug = {trace: true};
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics_debug.js','ga');
-{% else %}
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-{% endif %}
+{% include "GoogleBundle:Analytics:source.js.twig" %}
 
 // Upgrade documentation
 // @see https://developers.google.com/analytics/devguides/collection/upgrade/reference/gajs-analyticsjs
 {% for key, tracker in google_analytics.trackers %}
 // Start Tracker: {{ key }}
 
-// Configuration
-var config = {};
-// Will be an empty string if includeNamePrefix = false
-config['name'] = '{{ google_analytics.trackerName(key)|trim('.') }}';
-config['cookieDomain'] = {{ ((tracker.domain) ? ("'" ~ tracker.domain ~ "'")|raw : 'auto' ) }};
-config['allowAnchor'] = {{ ((google_analytics.getAllowAnchor(key)) ? 'true' : 'false' ) }};
-config['allowLinker'] = {{ ((google_analytics.getAllowLinker(key)) ? 'true' : 'false' ) }};
-{% set siteSpeedSampleRate = google_analytics.getSiteSpeedSampleRate(key) %}
-{% if siteSpeedSampleRate is defined and siteSpeedSampleRate is not null %}
-config['siteSpeedSampleRate'] = {{ siteSpeedSampleRate }};
-{% endif %}
-{% if app.user is defined and app.user.id is defined %}
-config['userId'] = '{{ app.user.id }}';
-{% endif %}
-ga('create', '{{ tracker.accountId | raw }}', 'auto', config);
+{% include "GoogleBundle:Analytics:configuration.js.twig" with {'key': 'key'} %}
 
-// Plugins
-// @see https://developers.google.com/analytics/devguides/collection/analyticsjs/plugins
-{% for plugin in google_analytics.plugins(key) %}
-ga('{{ google_analytics.trackerName(key) }}require', '{{ plugin }}');
-{% endfor %}
+{% include "GoogleBundle:Analytics:plugin.js.twig" with {'key': 'key'} %}
 
-// Custom Variables on pageview
-// @see http://misterphilip.com/universal-analytics/migration/variables
-{% if google_analytics.hasCustomVariables %}
-{% for customVariable in google_analytics.customVariables %}
-// Custom Dimension, what user group is the visitor in?
-ga('{{ google_analytics.trackerName(key) }}set', '{{ customVariable.name }}', '{{ customVariable.value }}');
-{% endfor %}
-{% endif %}
+{% include "GoogleBundle:Analytics:custom_variable.js.twig" with {'key': 'key'} %}
 
-// Classic and Enhanced Ecommerce Transactions
-// @see https://developers.google.com/analytics/devguides/collection/upgrade/reference/gajs-analyticsjs#ecommerce
-// @see https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#measuring-transactions
-// Note: Classic Transaction do have a native send method, so they do not need to be initialized prior to page views
+{% include "GoogleBundle:Analytics:impression.js.twig" with {'key': 'key'} %}
+
+{% include "GoogleBundle:Analytics:product.js.twig" with {'key': 'key'} %}
+
 {% include "GoogleBundle:Analytics:transaction.js.twig" with {'key': 'key'} %}
 
-// Pageview
-// @see https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
-{% if google_analytics.hasPageViewQueue %}
-{% for pageView in google_analytics.pageViewQueue %}
-ga('{{ google_analytics.trackerName(key) }}send', 'pageview', '{{ pageView|raw }}');
-{% endfor %}
-{% endif %}
-{% if google_analytics.hasCustomPageView %}
-ga('{{ google_analytics.trackerName(key) }}send', 'pageview', '{{ google_analytics.getCustomPageView()|raw }}');
-{% else %}
-if (window.location.hash) {
-    ga('{{ google_analytics.trackerName(key) }}send', 'pageview', '{{ google_analytics.getRequestUri()|raw }}'+window.location.hash);
-} else {
-    ga('{{ google_analytics.trackerName(key) }}send', 'pageview', '{{ google_analytics.getRequestUri()|raw }}');
-}
-{% endif %}
+{% include "GoogleBundle:Analytics:pageview.js.twig" with {'key': 'key'} %}
 
-// Events
-// @see https://developers.google.com/analytics/devguides/collection/analyticsjs/events
-{% if google_analytics.hasEventQueue %}
-AntiMattr.GoogleAnalytics.onGatLoad(function() {
-{% for event in google_analytics.eventQueue %}
-    AntiMattr.GoogleAnalytics.notifyEvent(
-          '{{ google_analytics.trackerName(key) }}'
-        , '{{ event.category }}'
-        , '{{ event.action }}'
-        {% if event.label is not null %}, '{{ event.label }}'{% endif %}
-        {% if event.value is not null %}, {{ event.value }}{% endif %}
-    );
-{% endfor %}
-});
-{% endif %}
+{% include "GoogleBundle:Analytics:event.js.twig" with {'key': 'key'} %}
 
 // End Tracker: {{ key }}
 {% endfor %}

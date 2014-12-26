@@ -20,6 +20,8 @@ class ImpressionTest extends AntiMattrTestCase
         $this->assertNull($this->impression->getId());
         $this->assertNull($this->impression->getSku());
         $this->assertNull($this->impression->getTitle());
+        $this->assertNotNull($this->impression->getAction());
+        $this->assertNull($this->impression->getBrand());
         $this->assertNull($this->impression->getCategory());
         $this->assertNull($this->impression->getPrice());
         $this->assertNull($this->impression->getList());
@@ -33,6 +35,7 @@ class ImpressionTest extends AntiMattrTestCase
         $impression->setSku('zzzz');
         $impression->setTitle('Product X');
         $impression->setCategory('Category A');
+        $impression->setAction('detail');
         $impression->setBrand('Brand A');
         $impression->setList('Search Results A');
         $impression->setPrice(50.00);

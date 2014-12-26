@@ -140,6 +140,7 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $product = new \AntiMattr\GoogleBundle\Analytics\Product();
     $product->setSku('zzzz');
     $product->setTitle('Product X');
+    $product->setAction('purchase');    
     $product->setBrand('Brand AA');
     $product->setCategory('Category A');
     $product->setPrice(50.00);
@@ -153,6 +154,7 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $product->setOrderNumber('bbbb');
     $product->setSku('jjjj');
     $product->setTitle('Product Y');
+    $product->setAction('purchase');    
     $product->setBrand('Brand BB');    
     $product->setCategory('Category B');
     $product->setPrice(25.00);
@@ -169,6 +171,7 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $impression = new \AntiMattr\GoogleBundle\Analytics\Impression();
     $impression->setSku('zzzz');
     $impression->setTitle('Product X');
+    $impression->setAction('detail');    
     $impression->setBrand('Brand AA');
     $impression->setCategory('Category A');
     $impression->setPrice(50.00);
@@ -181,6 +184,7 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $impression->setOrderNumber('bbbb');
     $impression->setSku('jjjj');
     $impression->setTitle('Product Y');
+    $impression->setAction('detail');    
     $impression->setBrand('Brand BB');    
     $impression->setCategory('Category B');
     $impression->setPrice(25.00);

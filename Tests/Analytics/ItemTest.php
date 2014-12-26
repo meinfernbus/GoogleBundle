@@ -20,6 +20,8 @@ class ItemTest extends AntiMattrTestCase
         $this->assertNull($this->item->getId());
         $this->assertNull($this->item->getTitle());
         $this->assertNull($this->item->getTitle());
+        $this->assertNotNull($this->item->getAction());
+        $this->assertNull($this->item->getBrand());
         $this->assertNull($this->item->getCategory());
         $this->assertNull($this->item->getOrderNumber());
         $this->assertNull($this->item->getPrice());

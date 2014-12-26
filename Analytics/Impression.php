@@ -9,11 +9,28 @@ use AntiMattr\Common\Product\Product as CommonProduct;
  */
 class Impression extends CommonProduct
 {
+    protected $action = 'detail';
     protected $brand;
     protected $category;
     protected $list;
     protected $position;
     protected $variant;
+
+    /**
+     * @param string
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
 
     /**
      * @return string
@@ -121,6 +138,7 @@ class Impression extends CommonProduct
             'sku' => $this->sku,
             'name' => $this->title,
             'brand' => $this->brand,
+            'action' => $this->action,
             'category' => $this->category,
             'variant' => $this->variant,
             'price' => $this->price,
@@ -142,6 +160,9 @@ class Impression extends CommonProduct
         }
         if (isset($data['name'])) {
             $this->title = $data['name'];
+        }
+        if (isset($data['action'])) {
+            $this->action = $data['action'];
         }
         if (isset($data['brand'])) {
             $this->brand = $data['brand'];

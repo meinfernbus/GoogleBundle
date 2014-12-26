@@ -192,6 +192,7 @@ class AnalyticsTest extends AntiMattrGoogleTestCase
         $impression->setId('id');
         $impression->setSku('zzzz');
         $impression->setTitle('Product X');
+        $impression->setAction('detail');
         $impression->setCategory('Category A');
         $impression->setBrand('Brand A');
         $impression->setList('Search Results A');
@@ -205,6 +206,7 @@ class AnalyticsTest extends AntiMattrGoogleTestCase
         $impression = new Impression();
         $impression->setSku('jjjj');
         $impression->setTitle('Product J');
+        $impression->setAction('detail');
         $impression->setCategory('Category B');
         $impression->setBrand('Brand B');
         $impression->setList('Search Results B');
@@ -214,8 +216,8 @@ class AnalyticsTest extends AntiMattrGoogleTestCase
         $this->analytics->addImpression($impression);
         $this->assertTrue($this->analytics->hasImpression($impression));
 
-        $this->assertTrue($this->analytics->hasImpressions());
-        $this->assertEquals(2, count($this->analytics->getImpressions()));
+        $this->assertTrue($this->analytics->hasImpressions('detail'));
+        $this->assertEquals(2, count($this->analytics->getImpressions('detail')));
     }
 
     public function testAddGetProducts()

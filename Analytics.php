@@ -368,15 +368,17 @@ class Analytics
     public function addImpression(Impression $impression)
     {
         $impressionArray = $impression->toArray();
-        $this->add(self::EC_IMPRESSIONS_KEY, $impressionArray);
+        $this->add(self::EC_IMPRESSIONS_KEY . '/'. $impression->getAction(), $impressionArray);
     }
 
     /**
+     * @param string action
+     *
      * @return boolean
      */
-    public function hasImpressions()
+    public function hasImpressions($action = '')
     {
-        return $this->has(self::EC_IMPRESSIONS_KEY);
+        return $this->has(self::EC_IMPRESSIONS_KEY . '/' . $action);
     }
 
     /**
@@ -386,10 +388,11 @@ class Analytics
      */
     public function hasImpression(Impression $impression)
     {
-        if (!$this->hasImpressions()) {
+        $action = $impression->getAction();
+        if (!$this->hasImpressions($action)) {
             return false;
         }
-        $impressions = $this->getImpressionsFromSession();
+        $impressions = $this->getImpressionsFromSession($action);
 
         $impressionSku = $impression->getId();
         foreach ($impressions as $impressionFromSession) {
@@ -407,18 +410,26 @@ class Analytics
     {
         $impressionsArray = array();
         foreach ($impressions as $impression) {
+            $action = $impression->getAction();
             $impressionArray = $impression->toArray();
-            $impressionsArray[] = $impressionArray;
+            if (!isset($impressionsArray[$action])) {
+                $impressionsArray[$action] = array();
+            }
+            $impressionsArray[$action][] = $impressionArray;
         }
-        $this->container->get('session')->set(self::EC_IMPRESSIONS_KEY, $impressionsArray);
+        foreach ($impressionsArray as $action => $impressionArray) {
+            $this->container->get('session')->set(self::EC_IMPRESSIONS_KEY . '/' . $action, $impressionArray);
+        }
     }
 
     /**
+     * @param string $action
+     *
      * @return array[] AntiMattr\GoogleBundle\Analytics\Impression
      */
-    public function getImpressions()
+    public function getImpressions($action = '')
     {
-        $impressionArray = $this->getOnce(self::EC_IMPRESSIONS_KEY);
+        $impressionArray = $this->getOnce(self::EC_IMPRESSIONS_KEY . '/' . $action);
         $hydratedImpressions = array();
         foreach ($impressionArray as $value) {
             if (is_object($value)) {
@@ -438,15 +449,17 @@ class Analytics
     public function addProduct(Product $product)
     {
         $productArray = $product->toArray();
-        $this->add(self::EC_PRODUCTS_KEY, $productArray);
+        $this->add(self::EC_PRODUCTS_KEY . '/'. $product->getAction(), $productArray);
     }
 
     /**
+     * @param string action
+     *
      * @return boolean
      */
-    public function hasProducts()
+    public function hasProducts($action = '')
     {
-        return $this->has(self::EC_PRODUCTS_KEY);
+        return $this->has(self::EC_PRODUCTS_KEY . '/'. $action);
     }
 
     /**
@@ -456,10 +469,11 @@ class Analytics
      */
     public function hasProduct(Product $product)
     {
-        if (!$this->hasProducts()) {
+        $action = $product->getAction();
+        if (!$this->hasProducts($action)) {
             return false;
         }
-        $products = $this->getProductsFromSession();
+        $products = $this->getProductsFromSession($action);
 
         $productSku = $product->getId();
         foreach ($products as $productFromSession) {
@@ -477,18 +491,26 @@ class Analytics
     {
         $productsArray = array();
         foreach ($products as $product) {
+            $action = $product->getAction();
             $productArray = $product->toArray();
-            $productsArray[] = $productArray;
+            if (!isset($productsArray[$action])) {
+                $productsArray[$action] = array();
+            }
+            $productsArray[$action][] = $productArray;
         }
-        $this->container->get('session')->set(self::EC_PRODUCTS_KEY, $productsArray);
+        foreach ($productsArray as $action => $productArray) {
+            $this->container->get('session')->set(self::EC_PRODUCTS_KEY . '/' . $action, $productArray);
+        }
     }
 
     /**
+     * @param string $action
+     *
      * @return array[] AntiMattr\GoogleBundle\Analytics\Product
      */
-    public function getProducts()
+    public function getProducts($action = '')
     {
-        $productArray = $this->getOnce(self::EC_PRODUCTS_KEY);
+        $productArray = $this->getOnce(self::EC_PRODUCTS_KEY. '/' . $action);
         $hydratedProducts = array();
         foreach ($productArray as $value) {
             if (is_object($value)) {
@@ -776,11 +798,13 @@ class Analytics
     }
 
     /**
+     * @param string $action
+     *
      * @return array[] AntiMattr\GoogleBundle\Analytics\Impression $impressions
      */
-    private function getImpressionsFromSession()
+    private function getImpressionsFromSession($action = '')
     {
-        $impressionArray = $this->get(self::EC_IMPRESSIONS_KEY);
+        $impressionArray = $this->get(self::EC_IMPRESSIONS_KEY. '/' . $action);
         $hydratedImpressions = array();
         foreach ($impressionArray as $value) {
             if (is_object($value)) {
@@ -795,11 +819,13 @@ class Analytics
     }
 
     /**
+     * @param string $action
+     *
      * @return array[] AntiMattr\GoogleBundle\Analytics\Product $products
      */
-    private function getProductsFromSession()
+    private function getProductsFromSession($action = '')
     {
-        $productArray = $this->get(self::EC_PRODUCTS_KEY);
+        $productArray = $this->get(self::EC_PRODUCTS_KEY. '/' . $action);
         $hydratedProducts = array();
         foreach ($productArray as $value) {
             if (is_object($value)) {

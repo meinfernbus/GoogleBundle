@@ -5,16 +5,36 @@ namespace AntiMattr\GoogleBundle\Analytics;
 use AntiMattr\Common\Product\Product as CommonProduct;
 
 /**
+ * Supports Ecommerce and Enhanced Ecommerce
+ *
+ * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/ecommerce
  * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#product-data
  */
 class Item extends CommonProduct
 {
+    protected $action = 'purchase';
     protected $brand;
     protected $category;
     protected $coupon;
     protected $orderNumber;
     protected $position;
     protected $variant;
+
+    /**
+     * @param string
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
 
     /**
      * @return string
@@ -153,6 +173,7 @@ class Item extends CommonProduct
             'id' => $this->getId(),
             'sku' => $this->sku,
             'name' => $this->title,
+            'action' => $this->action,
             'brand' => $this->brand,
             'category' => $this->category,
             'variant' => $this->variant,
@@ -177,6 +198,9 @@ class Item extends CommonProduct
         }
         if (isset($data['name'])) {
             $this->title = $data['name'];
+        }
+        if (isset($data['action'])) {
+            $this->action = $data['action'];
         }
         if (isset($data['brand'])) {
             $this->brand = $data['brand'];

@@ -1,0 +1,17 @@
+{# @param string key - Tracker key #}
+
+// Configuration
+var config = {};
+// Will be an empty string if includeNamePrefix = false
+config['name'] = '{{ google_analytics.trackerName(key)|trim('.') }}';
+config['cookieDomain'] = {{ ((tracker.domain) ? ("'" ~ tracker.domain ~ "'")|raw : 'auto' ) }};
+config['allowAnchor'] = {{ ((google_analytics.getAllowAnchor(key)) ? 'true' : 'false' ) }};
+config['allowLinker'] = {{ ((google_analytics.getAllowLinker(key)) ? 'true' : 'false' ) }};
+{% set siteSpeedSampleRate = google_analytics.getSiteSpeedSampleRate(key) %}
+{% if siteSpeedSampleRate is defined and siteSpeedSampleRate is not null %}
+config['siteSpeedSampleRate'] = {{ siteSpeedSampleRate }};
+{% endif %}
+{% if app.user is defined and app.user.id is defined %}
+config['userId'] = '{{ app.user.id }}';
+{% endif %}
+ga('create', '{{ tracker.accountId | raw }}', 'auto', config);

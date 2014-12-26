@@ -9,11 +9,28 @@ use AntiMattr\Common\Product\Product as CommonProduct;
  */
 class Product extends CommonProduct
 {
+    protected $action;
     protected $brand;
     protected $category;
     protected $coupon;
     protected $position;
     protected $variant;
+
+    /**
+     * @param string
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
 
     /**
      * @return string
@@ -120,6 +137,7 @@ class Product extends CommonProduct
             'id' => $this->getId(),
             'sku' => $this->sku,
             'name' => $this->title,
+            'action' => $this->action,
             'brand' => $this->brand,
             'category' => $this->category,
             'variant' => $this->variant,
@@ -143,6 +161,9 @@ class Product extends CommonProduct
         }
         if (isset($data['name'])) {
             $this->title = $data['name'];
+        }
+        if (isset($data['action'])) {
+            $this->action = $data['action'];
         }
         if (isset($data['brand'])) {
             $this->brand = $data['brand'];
