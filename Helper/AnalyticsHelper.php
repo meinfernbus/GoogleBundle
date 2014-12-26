@@ -84,6 +84,16 @@ class AnalyticsHelper extends Helper
         return $this->analytics->getEventQueue();
     }
 
+    public function hasImpressions($action = '')
+    {
+        return $this->analytics->hasImpressions($action);
+    }
+
+    public function getImpressions($action = '')
+    {
+        return $this->analytics->getImpressions($action);
+    }
+
     public function hasItems()
     {
         return $this->analytics->hasItems();
@@ -112,6 +122,16 @@ class AnalyticsHelper extends Helper
     public function getPlugins($trackerKey)
     {
         return $this->analytics->getPlugins($trackerKey);
+    }
+
+    public function hasProducts($action = '')
+    {
+        return $this->analytics->hasProducts($action);
+    }
+
+    public function getProducts($action = '')
+    {
+        return $this->analytics->getProducts($action);
     }
 
     public function getSourceHttps()
