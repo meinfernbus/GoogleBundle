@@ -80,21 +80,21 @@ AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, labe
 {% for key, tracker in google_analytics.trackers %}
 // Start Tracker: {{ key }}
 
-{% include "GoogleBundle:Analytics:configuration.js.twig" with {'key': 'key'} %}
+{% include "GoogleBundle:Analytics:configuration.js.twig" with {'key': key} %}
 
-{% include "GoogleBundle:Analytics:plugin.js.twig" with {'key': 'key'} %}
+{% include "GoogleBundle:Analytics:plugin.js.twig" with {'key': key} %}
 
-{% include "GoogleBundle:Analytics:custom_variable.js.twig" with {'key': 'key'} %}
+{% include "GoogleBundle:Analytics:custom_variable.js.twig" with {'key': key} %}
 
-{% include "GoogleBundle:Analytics:impression.js.twig" with {'key': 'key'} %}
+{% include "GoogleBundle:Analytics:impression.js.twig" with {'key': key} %}
 
-{% include "GoogleBundle:Analytics:product.js.twig" with {'key': 'key'} %}
+{% include "GoogleBundle:Analytics:product.js.twig" with {'key': key} %}
 
-{% include "GoogleBundle:Analytics:transaction.js.twig" with {'key': 'key'} %}
+{% include "GoogleBundle:Analytics:transaction.js.twig" with {'key': key} %}
 
-{% include "GoogleBundle:Analytics:pageview.js.twig" with {'key': 'key'} %}
+{% include "GoogleBundle:Analytics:pageview.js.twig" with {'key': key} %}
 
-{% include "GoogleBundle:Analytics:event.js.twig" with {'key': 'key'} %}
+{% include "GoogleBundle:Analytics:event.js.twig" with {'key': key} %}
 
 // End Tracker: {{ key }}
 {% endfor %}
