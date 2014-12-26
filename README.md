@@ -128,6 +128,7 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $transaction = new \AntiMattr\GoogleBundle\Analytics\Transaction();
     $transaction->setOrderNumber('xxxx');
     $transaction->setAffiliation('Store 777');
+    $transaction->setRevenue(100.00); // <== NEW    
     $transaction->setTotal(100.00);
     $transaction->setTax(10.00);
     $transaction->setShipping(5.00);

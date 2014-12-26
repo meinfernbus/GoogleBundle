@@ -613,9 +613,19 @@ class Analytics
      */
     public function isTransactionValid()
     {
-        if (!$this->hasTransaction() || (null === $this->getTransactionFromSession()->getOrderNumber())) {
+        if (!$this->hasTransaction()) {
             return false;
         }
+        if (null === $this->getTransactionFromSession()->getOrderNumber()) {
+            return false;
+        }
+        if ($this->enhancedEcommerce && null === $this->getTransactionFromSession()->getRevenue()) {
+            return false;
+        }
+        if (!$this->enhancedEcommerce && null === $this->getTransactionFromSession()->getTotal()) {
+            return false;
+        }
+
         if ($this->hasItems()) {
             $items = $this->getItemsFromSession();
             foreach ($items as $item) {

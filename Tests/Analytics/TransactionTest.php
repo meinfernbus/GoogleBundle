@@ -20,65 +20,31 @@ class TransactionTest extends AntiMattrTestCase
         $this->assertNull($this->transaction->getCity());
         $this->assertNull($this->transaction->getCountry());
         $this->assertNull($this->transaction->getOrderNumber());
+        $this->assertNull($this->transaction->getRevenue());
         $this->assertNull($this->transaction->getShipping());
         $this->assertNull($this->transaction->getState());
         $this->assertNull($this->transaction->getTax());
         $this->assertNull($this->transaction->getTotal());
     }
 
-    public function testSetGetAffiliation()
+    public function testToArrayFromArray()
     {
-        $val = "affiliation";
-        $this->transaction->setAffiliation($val);
-        $this->assertEquals($val, $this->transaction->getAffiliation());
-    }
+        $transaction = new Transaction();
+        $transaction->setOrderNumber('xxxx');
+        $transaction->setAffiliation('Store 777');
+        $transaction->setRevenue(85.00);
+        $transaction->setTotal(100.00);
+        $transaction->setTax(10.00);
+        $transaction->setShipping(5.00);
+        $transaction->setCity("NYC");
+        $transaction->setState("NY");
+        $transaction->setCountry("USA");
 
-    public function testSetGetCity()
-    {
-        $val = "city";
-        $this->transaction->setCity($val);
-        $this->assertEquals($val, $this->transaction->getCity());
-    }
+        $toArray = $transaction->toArray();
 
-    public function testSetGetCountry()
-    {
-        $val = "country";
-        $this->transaction->setCountry($val);
-        $this->assertEquals($val, $this->transaction->getCountry());
-    }
+        $transaction2 = new Transaction();
+        $transaction2->fromArray($toArray);
 
-    public function testSetGetOrderNumber()
-    {
-        $val = "orderNumber";
-        $this->transaction->setOrderNumber($val);
-        $this->assertEquals($val, $this->transaction->getOrderNumber());
-    }
-
-    public function testSetGetShipping()
-    {
-        $val = 99.99;
-        $this->transaction->setShipping($val);
-        $this->assertEquals($val, $this->transaction->getShipping());
-    }
-
-    public function testSetGetState()
-    {
-        $val = "state";
-        $this->transaction->setState($val);
-        $this->assertEquals($val, $this->transaction->getState());
-    }
-
-    public function testSetGetTax()
-    {
-        $val = 11.11;
-        $this->transaction->setTax($val);
-        $this->assertEquals($val, $this->transaction->getTax());
-    }
-
-    public function testSetGetTotal()
-    {
-        $val = 100.00;
-        $this->transaction->setTotal($val);
-        $this->assertEquals($val, $this->transaction->getTotal());
+        $this->assertEquals($transaction, $transaction2);
     }
 }
