@@ -78,7 +78,6 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $impression->setBrand('Brand AA');
     $impression->setCategory('Category A');
     $impression->setPrice(50.00);
-    $impression->setQuantity(1);
     $impression->setVariant('Black');
     $impression->setList('Search Results Page 1');
     $impression->setPosition(1);
@@ -91,7 +90,6 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $impression->setBrand('Brand BB');    
     $impression->setCategory('Category B');
     $impression->setPrice(25.00);
-    $impression->setQuantity(2);
     $impression->setVariant('Yellow');
     $impression->setList('Search Results Page 2');
     $impression->setPosition(2);    
