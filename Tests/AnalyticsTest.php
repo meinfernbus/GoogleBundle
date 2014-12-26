@@ -4,6 +4,7 @@ namespace AntiMattr\GoogleBundle\Tests;
 
 use AntiMattr\GoogleBundle\Analytics;
 use AntiMattr\GoogleBundle\Analytics\Event;
+use AntiMattr\GoogleBundle\Analytics\Impression;
 use AntiMattr\GoogleBundle\Analytics\Item;
 use AntiMattr\GoogleBundle\Analytics\Product;
 use AntiMattr\GoogleBundle\Analytics\Transaction;
@@ -185,6 +186,38 @@ class AnalyticsTest extends AntiMattrGoogleTestCase
         $this->assertEquals(2, count($this->analytics->getItems()));
     }
 
+    public function testAddGetImpressions()
+    {
+        $impression = new Impression();
+        $impression->setId('id');
+        $impression->setSku('zzzz');
+        $impression->setTitle('Product X');
+        $impression->setCategory('Category A');
+        $impression->setBrand('Brand A');
+        $impression->setList('Search Results A');
+        $impression->setPrice(50.00);
+        $impression->setPosition(1);
+        $impression->setVariant('Black');
+
+        $this->analytics->addImpression($impression);
+        $this->assertTrue($this->analytics->hasImpression($impression));
+
+        $impression = new Impression();
+        $impression->setSku('jjjj');
+        $impression->setTitle('Product J');
+        $impression->setCategory('Category B');
+        $impression->setBrand('Brand B');
+        $impression->setList('Search Results B');
+        $impression->setPrice(25.00);
+        $impression->setPosition(2);
+
+        $this->analytics->addImpression($impression);
+        $this->assertTrue($this->analytics->hasImpression($impression));
+
+        $this->assertTrue($this->analytics->hasImpressions());
+        $this->assertEquals(2, count($this->analytics->getImpressions()));
+    }
+
     public function testAddGetProducts()
     {
         $product = new Product();
@@ -192,9 +225,11 @@ class AnalyticsTest extends AntiMattrGoogleTestCase
         $product->setTitle('Product X');
         $product->setCategory('Category A');
         $product->setBrand('Brand A');
+        $product->setCoupon('COUPONA');
         $product->setPrice(50.00);
         $product->setQuantity(1);
         $product->setPosition(1);
+        $product->setVariant('Black');
 
         $this->analytics->addProduct($product);
         $this->assertTrue($this->analytics->hasProduct($product));
@@ -204,6 +239,7 @@ class AnalyticsTest extends AntiMattrGoogleTestCase
         $product->setTitle('Product J');
         $product->setCategory('Category B');
         $product->setBrand('Brand B');
+        $product->setCoupon('COUPONB');
         $product->setPrice(25.00);
         $product->setQuantity(2);
         $product->setPosition(2);

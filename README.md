@@ -46,6 +46,7 @@ Google Analytics
 ```yaml
 google:
     analytics:
+        enhanced_ecommerce: false
         session_auto_started: true
         trackers:
             default:
@@ -69,7 +70,8 @@ With twig:
 
     {% include "GoogleBundle:Analytics:async_universal.html.twig" %}
 
-#### Features
+Features
+========
 
 ##### Logging a Default Page View
 
@@ -116,6 +118,77 @@ Note: Page View Queue is always executed before a Custom Page View
     $item->setPrice(25.00);
     $item->setQuantity(2);
     $this->get('google.analytics')->addItem($item);
+
+#### Enhanced Ecommerce Tracking 
+
+Measuring Transactions
+
+https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#measuring-transactions
+
+    $transaction = new \AntiMattr\GoogleBundle\Analytics\Transaction();
+    $transaction->setOrderNumber('xxxx');
+    $transaction->setAffiliation('Store 777');
+    $transaction->setTotal(100.00);
+    $transaction->setTax(10.00);
+    $transaction->setShipping(5.00);
+    $transaction->setCity("NYC");
+    $transaction->setState("NY");
+    $transaction->setCountry("USA");
+    $this->get('google.analytics')->setTransaction($transaction);
+
+    $product = new \AntiMattr\GoogleBundle\Analytics\Product();
+    $product->setSku('zzzz');
+    $product->setTitle('Product X');
+    $product->setBrand('Brand AA');
+    $product->setCategory('Category A');
+    $product->setPrice(50.00);
+    $product->setQuantity(1);
+    $product->setVariant('Black');
+    $product->setCoupon('COUPON AAA');
+    $product->setPosition(1);
+    $this->get('google.analytics')->addProduct($product);
+
+    $product = new \AntiMattr\GoogleBundle\Analytics\Product();
+    $product->setOrderNumber('bbbb');
+    $product->setSku('jjjj');
+    $product->setTitle('Product Y');
+    $product->setBrand('Brand BB');    
+    $product->setCategory('Category B');
+    $product->setPrice(25.00);
+    $product->setQuantity(2);
+    $product->setVariant('Yellow');
+    $product->setCoupon('COUPON BBB');
+    $product->setPosition(2);    
+    $this->get('google.analytics')->addProduct($product);
+
+Measuring Impressions
+
+https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#measuring-impressions
+
+    $impression = new \AntiMattr\GoogleBundle\Analytics\Impression();
+    $impression->setSku('zzzz');
+    $impression->setTitle('Product X');
+    $impression->setBrand('Brand AA');
+    $impression->setCategory('Category A');
+    $impression->setPrice(50.00);
+    $impression->setQuantity(1);
+    $impression->setVariant('Black');
+    $impression->setList('Search Results Page 1');
+    $impression->setPosition(1);
+    $this->get('google.analytics')->addImpression($impression);
+
+    $impression = new \AntiMattr\GoogleBundle\Analytics\Impression();
+    $impression->setOrderNumber('bbbb');
+    $impression->setSku('jjjj');
+    $impression->setTitle('Product Y');
+    $impression->setBrand('Brand BB');    
+    $impression->setCategory('Category B');
+    $impression->setPrice(25.00);
+    $impression->setQuantity(2);
+    $impression->setVariant('Yellow');
+    $impression->setList('Search Results Page 2');
+    $impression->setPosition(2);    
+    $this->get('google.analytics')->addImpression($impression);
 
 ### Google Adwords
 

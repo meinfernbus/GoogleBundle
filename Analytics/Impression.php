@@ -5,13 +5,13 @@ namespace AntiMattr\GoogleBundle\Analytics;
 use AntiMattr\Common\Product\Product as CommonProduct;
 
 /**
- * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#product-data
+ * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#impression-data
  */
-class Product extends CommonProduct
+class Impression extends CommonProduct
 {
     protected $brand;
     protected $category;
-    protected $coupon;
+    protected $list;
     protected $position;
     protected $variant;
 
@@ -58,17 +58,17 @@ class Product extends CommonProduct
     /**
      * @param string
      */
-    public function setCoupon($coupon)
+    public function setList($list)
     {
-        $this->coupon = $coupon;
+        $this->list = $list;
     }
 
     /**
      * @return string
      */
-    public function getCoupon()
+    public function getList()
     {
-        return $this->coupon;
+        return $this->list;
     }
 
     /**
@@ -124,8 +124,7 @@ class Product extends CommonProduct
             'category' => $this->category,
             'variant' => $this->variant,
             'price' => $this->price,
-            'quantity' => $this->quantity,
-            'coupon' => $this->coupon,
+            'list' => $this->list,
             'position' => $this->position
         );
     }
@@ -156,11 +155,8 @@ class Product extends CommonProduct
         if (isset($data['price'])) {
             $this->price = $data['price'];
         }
-        if (isset($data['quantity'])) {
-            $this->quantity = $data['quantity'];
-        }
-        if (isset($data['coupon'])) {
-            $this->coupon = $data['coupon'];
+        if (isset($data['list'])) {
+            $this->list = $data['list'];
         }
         if (isset($data['position'])) {
             $this->position = $data['position'];

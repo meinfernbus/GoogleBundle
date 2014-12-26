@@ -4,6 +4,7 @@ namespace AntiMattr\GoogleBundle;
 
 use AntiMattr\GoogleBundle\Analytics\CustomVariable;
 use AntiMattr\GoogleBundle\Analytics\Event;
+use AntiMattr\GoogleBundle\Analytics\Impression;
 use AntiMattr\GoogleBundle\Analytics\Item;
 use AntiMattr\GoogleBundle\Analytics\Product;
 use AntiMattr\GoogleBundle\Analytics\Transaction;
@@ -11,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Analytics
 {
+    const EC_IMPRESSIONS_KEY   = 'google_analytics/ec/impressions';
     const EC_PRODUCTS_KEY      = 'google_analytics/ec/products';
     const EVENT_QUEUE_KEY      = 'google_analytics/event/queue';
     const CUSTOM_PAGE_VIEW_KEY = 'google_analytics/page_view';
@@ -20,6 +22,7 @@ class Analytics
 
     private $container;
     private $customVariables = array();
+    private $enhancedEcommerce = false;
     private $pageViewsWithBaseUrl = true;
     private $sessionAutoStarted = false;
     private $trackers;
@@ -33,9 +36,11 @@ class Analytics
         array $trackers = array(),
         array $whitelist = array(),
         array $dashboard = array(),
-        $sessionAutoStarted = false)
+        $sessionAutoStarted = false,
+        $enhancedEcommerce = false)
     {
         $this->container = $container;
+        $this->enhancedEcommerce = $enhancedEcommerce;
         $this->sessionAutoStarted = $sessionAutoStarted;
         $this->trackers = $trackers;
         $this->whitelist = $whitelist;
@@ -244,6 +249,14 @@ class Analytics
     }
 
     /**
+     * @return boolean
+     */
+    public function isEnhancedEcommerce()
+    {
+        return $this->enhancedEcommerce;
+    }
+
+    /**
      * @param AntiMattr\GoogleBundle\Analytics\Event $event
      */
     public function enqueueEvent(Event $event)
@@ -349,7 +362,75 @@ class Analytics
         return $hydratedItems;
     }
 
+    /**
+     * @param AntiMattr\GoogleBundle\Analytics\Impression $impression
+     */
+    public function addImpression(Impression $impression)
+    {
+        $impressionArray = $impression->toArray();
+        $this->add(self::EC_IMPRESSIONS_KEY, $impressionArray);
+    }
 
+    /**
+     * @return boolean
+     */
+    public function hasImpressions()
+    {
+        return $this->has(self::EC_IMPRESSIONS_KEY);
+    }
+
+    /**
+     * @param AntiMattr\GoogleBundle\Analytics\Impression $impression
+     *
+     * @return boolean
+     */
+    public function hasImpression(Impression $impression)
+    {
+        if (!$this->hasImpressions()) {
+            return false;
+        }
+        $impressions = $this->getImpressionsFromSession();
+
+        $impressionSku = $impression->getId();
+        foreach ($impressions as $impressionFromSession) {
+            if ($impressionSku == $impressionFromSession->getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param array[] AntiMattr\GoogleBundle\Analytics\Impression $impressions
+     */
+    public function setImpressions($impressions)
+    {
+        $impressionsArray = array();
+        foreach ($impressions as $impression) {
+            $impressionArray = $impression->toArray();
+            $impressionsArray[] = $impressionArray;
+        }
+        $this->container->get('session')->set(self::EC_IMPRESSIONS_KEY, $impressionsArray);
+    }
+
+    /**
+     * @return array[] AntiMattr\GoogleBundle\Analytics\Impression
+     */
+    public function getImpressions()
+    {
+        $impressionArray = $this->getOnce(self::EC_IMPRESSIONS_KEY);
+        $hydratedImpressions = array();
+        foreach ($impressionArray as $value) {
+            if (is_object($value)) {
+                $hydratedImpressions[] = $value;
+                continue;
+            }
+            $impression = new Impression();
+            $impression->fromArray($value);
+            $hydratedImpressions[] = $impression;
+        }
+        return $hydratedImpressions;
+    }
 
     /**
      * @param AntiMattr\GoogleBundle\Analytics\Product $product
@@ -380,7 +461,7 @@ class Analytics
         }
         $products = $this->getProductsFromSession();
 
-        $productSku = $product->getSku();
+        $productSku = $product->getId();
         foreach ($products as $productFromSession) {
             if ($productSku == $productFromSession->getId()) {
                 return true;
@@ -682,6 +763,25 @@ class Analytics
             $hydratedItems[] = $item;
         }
         return $hydratedItems;
+    }
+
+    /**
+     * @return array[] AntiMattr\GoogleBundle\Analytics\Impression $impressions
+     */
+    private function getImpressionsFromSession()
+    {
+        $impressionArray = $this->get(self::EC_IMPRESSIONS_KEY);
+        $hydratedImpressions = array();
+        foreach ($impressionArray as $value) {
+            if (is_object($value)) {
+                $hydratedProducts[] = $value;
+                continue;
+            }
+            $impression = new Impression();
+            $impression->fromArray($value);
+            $hydratedImpressions[] = $impression;
+        }
+        return $hydratedImpressions;
     }
 
     /**
