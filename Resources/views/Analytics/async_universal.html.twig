@@ -122,8 +122,9 @@ ga('{{ google_analytics.trackerName(key) }}set', '{{ customVariable.name }}', '{
 {% endfor %}
 {% endif %}
 
-// Classic Transactions
+// Classic and Enhanced Ecommerce Transactions
 // @see https://developers.google.com/analytics/devguides/collection/upgrade/reference/gajs-analyticsjs#ecommerce
+// @see https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#measuring-transactions
 // Note: Classic Transaction do have a native send method, so they do not need to be initialized prior to page views
 {% include "GoogleBundle:Analytics:transaction.js.twig" with {'key': 'key'} %}
 
