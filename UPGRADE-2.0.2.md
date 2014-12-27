@@ -68,7 +68,7 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $product->setVariant('Yellow');
     $product->setCoupon('COUPON BBB');
     $product->setPosition(2);    
-    $this->get('google.analytics')->addProduct($product);
+    $this->get('google.analytics')->addItem($product);
 
 Measuring Impressions
 

@@ -137,7 +137,7 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $transaction->setCountry("USA");
     $this->get('google.analytics')->setTransaction($transaction);
 
-    $product = new \AntiMattr\GoogleBundle\Analytics\Product();
+    $product = new \AntiMattr\GoogleBundle\Analytics\Item();
     $product->setSku('zzzz');
     $product->setTitle('Product X');
     $product->setAction('purchase');    
@@ -148,9 +148,9 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $product->setVariant('Black');
     $product->setCoupon('COUPON AAA');
     $product->setPosition(1);
-    $this->get('google.analytics')->addProduct($product);
+    $this->get('google.analytics')->addItem($product);
 
-    $product = new \AntiMattr\GoogleBundle\Analytics\Product();
+    $product = new \AntiMattr\GoogleBundle\Analytics\Item();
     $product->setOrderNumber('bbbb');
     $product->setSku('jjjj');
     $product->setTitle('Product Y');
@@ -162,7 +162,7 @@ https://developers.google.com/analytics/devguides/collection/analyticsjs/enhance
     $product->setVariant('Yellow');
     $product->setCoupon('COUPON BBB');
     $product->setPosition(2);    
-    $this->get('google.analytics')->addProduct($product);
+    $this->get('google.analytics')->addItem($product);
 
 Measuring Impressions
 
