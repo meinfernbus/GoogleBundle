@@ -1,0 +1,63 @@
+{# @param string key - Tracker key #}
+
+{% if google_analytics.isEnhancedEcommerce %}
+  // Enhanced Ecommerce Transactions
+  // @see https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#measuring-transactions
+  // Note: Enhanced Ecommerce do need to be initialized prior to a page view or event
+  {% if google_analytics.isTransactionValid %}
+  {% set transaction = google_analytics.transaction %}
+  ga('{{ google_analytics.trackerName(key) }}require', 'ec');
+  
+  {% if google_analytics.hasItems %}
+  {% for product in google_analytics.getItems %}
+  ga('{{ google_analytics.trackerName(key) }}ec:addProduct', { // Provide product details in an productFieldObject.
+    'id': '{{ product.id | escape('js') }}',            // Product ID (string).
+    'name': '{{ product.title | escape('js') }}',        // Product name (string).
+    'category': '{{ product.category | escape('js') }}', // Product category (string).
+    'brand': '{{ product.brand | escape('js') }}',       // Product brand (string).
+    'variant': '{{ product.variant | escape('js') }}',   // Product variant (string).
+    'price': '{{ product.price | escape('js') }}',       // Product price (currency).
+    'coupon': '{{ product.coupon | escape('js') }}',     // Product coupon (string).
+    'quantity': {{ product.quantity | escape('js') }}    // Product quantity (number).
+  });
+  {% endfor %}
+  {% endif %}
+
+  ga('{{ google_analytics.trackerName(key) }}ec:setAction', 'purchase', { // Transaction details are provided in an actionFieldObject.
+    'id': '{{ transaction.orderNumber | escape('js') }}',          // (Required) Transaction id (string).
+    'affiliation': '{{ transaction.affiliation | escape('js') }}', // Affiliation (string).
+    'revenue': '{{ transaction.revenue | escape('js') }}',         // Revenue (currency).
+    'tax': '{{ transaction.tax | escape('js') }}',                 // Tax (currency).
+    'shipping': '{{ transaction.shipping | escape('js') }}',       // Shipping (currency).
+    'coupon': '{{ transaction.coupon | escape('js') }}'            // Transaction coupon (string).
+  });
+  {% endif %}
+{% else %}
+  // Classic Transactions
+  // @see https://developers.google.com/analytics/devguides/collection/upgrade/reference/gajs-analyticsjs#ecommerce
+  // Note: Classic Transaction do have a native send method, so they do not need to be initialized prior to page views
+  {% if google_analytics.isTransactionValid %}
+  {% set transaction = google_analytics.transaction %}
+  ga('{{ google_analytics.trackerName(key) }}require', 'ecommerce');
+  ga('{{ google_analytics.trackerName(key) }}ecommerce:addTransaction', {
+    'id': '{{ transaction.orderNumber | escape('js') }}',          // Transaction ID. Required
+    'affiliation': '{{ transaction.affiliation | escape('js') }}', // Affiliation or store name OPTIONAL
+    'revenue': '{{ transaction.revenue | escape('js') }}',         // Revenue
+    'shipping': '{{ transaction.shipping | escape('js') }}',       // Shipping OPTIONAL
+    'tax': '{{ transaction.tax | escape('js') }}'                  // Tax OPTIONAL
+  });
+  {% if google_analytics.hasItems %}
+  {% for item in google_analytics.items %}
+  ga('{{ google_analytics.trackerName(key) }}ecommerce:addItem', {
+    'id': '{{ item.orderNumber | escape('js') }}',    // Transaction ID. Required
+    'name': '{{ item.name | escape('js') }}',         // Product name. Required
+    'sku': '{{ item.id | escape('js') }}',           // SKU/code
+    'category': '{{ item.category | escape('js') }}', // Category or variation
+    'price': '{{ item.price | escape('js') }}',       // Unit price
+    'quantity': '{{ item.quantity | escape('js') }}'  // Quantity
+  });
+  {% endfor %}
+  {% endif %}
+  ga('{{ google_analytics.trackerName(key) }}ecommerce:send');
+  {% endif %}
+{% endif %}

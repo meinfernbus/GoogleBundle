@@ -1,0 +1,7 @@
+{# @param string key - Tracker key #}
+
+// Plugins
+// @see https://developers.google.com/analytics/devguides/collection/analyticsjs/plugins
+{% for plugin in google_analytics.plugins(key) %}
+ga('{{ google_analytics.trackerName(key) }}require', '{{ plugin }}');
+{% endfor %}

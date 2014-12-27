@@ -3,72 +3,53 @@
 namespace AntiMattr\GoogleBundle\Tests\Analytics;
 
 use AntiMattr\GoogleBundle\Analytics\Item;
+use AntiMattr\TestCase\AntiMattrTestCase;
 
-class ItemTest extends \PHPUnit_Framework_TestCase
+class ItemTest extends AntiMattrTestCase
 {
     private $item;
 
     public function setUp()
     {
-        parent::setup();
         $this->item = new Item();
-    }
-
-    public function tearDown()
-    {
-        $this->item = null;
-        parent::tearDown();
     }
 
     public function testConstructor()
     {
+        $this->assertInstanceOf('AntiMattr\Common\Product\Product', $this->item);
+        $this->assertNull($this->item->getId());
+        $this->assertNull($this->item->getTitle());
+        $this->assertNull($this->item->getTitle());
+        $this->assertNotNull($this->item->getAction());
+        $this->assertNull($this->item->getBrand());
         $this->assertNull($this->item->getCategory());
-        $this->assertNull($this->item->getName());
         $this->assertNull($this->item->getOrderNumber());
         $this->assertNull($this->item->getPrice());
         $this->assertNull($this->item->getQuantity());
-        $this->assertNull($this->item->getSku());
+        $this->assertNull($this->item->getCoupon());
+        $this->assertNull($this->item->getPosition());
     }
 
-    public function testSetGetCategory()
+    public function testToArrayFromArray()
     {
-        $val = "category";
-        $this->item->setCategory($val);
-        $this->assertEquals($val, $this->item->getCategory());
-    }
+        $item = new Item();
+        $item->setId('id');
+        $item->setSku('zzzz');
+        $item->setTitle('Product X');
+        $item->setCategory('Category A');
+        $item->setBrand('Brand A');
+        $item->setCoupon('COUPONA');
+        $item->setOrderNumber('orderNumberA');
+        $item->setPrice(50.00);
+        $item->setQuantity(1);
+        $item->setPosition(1);
+        $item->setVariant('Black');
 
-    public function testSetGetName()
-    {
-        $val = "name";
-        $this->item->setName($val);
-        $this->assertEquals($val, $this->item->getName());
-    }
+        $toArray = $item->toArray();
 
-    public function testSetGetOrderNumber()
-    {
-        $val = "xxxxxx";
-        $this->item->setOrderNumber($val);
-        $this->assertEquals($val, $this->item->getOrderNumber());
-    }
+        $item2 = new Item();
+        $item2->fromArray($toArray);
 
-    public function testSetGetPrice()
-    {
-        $val = 99.99;
-        $this->item->setPrice($val);
-        $this->assertEquals($val, $this->item->getPrice());
-    }
-
-    public function testSetGetQuantity()
-    {
-        $val = 7;
-        $this->item->setQuantity($val);
-        $this->assertEquals($val, $this->item->getQuantity());
-    }
-
-    public function testSetGetSku()
-    {
-        $val = '8888';
-        $this->item->setSku($val);
-        $this->assertEquals($val, $this->item->getSku());
+        $this->assertEquals($item, $item2);
     }
 }
