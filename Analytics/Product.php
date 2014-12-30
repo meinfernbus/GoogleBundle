@@ -13,6 +13,7 @@ class Product extends CommonProduct
     protected $brand;
     protected $category;
     protected $coupon;
+    protected $list;
     protected $position;
     protected $variant;
 
@@ -91,6 +92,22 @@ class Product extends CommonProduct
     /**
      * @param string
      */
+    public function setList($list)
+    {
+        $this->list = $list;
+    }
+
+    /**
+     * @return string
+     */
+    public function getList()
+    {
+        return $this->list;
+    }
+
+    /**
+     * @param string
+     */
     public function setPosition($position)
     {
         $this->position = $position;
@@ -139,6 +156,7 @@ class Product extends CommonProduct
             'name' => $this->title,
             'action' => $this->action,
             'brand' => $this->brand,
+            'list' => $this->list,
             'category' => $this->category,
             'variant' => $this->variant,
             'price' => $this->price,
@@ -170,6 +188,9 @@ class Product extends CommonProduct
         }
         if (isset($data['category'])) {
             $this->category = $data['category'];
+        }
+        if (isset($data['list'])) {
+            $this->list = $data['list'];
         }
         if (isset($data['variant'])) {
             $this->variant = $data['variant'];
