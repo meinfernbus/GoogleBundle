@@ -21,6 +21,7 @@ class ProductTest extends AntiMattrTestCase
         $this->assertNull($this->product->getSku());
         $this->assertNull($this->product->getTitle());
         $this->assertNull($this->product->getAction());
+        $this->assertNull($this->product->getList());
         $this->assertNull($this->product->getBrand());
         $this->assertNull($this->product->getCategory());
         $this->assertNull($this->product->getPrice());
@@ -39,6 +40,7 @@ class ProductTest extends AntiMattrTestCase
         $product->setCategory('Category A');
         $product->setBrand('Brand A');
         $product->setCoupon('COUPONA');
+        $product->setList('Search Results A');
         $product->setPrice(50.00);
         $product->setQuantity(1);
         $product->setPosition(1);
