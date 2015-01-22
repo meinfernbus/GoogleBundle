@@ -56,6 +56,8 @@ class MapsManager
             $map->setKey($this->config['key']);
         }
 
+        $map->setHost($this->config['host']);
+
         return $map;
     }
 
