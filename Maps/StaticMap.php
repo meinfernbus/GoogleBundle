@@ -131,7 +131,7 @@ class StaticMap extends AbstractMap
         $cachePrefix = 'http://';
 
         if (isset($this->meta['host'])) {
-            $cachePrefix .= $this->meta['host'];
+            $cachePrefix = $this->meta['host'];
         } else {
             if (!empty($_SERVER['SERVER_NAME'])) {
                 $cachePrefix .= $_SERVER['SERVER_NAME'];
@@ -149,6 +149,7 @@ class StaticMap extends AbstractMap
 
         if ($this->hasMeta()) {
             $queryData = $this->getMeta();
+            unset($queryData['host']);
         }
 
         $queryData['sensor'] = ((bool) $this->getSensor()) ? 'true' : 'false';
@@ -180,6 +181,7 @@ class StaticMap extends AbstractMap
         }
 
         $targetFile = str_replace(array('.', ',', '|', '|', ':', '=', '&'), '_', $request);
+
         if (!empty($apiKey)) {
             $request .= '&key' . '=' . $apiKey;
         }
@@ -188,6 +190,7 @@ class StaticMap extends AbstractMap
         if (!is_dir($this->getUploadRootDir())) {
             mkdir($this->getUploadRootDir());
         }
+
         if (is_dir($this->getUploadRootDir())) {
             $targetFilePath = $this->getAbsolutePath($targetFile);
             if (!file_exists($targetFilePath) || (filemtime($targetFilePath) + 86400) < time()) {
@@ -199,6 +202,7 @@ class StaticMap extends AbstractMap
         } else {
             $request = $prefix . $request;
         }
+
         $out = '<img id="' . $this->getId() . '" src="' . $request . '" />';
 
         return $out;
