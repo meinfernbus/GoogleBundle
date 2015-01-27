@@ -163,6 +163,8 @@ google:
     maps:
         config:
             key: YOUR-API-KEY-FROM-GOOGLE
+            host: YOUR-HOST // Host where the gmap image is served.
+            (Optional, only needed if script is running from CLI. If not set $_SERVER is used)
 ```
 
 Get your key at https://code.google.com/apis/console/
