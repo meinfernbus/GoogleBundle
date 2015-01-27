@@ -82,7 +82,7 @@ class StaticMap extends AbstractMap
             return $this->meta['size'];
         }
         if (($height = $this->getHeight()) && ($width = $this->getWidth())) {
-            return $width.'x'.$height;
+            return $width . 'x' . $height;
         }
     }
 
@@ -90,7 +90,7 @@ class StaticMap extends AbstractMap
     {
         $type = (string) $type;
         if (FALSE === $this->isTypeValid($type)) {
-            throw new \InvalidArgumentException($type.' is not a valid Static Map Type.');
+            throw new \InvalidArgumentException($type . ' is not a valid Static Map Type.');
         }
         $this->meta['type'] = $type;
     }
@@ -126,11 +126,16 @@ class StaticMap extends AbstractMap
 
     public function render()
     {
-        $prefix  = static::API_ENDPOINT;
+        $prefix = static::API_ENDPOINT;
         $request = '';
         $cachePrefix = 'http://';
-        if (!empty($_SERVER['SERVER_NAME'])) {
-            $cachePrefix .= $_SERVER['SERVER_NAME'];
+
+        if (isset($this->meta['host'])) {
+            $cachePrefix = $this->meta['host'];
+        } else {
+            if (!empty($_SERVER['SERVER_NAME'])) {
+                $cachePrefix .= $_SERVER['SERVER_NAME'];
+            }
         }
 
         // Using router object would be better, but as this is a static class...
@@ -139,11 +144,15 @@ class StaticMap extends AbstractMap
             $prefix = 'https' . substr($prefix, 4);
             $cachePrefix = 'https' . substr($cachePrefix, 4);
         }
+
         $queryData = array();
+
         if ($this->hasMeta()) {
             $queryData = $this->getMeta();
+            unset($queryData['host']);
         }
-        $queryData['sensor'] = ((bool)$this->getSensor()) ? 'true' : 'false';
+
+        $queryData['sensor'] = ((bool) $this->getSensor()) ? 'true' : 'false';
 
         if (isset($queryData['key'])) {
             $apiKey = $queryData['key'];
@@ -151,6 +160,7 @@ class StaticMap extends AbstractMap
         } else {
             $apiKey = '';
         }
+
         $request .= http_build_query($queryData);
 
         if ($this->hasMarkers()) {
@@ -158,27 +168,29 @@ class StaticMap extends AbstractMap
                 $request .= '&markers=';
                 if ($marker->hasMeta()) {
                     foreach ($marker->getMeta() as $mkey => $mval) {
-                        $request .= $mkey.':'.$mval.'|';
+                        $request .= $mkey . ':' . $mval . '|';
                     }
                 }
                 if ($latitude = $marker->getLatitude()) {
                     $request .= $latitude;
                 }
                 if ($longitude = $marker->getLongitude()) {
-                    $request .= ','.$longitude;
+                    $request .= ',' . $longitude;
                 }
             }
         }
 
-        $targetFile = str_replace(array('.',',','|','|',':','=','&'), '_', $request);
+        $targetFile = str_replace(array('.', ',', '|', '|', ':', '=', '&'), '_', $request);
+
         if (!empty($apiKey)) {
             $request .= '&key' . '=' . $apiKey;
         }
 
-	//var_dump('rootDir: ', $this->getUploadRootDir());die;
+        //var_dump('rootDir: ', $this->getUploadRootDir());die;
         if (!is_dir($this->getUploadRootDir())) {
             mkdir($this->getUploadRootDir());
         }
+
         if (is_dir($this->getUploadRootDir())) {
             $targetFilePath = $this->getAbsolutePath($targetFile);
             if (!file_exists($targetFilePath) || (filemtime($targetFilePath) + 86400) < time()) {
@@ -190,7 +202,8 @@ class StaticMap extends AbstractMap
         } else {
             $request = $prefix . $request;
         }
-        $out = '<img id="'.$this->getId().'" src="'.$request.'" />';
+
+        $out = '<img id="' . $this->getId() . '" src="' . $request . '" />';
 
         return $out;
     }
@@ -208,5 +221,10 @@ class StaticMap extends AbstractMap
     protected function getUploadRootDir()
     {
         return __DIR__ . '/../../../../../../web/' . self::CACHE_DIR;
+    }
+
+    public function setHost($host)
+    {
+        $this->meta['host'] = $host;
     }
 }

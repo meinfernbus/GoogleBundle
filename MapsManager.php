@@ -52,8 +52,13 @@ class MapsManager
     public function createStaticMap()
     {
         $map = new Maps\StaticMap();
+
         if (isset($this->config['key'])) {
             $map->setKey($this->config['key']);
+        }
+
+        if (isset($this->config['host'])) {
+            $map->setHost($this->config['host']);
         }
 
         return $map;
