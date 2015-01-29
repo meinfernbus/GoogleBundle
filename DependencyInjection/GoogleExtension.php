@@ -19,6 +19,7 @@ class GoogleExtension extends Extension
             'adwords' => array(),
             'analytics' => array(),
             'maps' => array(),
+            'tagManager' => array(),
         );
 
         foreach ($configs as $config) {
@@ -95,6 +96,22 @@ class GoogleExtension extends Extension
         foreach ($configs as $config) {
             if (isset($config['config'])) {
                 $container->setParameter('google.maps.config', $config['config']);
+            }
+        }
+    }
+
+    /**
+     * @param array            $configs
+     * @param ContainerBuilder $container
+     */
+    private function tagManagerLoad(array $configs, ContainerBuilder $container)
+    {
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('tag-manager.xml');
+
+        foreach ($configs as $config) {
+            if (isset($config['container'])) {
+                $container->setParameter('google.tag_manager.container', $config['container']);
             }
         }
     }
