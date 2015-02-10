@@ -140,8 +140,13 @@ class StaticMap extends AbstractMap
         $prefix      = static::API_ENDPOINT;
         $request     = '';
         $cachePrefix = 'http://';
-        if (!empty($_SERVER['HTTP_HOST'])) {
-            $cachePrefix .= $_SERVER['HTTP_HOST'];
+
+        if (isset($this->meta['host'])) {
+            $cachePrefix = $this->meta['host'];
+        } else {
+            if (!empty($_SERVER['HTTP_HOST'])) {
+                $cachePrefix .= $_SERVER['HTTP_HOST'];
+            }
         }
 
         // Using router object would be better, but as this is a static class...
@@ -225,5 +230,10 @@ class StaticMap extends AbstractMap
     protected function getUploadRootDir()
     {
         return __DIR__ . '/../../../../../../web/' . self::CACHE_DIR;
+    }
+
+    public function setHost($host)
+    {
+        $this->meta['host'] = $host;
     }
 }
