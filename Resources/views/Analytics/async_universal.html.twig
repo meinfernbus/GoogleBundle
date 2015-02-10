@@ -43,8 +43,8 @@ AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, labe
     if (typeof nonInteraction != 'undefined') {
         eventNonInteraction = Number(nonInteraction);
     }
-    if (typeof eventCallback != 'undefined') {
-        eventCallback = eventCallback;
+    if (typeof callback != 'undefined') {
+        eventCallback = callback;
     }               
 
     if (typeof ga == "undefined") {
