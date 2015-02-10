@@ -161,11 +161,13 @@ class StaticMap extends AbstractMap
         }
         $queryData['sensor'] = ((bool) $this->getSensor()) ? 'true' : 'false';
 
+        $apiKey = '';
         if (isset($queryData['key'])) {
             $apiKey = $queryData['key'];
             unset($queryData['key']);
-        } else {
-            $apiKey = '';
+        }
+        if (isset($queryData['host'])) {
+            unset($queryData['host']);
         }
         $request .= http_build_query($queryData);
 
