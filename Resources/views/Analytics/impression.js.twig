@@ -17,6 +17,5 @@
     'list': '{{ impression.list | escape('js') }}'          // Impression coupon (string).
   });
   {% endfor %}
-  ga('{{ google_analytics.trackerName(key) }}ec:setAction', 'detail');
   {% endif %}
 {% endif %}
