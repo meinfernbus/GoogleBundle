@@ -2,12 +2,12 @@
 
 {% if google_analytics.isEnhancedEcommerce %}
   // Enhanced Ecommerce Impressions
-  // @see https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#product-impression
+  // @see https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#measuring-impressions
   // Note: Enhanced ecommerce plugin is required but not included in this template
-  
+
   {% if google_analytics.hasImpressions("detail") %}
   {% for impression in google_analytics.getImpressions("detail") %}
-  ga('{{ google_analytics.trackerName(key) }}ec:addProduct', { // Provide product details in an impressionFieldObject.
+  ga('{{ google_analytics.trackerName(key) }}ec:addImpression', { // Provide product details in an impressionFieldObject.
     'id': '{{ impression.id | escape('js') }}',             // Impression ID (string).
     'name': '{{ impression.title | escape('js') }}',        // Impression name (string).
     'category': '{{ impression.category | escape('js') }}', // Impression category (string).
