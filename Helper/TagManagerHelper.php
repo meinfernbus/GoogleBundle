@@ -10,38 +10,38 @@ use Symfony\Component\Templating\Helper\Helper;
 class TagManagerHelper extends Helper
 {
     /**
-     * @var string
+     * @var array
      */
-    private $containerId;
+    private $containerIds;
 
     /**
      * Contructor
      *
-     * @param string $containerId
+     * @param array $containerIds
      */
-    public function __construct($containerId)
+    public function __construct($containerIds)
     {
-        $this->containerId = $containerId;
+        $this->containerIds = $containerIds;
     }
 
     /**
-     * Gets container id
+     * Gets container ids
      *
      * @return string
      */
-    public function getContainerId()
+    public function getContainerIds()
     {
-        return $this->containerId;
+        return $this->containerIds;
     }
 
     /**
-     * Checks whether container id is set
+     * Checks whether container ids are set
      *
      * @return boolean
      */
-    public function hasContainerId()
+    public function hasContainerIds()
     {
-        return !empty($this->containerId);
+        return !empty($this->containerIds);
     }
 
     /**

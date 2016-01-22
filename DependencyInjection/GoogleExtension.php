@@ -106,14 +106,20 @@ class GoogleExtension extends Extension
      */
     private function tagManagerLoad(array $configs, ContainerBuilder $container)
     {
+        $containers = [];
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('tag-manager.xml');
 
         foreach ($configs as $config) {
             if (isset($config['container'])) {
-                $container->setParameter('google.tag_manager.container', $config['container']);
+                $containers[] = $config['container'];
+            }
+            if (isset($config['containers'])) {
+                $containers = array_merge($containers, array_values($config['containers']));
             }
         }
+
+        $container->setParameter('google.tag_manager.containers', $containers);
     }
 
     /**
