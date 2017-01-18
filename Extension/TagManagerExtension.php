@@ -7,7 +7,7 @@ use AntiMattr\GoogleBundle\Helper\TagManagerHelper;
 /**
  * Tag Manager Extension
  */
-class TagManagerExtension extends \Twig_Extension
+class TagManagerExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
     private $tagManagerHelper;
 
