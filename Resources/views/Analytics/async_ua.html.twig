@@ -14,8 +14,8 @@
 
         ga('create', '{{ tracker.accountId }}', {% if tracker.crossDomain is defined %}'auto', {'name': '{{ google_analytics.trackerName(key)|trim('.') }}', 'allowLinker': true}{% else %}'{{ tracker.domain }}',{'name': '{{ google_analytics.trackerName(key)|trim('.') }}'}{% endif %});
         ga('{{ google_analytics.trackerName(key) }}require', 'displayfeatures');
-        ga('{{ google_analytics.trackerName(key) }}send', 'pageview');
         ga('{{ google_analytics.trackerName(key) }}set', 'anonymizeIp', {% if tracker.anonymizeIp %}true{% else %}false{% endif %});
+        ga('{{ google_analytics.trackerName(key) }}send', 'pageview');
 
         {% if google_analytics.hasCustomVariables %}
             {% for customVariable in google_analytics.customVariables %}
