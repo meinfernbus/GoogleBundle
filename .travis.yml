@@ -1,0 +1,23 @@
+language: php
+
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.composer
+
+php:
+    - hhvm
+    - 5.6
+    - 7.0
+    - 7.1
+env:
+    - deps=high
+    - deps=low
+
+install:
+    - if [ "$deps" = "high" ]; then composer --prefer-dist -n --no-progress update; fi;
+    - if [ "$deps" = "low" ]; then composer --prefer-dist -n --no-progress --prefer-lowest update; fi;
+
+script:
+    - composer test
