@@ -63,6 +63,12 @@ class GoogleExtension extends Extension
         $loader->load('analytics.xml');
 
         foreach ($configs as $config) {
+            if (isset($config['enhanced_ecommerce'])) {
+                $container->setParameter('google.analytics.enhanced_ecommerce', $config['enhanced_ecommerce']);
+            }
+            if (isset($config['session_auto_started'])) {
+                $container->setParameter('google.analytics.session_auto_started', $config['session_auto_started']);
+            }
             if (isset($config['trackers'])) {
                 $container->setParameter('google.analytics.trackers', $config['trackers']);
             }

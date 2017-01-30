@@ -1,0 +1,17 @@
+{# @param string key - Tracker key #}
+
+// Events
+// @see https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+{% if google_analytics.hasEventQueue %}
+AntiMattr.GoogleAnalytics.onGatLoad(function() {
+{% for event in google_analytics.eventQueue %}
+AntiMattr.GoogleAnalytics.notifyEvent(
+    '{{ google_analytics.trackerName(key) }}'
+  , '{{ event.category }}'
+  , '{{ event.action }}'
+  {% if event.label is not null %}, '{{ event.label }}'{% endif %}
+  {% if event.value is not null %}, {{ event.value }}{% endif %}
+);
+{% endfor %}
+});
+{% endif %}

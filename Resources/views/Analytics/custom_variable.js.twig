@@ -1,0 +1,10 @@
+{# @param string key - Tracker key #}
+
+// Custom Variables on pageview
+// @see http://misterphilip.com/universal-analytics/migration/variables
+{% if google_analytics.hasCustomVariables %}
+{% for customVariable in google_analytics.customVariables %}
+// Custom Dimension, what user group is the visitor in?
+ga('{{ google_analytics.trackerName(key) }}set', '{{ customVariable.name }}', '{{ customVariable.value }}');
+{% endfor %}
+{% endif %}

@@ -5,18 +5,15 @@ namespace AntiMattr\GoogleBundle\Analytics;
 use AntiMattr\Common\Product\Product as CommonProduct;
 
 /**
- * Supports Ecommerce and Enhanced Ecommerce
- *
- * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/ecommerce
  * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#product-data
  */
-class Item extends CommonProduct
+class Product extends CommonProduct
 {
-    protected $action = 'purchase';
+    protected $action;
     protected $brand;
     protected $category;
     protected $coupon;
-    protected $orderNumber;
+    protected $list;
     protected $position;
     protected $variant;
 
@@ -95,33 +92,17 @@ class Item extends CommonProduct
     /**
      * @param string
      */
-    public function setName($name)
+    public function setList($list)
     {
-        $this->setTitle($name);
+        $this->list = $list;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getList()
     {
-        return $this->getTitle();
-    }
-
-    /**
-     * @param string
-     */
-    public function setOrderNumber($orderNumber)
-    {
-        $this->orderNumber = (string) $orderNumber;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOrderNumber()
-    {
-        return $this->orderNumber;
+        return $this->list;
     }
 
     /**
@@ -145,7 +126,7 @@ class Item extends CommonProduct
      */
     public function setPrice($price)
     {
-        $this->price = (float) $price;
+        $this->price = $price;
     }
 
     /**
@@ -175,9 +156,9 @@ class Item extends CommonProduct
             'name' => $this->title,
             'action' => $this->action,
             'brand' => $this->brand,
+            'list' => $this->list,
             'category' => $this->category,
             'variant' => $this->variant,
-            'orderNumber' => $this->orderNumber,
             'price' => $this->price,
             'quantity' => $this->quantity,
             'coupon' => $this->coupon,
@@ -208,11 +189,11 @@ class Item extends CommonProduct
         if (isset($data['category'])) {
             $this->category = $data['category'];
         }
+        if (isset($data['list'])) {
+            $this->list = $data['list'];
+        }
         if (isset($data['variant'])) {
             $this->variant = $data['variant'];
-        }
-        if (isset($data['orderNumber'])) {
-            $this->orderNumber = $data['orderNumber'];
         }
         if (isset($data['price'])) {
             $this->price = $data['price'];

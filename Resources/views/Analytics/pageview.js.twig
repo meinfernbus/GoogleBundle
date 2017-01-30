@@ -1,0 +1,18 @@
+{# @param string key - Tracker key #}
+
+// Pageview
+// @see https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
+{% if google_analytics.hasPageViewQueue %}
+{% for pageView in google_analytics.pageViewQueue %}
+ga('{{ google_analytics.trackerName(key) }}send', 'pageview', '{{ pageView|raw }}');
+{% endfor %}
+{% endif %}
+{% if google_analytics.hasCustomPageView %}
+ga('{{ google_analytics.trackerName(key) }}send', 'pageview', '{{ google_analytics.getCustomPageView()|raw }}');
+{% else %}
+if (window.location.hash) {
+  ga('{{ google_analytics.trackerName(key) }}send', 'pageview', '{{ google_analytics.getRequestUri()|raw }}'+window.location.hash);
+} else {
+  ga('{{ google_analytics.trackerName(key) }}send', 'pageview', '{{ google_analytics.getRequestUri()|raw }}');
+}
+{% endif %}

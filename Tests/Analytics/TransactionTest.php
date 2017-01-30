@@ -3,78 +3,48 @@
 namespace AntiMattr\GoogleBundle\Tests\Analytics;
 
 use AntiMattr\GoogleBundle\Analytics\Transaction;
+use AntiMattr\TestCase\AntiMattrTestCase;
 
-class TransactionTest extends \PHPUnit_Framework_TestCase {
+class TransactionTest extends AntiMattrTestCase
+{
+    protected $transaction;
 
-	protected $transaction;
+    public function setUp()
+    {
+        $this->transaction = new Transaction();
+    }
 
-	public function setUp() {
-		parent::setup();
-		$this->transaction = new Transaction();
-	}
+    public function testConstructor()
+    {
+        $this->assertNull($this->transaction->getAffiliation());
+        $this->assertNull($this->transaction->getCity());
+        $this->assertNull($this->transaction->getCountry());
+        $this->assertNull($this->transaction->getOrderNumber());
+        $this->assertNull($this->transaction->getRevenue());
+        $this->assertNull($this->transaction->getShipping());
+        $this->assertNull($this->transaction->getState());
+        $this->assertNull($this->transaction->getTax());
+        $this->assertNull($this->transaction->getTotal());
+    }
 
-	public function tearDown() {
-		$this->transaction = null;
-		parent::tearDown();
-	}
+    public function testToArrayFromArray()
+    {
+        $transaction = new Transaction();
+        $transaction->setOrderNumber('xxxx');
+        $transaction->setAffiliation('Store 777');
+        $transaction->setRevenue(85.00);
+        $transaction->setTotal(100.00);
+        $transaction->setTax(10.00);
+        $transaction->setShipping(5.00);
+        $transaction->setCity("NYC");
+        $transaction->setState("NY");
+        $transaction->setCountry("USA");
 
-	public function testConstructor() {
-		$this->assertNull($this->transaction->getAffiliation());
-		$this->assertNull($this->transaction->getCity());
-		$this->assertNull($this->transaction->getCountry());
-		$this->assertNull($this->transaction->getOrderNumber());
-		$this->assertNull($this->transaction->getShipping());
-		$this->assertNull($this->transaction->getState());
-		$this->assertNull($this->transaction->getTax());
-		$this->assertNull($this->transaction->getTotal());
-	}
+        $toArray = $transaction->toArray();
 
-	public function testSetGetAffiliation() {
-		 $val = "affiliation";
-		 $this->transaction->setAffiliation($val);
-		 $this->assertEquals($val, $this->transaction->getAffiliation());
-	}
+        $transaction2 = new Transaction();
+        $transaction2->fromArray($toArray);
 
-	public function testSetGetCity() {
-		 $val = "city";
-		 $this->transaction->setCity($val);
-		 $this->assertEquals($val, $this->transaction->getCity());
-	}
-
-	public function testSetGetCountry() {
-		 $val = "country";
-		 $this->transaction->setCountry($val);
-		 $this->assertEquals($val, $this->transaction->getCountry());
-	}
-
-	public function testSetGetOrderNumber() {
-		 $val = "orderNumber";
-		 $this->transaction->setOrderNumber($val);
-		 $this->assertEquals($val, $this->transaction->getOrderNumber());
-	}
-
-	public function testSetGetShipping() {
-		 $val = 99.99;
-		 $this->transaction->setShipping($val);
-		 $this->assertEquals($val, $this->transaction->getShipping());
-	}
-
-	public function testSetGetState() {
-		 $val = "state";
-		 $this->transaction->setState($val);
-		 $this->assertEquals($val, $this->transaction->getState());
-	}
-
-	public function testSetGetTax() {
-		 $val = 11.11;
-		 $this->transaction->setTax($val);
-		 $this->assertEquals($val, $this->transaction->getTax());
-	}
-
-	public function testSetGetTotal() {
-		 $val = 100.00;
-		 $this->transaction->setTotal($val);
-		 $this->assertEquals($val, $this->transaction->getTotal());
-	}
-
+        $this->assertEquals($transaction, $transaction2);
+    }
 }

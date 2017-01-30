@@ -70,4 +70,40 @@ class Event
     {
         return $this->options;
     }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'action' => $this->action,
+            'category' => $this->category,
+            'label' => $this->label,
+            'value' => $this->value,
+            'options' => $this->options,
+        );
+    }
+
+    /**
+     * @param array
+     */
+    public function fromArray(array $data)
+    {
+        if (isset($data['action'])) {
+            $this->action = $data['action'];
+        }
+        if (isset($data['category'])) {
+            $this->category = $data['category'];
+        }
+        if (isset($data['label'])) {
+            $this->label = $data['label'];
+        }
+        if (isset($data['value'])) {
+            $this->value = $data['value'];
+        }
+        if (isset($data['options'])) {
+            $this->options = $data['options'];
+        }
+    }
 }
