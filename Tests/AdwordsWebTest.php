@@ -20,13 +20,6 @@ class AdwordsWebTest extends WebTestCase
         $this->adwords = static::$kernel->getContainer()->get('google.adwords');
     }
 
-    protected function tearDown()
-    {
-        $this->adwords = null;
-        $this->client = null;
-        parent::tearDown();
-    }
-
     public function testConstructor()
     {
         $this->assertFalse($this->adwords->hasActiveConversion());
