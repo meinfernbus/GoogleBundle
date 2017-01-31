@@ -231,7 +231,7 @@ class StaticMap extends AbstractMap
 
     protected function getUploadRootDir()
     {
-        return __DIR__ . '/../../../../../../web/' . self::CACHE_DIR;
+        return __DIR__ . '/../../../../web/' . self::CACHE_DIR;
     }
 
     public function setHost($host)
