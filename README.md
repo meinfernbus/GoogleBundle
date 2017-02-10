@@ -1,15 +1,15 @@
+[![Build Status](https://travis-ci.org/meinfernbus/GoogleBundle.svg?branch=master)](https://travis-ci.org/meinfernbus/GoogleBundle)
+
 # GoogleBundle
 
 The GoogleBundle adds the ability to add various google-related services
 to your application. These include Google Analytics, Adwords and Static Maps.
+This module was forked a long time ago from https://github.com/antimattr/GoogleBundle but is now maintained as a separate project.
 
 ## Installation
 
-### Initialize Submodule
-
-```sh
-    git submodule add git@github.com:antimattr/GoogleBundle.git src/AntiMattr/GoogleBundle
-```
+### Composer
+composer require meinfernbus/google-bundle
 
 ### Application Kernel
 

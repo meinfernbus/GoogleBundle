@@ -36,7 +36,7 @@ class Adwords
                 $session->remove(self::CONVERSION_VALUE);
             }
         }
-    }	
+    }
 
     /**
      * @return Conversion $conversion
@@ -52,7 +52,12 @@ class Adwords
             if ($session->has(self::CONVERSION_VALUE)) {
                 $config['value'] = $session->get(self::CONVERSION_VALUE);
             }
-            $this->activeConversion = new Conversion($config['id'], $config['label'], $config['value'], $config['remarketing']);
+            $this->activeConversion = new Conversion(
+                $config['id'],
+                $config['label'],
+                $config['value'],
+                isset($config['remarketing']) ? $config : false
+            );
         }
         return $this->activeConversion;
     }
