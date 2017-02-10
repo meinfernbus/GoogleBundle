@@ -1,0 +1,102 @@
+<!-- Google Analytics -->
+<script>
+if (AntiMattr == null || typeof(AntiMattr) != 'object') { var AntiMattr = window.AntiMattr = {}; }
+AntiMattr.GoogleAnalytics = {};
+
+AntiMattr.GoogleAnalytics.onGatLoad = function(callback) {
+    if (typeof ga != "undefined") {
+        callback();
+    } else {
+        var listener = this;
+        setTimeout(function(){
+            listener.onGatLoad(callback);
+        },100);
+    }
+};
+
+/**
+ * @see https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+ * 
+ * @param string   tracker   
+ * @param string   category
+ * @param string   action
+ * @param string   label [optional]
+ * @param integer  value [optional and dependent on label]
+ * @param bool     nonInteraction
+ * @param function callback Execute callback when ga(send) done
+ */
+AntiMattr.GoogleAnalytics.notifyEvent = function(tracker, category, action, label, value, nonInteraction, callback) {
+    var eventTracker = tracker,
+        eventCategory = String(category),
+        eventAction = String(action),
+        eventLabel = null,
+        eventValue = null,
+        eventNonInteraction = 0,
+        eventCallback = null;
+
+    if (typeof label != 'undefined') {
+        eventLabel = String(label);
+    }
+    if (typeof value != 'undefined') {
+        eventValue = parseInt(value);
+    }
+    if (typeof nonInteraction != 'undefined') {
+        eventNonInteraction = Number(nonInteraction);
+    }
+    if (typeof callback != 'undefined') {
+        eventCallback = callback;
+    }               
+
+    if (typeof ga == "undefined") {
+        var listener = this;
+        setTimeout(function(){
+            listener.notifyEvent(
+                eventTracker,
+                eventCategory,
+                eventAction,
+                eventLabel,
+                eventValue,
+                eventNonInteraction,
+                eventCallback
+            );
+        },100);
+        return;
+    }
+
+    ga(tracker + 'send', 'event', {
+      'eventCategory': eventCategory,
+      'eventAction': eventAction,
+      'eventLabel': eventLabel,
+      'eventValue': eventValue,
+      'hitCallback': eventCallback,
+      'nonInteraction': eventNonInteraction
+    });
+};
+
+{% include "GoogleBundle:Analytics:source.js.twig" %}
+
+// Upgrade documentation
+// @see https://developers.google.com/analytics/devguides/collection/upgrade/reference/gajs-analyticsjs
+{% for key, tracker in google_analytics.trackers %}
+// Start Tracker: {{ key }}
+
+{% include "GoogleBundle:Analytics:configuration.js.twig" with {'key': key} %}
+
+{% include "GoogleBundle:Analytics:plugin.js.twig" with {'key': key} %}
+
+{% include "GoogleBundle:Analytics:custom_variable.js.twig" with {'key': key} %}
+
+{% include "GoogleBundle:Analytics:impression.js.twig" with {'key': key} %}
+
+{% include "GoogleBundle:Analytics:product.js.twig" with {'key': key} %}
+
+{% include "GoogleBundle:Analytics:transaction.js.twig" with {'key': key} %}
+
+{% include "GoogleBundle:Analytics:pageview.js.twig" with {'key': key} %}
+
+{% include "GoogleBundle:Analytics:event.js.twig" with {'key': key} %}
+
+// End Tracker: {{ key }}
+{% endfor %}
+</script>
+<!-- End Google Analytics -->

@@ -1,0 +1,75 @@
+{# @param string key - Tracker key #}
+
+{% if google_analytics.isEnhancedEcommerce %}
+  // Enhanced Ecommerce Products
+  // @see https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#add-remove-cart
+  // Note: Enhanced ecommerce plugin is required but not included in this template
+  
+  {% if google_analytics.hasProducts("remove") %}
+  {% for product in google_analytics.getProducts("remove") %}
+  ga('{{ google_analytics.trackerName(key) }}ec:addProduct', { // Provide product details in an productFieldObject.
+    'id': '{{ product.id | escape('js') }}',             // Product ID (string).
+    'name': '{{ product.title | escape('js') }}',        // Product name (string).
+    'category': '{{ product.category | escape('js') }}', // Product category (string).
+    'brand': '{{ product.brand | escape('js') }}',       // Product brand (string).
+    'list': '{{ product.list | escape('js') }}',         // Product list (string).
+    'variant': '{{ product.variant | escape('js') }}',   // Product variant (string).
+    'price': '{{ product.price | escape('js') }}',       // Product price (currency).
+    'coupon': '{{ product.coupon | escape('js') }}',     // Product coupon (string).
+    'quantity': {{ product.quantity | escape('js') }}    // Product quantity (number).
+  });
+  {% endfor %}
+  ga('{{ google_analytics.trackerName(key) }}ec:setAction', 'remove');
+  {% endif %}
+
+  {% if google_analytics.hasProducts("add") %}
+  {% for product in google_analytics.getProducts("add") %}
+  ga('{{ google_analytics.trackerName(key) }}ec:addProduct', { // Provide product details in an productFieldObject.
+    'id': '{{ product.id | escape('js') }}',             // Product ID (string).
+    'name': '{{ product.title | escape('js') }}',        // Product name (string).
+    'category': '{{ product.category | escape('js') }}', // Product category (string).
+    'brand': '{{ product.brand | escape('js') }}',       // Product brand (string).
+    'list': '{{ product.list | escape('js') }}',         // Product list (string).
+    'variant': '{{ product.variant | escape('js') }}',   // Product variant (string).
+    'price': '{{ product.price | escape('js') }}',       // Product price (currency).
+    'coupon': '{{ product.coupon | escape('js') }}',     // Product coupon (string).
+    'quantity': {{ product.quantity | escape('js') }}    // Product quantity (number).
+  });
+  {% endfor %}
+  ga('{{ google_analytics.trackerName(key) }}ec:setAction', 'add');
+  {% endif %}
+
+  {% if google_analytics.hasProducts("click") %}
+  {% for product in google_analytics.getProducts("click") %}
+  ga('{{ google_analytics.trackerName(key) }}ec:addProduct', { // Provide product details in an productFieldObject.
+    'id': '{{ product.id | escape('js') }}',             // Product ID (string).
+    'name': '{{ product.title | escape('js') }}',        // Product name (string).
+    'category': '{{ product.category | escape('js') }}', // Product category (string).
+    'brand': '{{ product.brand | escape('js') }}',       // Product brand (string).
+    'list': '{{ product.list | escape('js') }}',         // Product list (string).    
+    'variant': '{{ product.variant | escape('js') }}',   // Product variant (string).
+    'price': '{{ product.price | escape('js') }}',       // Product price (currency).
+    'coupon': '{{ product.coupon | escape('js') }}',     // Product coupon (string).
+    'quantity': {{ product.quantity | escape('js') }}    // Product quantity (number).
+  });
+  {% endfor %}
+  ga('{{ google_analytics.trackerName(key) }}ec:setAction', 'click');
+  {% endif %}
+
+  {% if google_analytics.hasProducts("detail") %}
+  {% for product in google_analytics.getProducts("detail") %}
+  ga('{{ google_analytics.trackerName(key) }}ec:addProduct', { // Provide product details in an productFieldObject.
+    'id': '{{ product.id | escape('js') }}',             // Product ID (string).
+    'name': '{{ product.title | escape('js') }}',        // Product name (string).
+    'category': '{{ product.category | escape('js') }}', // Product category (string).
+    'brand': '{{ product.brand | escape('js') }}',       // Product brand (string).
+    'list': '{{ product.list | escape('js') }}',         // Product list (string).    
+    'variant': '{{ product.variant | escape('js') }}',   // Product variant (string).
+    'price': '{{ product.price | escape('js') }}',       // Product price (currency).
+    'coupon': '{{ product.coupon | escape('js') }}',     // Product coupon (string).
+    'quantity': {{ product.quantity | escape('js') }}    // Product quantity (number).
+  });
+  {% endfor %}
+  ga('{{ google_analytics.trackerName(key) }}ec:setAction', 'detail');
+  {% endif %}  
+{% endif %}

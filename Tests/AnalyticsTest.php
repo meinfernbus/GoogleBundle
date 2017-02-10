@@ -2,31 +2,34 @@
 
 namespace AntiMattr\GoogleBundle\Tests;
 
-use DateTime;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use AntiMattr\GoogleBundle\Analytics;
 use AntiMattr\GoogleBundle\Analytics\Event;
+use AntiMattr\GoogleBundle\Analytics\Impression;
 use AntiMattr\GoogleBundle\Analytics\Item;
+use AntiMattr\GoogleBundle\Analytics\Product;
 use AntiMattr\GoogleBundle\Analytics\Transaction;
+use AntiMattr\TestCase\AntiMattrTestCase;
 
-class AnalyticsWebTest extends WebTestCase
+class AnalyticsTest extends AntiMattrGoogleTestCase
 {
     private $analytics;
-    private $client;
+    private $configuration;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->client = static::createClient();
-        $this->analytics = static::$kernel->getContainer()->get('google.analytics');
-    }
 
-    protected function tearDown()
-    {
-        $this->analytics = null;
-        $this->client = null;
-        parent::tearDown();
+        $this->configuration = array(
+            'default' => array(
+                'name' => 'MyJavaScriptCompatibleVariableNameWithNoSpaces',
+                'accountId' => 'xxxxxx',
+                'domain' => '.example.com',
+                'allowHash' => false,
+                'allowLinker' => true,
+                'trackPageLoadTime' => false
+            )
+        );
+        $this->analytics = new Analytics($this->container, $this->configuration);
     }
 
     public function testConstructor()
@@ -34,6 +37,7 @@ class AnalyticsWebTest extends WebTestCase
         $this->assertFalse($this->analytics->hasPageViewQueue());
         $this->assertFalse($this->analytics->hasCustomVariables());
         $this->assertFalse($this->analytics->hasItems());
+        $this->assertFalse($this->analytics->hasProducts());
         $this->assertNull($this->analytics->getTransaction());
         $this->assertEquals(1, count($this->analytics->getTrackers()));
         $this->assertTrue($this->analytics->getAllowLinker('default'));
@@ -180,6 +184,73 @@ class AnalyticsWebTest extends WebTestCase
 
         $this->assertTrue($this->analytics->hasItems());
         $this->assertEquals(2, count($this->analytics->getItems()));
+    }
+
+    public function testAddGetImpressions()
+    {
+        $impression = new Impression();
+        $impression->setId('id');
+        $impression->setSku('zzzz');
+        $impression->setTitle('Product X');
+        $impression->setAction('detail');
+        $impression->setCategory('Category A');
+        $impression->setBrand('Brand A');
+        $impression->setList('Search Results A');
+        $impression->setPrice(50.00);
+        $impression->setPosition(1);
+        $impression->setVariant('Black');
+
+        $this->analytics->addImpression($impression);
+        $this->assertTrue($this->analytics->hasImpression($impression));
+
+        $impression = new Impression();
+        $impression->setSku('jjjj');
+        $impression->setTitle('Product J');
+        $impression->setAction('detail');
+        $impression->setCategory('Category B');
+        $impression->setBrand('Brand B');
+        $impression->setList('Search Results B');
+        $impression->setPrice(25.00);
+        $impression->setPosition(2);
+
+        $this->analytics->addImpression($impression);
+        $this->assertTrue($this->analytics->hasImpression($impression));
+
+        $this->assertTrue($this->analytics->hasImpressions('detail'));
+        $this->assertEquals(2, count($this->analytics->getImpressions('detail')));
+    }
+
+    public function testAddGetProducts()
+    {
+        $product = new Product();
+        $product->setSku('zzzz');
+        $product->setTitle('Product X');
+        $product->setCategory('Category A');
+        $product->setBrand('Brand A');
+        $product->setCoupon('COUPONA');
+        $product->setPrice(50.00);
+        $product->setQuantity(1);
+        $product->setPosition(1);
+        $product->setVariant('Black');
+
+        $this->analytics->addProduct($product);
+        $this->assertTrue($this->analytics->hasProduct($product));
+
+        $product = new Product();
+        $product->setSku('jjjj');
+        $product->setTitle('Product J');
+        $product->setCategory('Category B');
+        $product->setBrand('Brand B');
+        $product->setCoupon('COUPONB');
+        $product->setPrice(25.00);
+        $product->setQuantity(2);
+        $product->setPosition(2);
+
+        $this->analytics->addProduct($product);
+        $this->assertTrue($this->analytics->hasProduct($product));
+
+        $this->assertTrue($this->analytics->hasProducts());
+        $this->assertEquals(2, count($this->analytics->getProducts()));
     }
 
     public function testSetAllowAnchor()
