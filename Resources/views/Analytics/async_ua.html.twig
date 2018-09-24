@@ -16,6 +16,10 @@
         ga('{{ google_analytics.trackerName(key) }}require', 'displayfeatures');
         ga('{{ google_analytics.trackerName(key) }}set', 'anonymizeIp', {% if tracker.anonymizeIp %}true{% else %}false{% endif %});
         
+        {% if google_analytics.hasUserId %}
+            ga('{{ google_analytics.trackerName(key) }}set', 'userId', '{{ google_analytics.userId }}');
+        {% endif %}
+        
         {% if google_analytics.hasCustomVariables %}
             {% for customVariable in google_analytics.customVariables %}
                 ga('{{ google_analytics.trackerName(key) }}set', 'dimension{{customVariable.index}}', '{{ customVariable.value }}');
