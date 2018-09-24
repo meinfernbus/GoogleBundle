@@ -563,20 +563,21 @@ class Analytics
         return $this->table_id;
     }
     
-    public function setUserId($userId){
+    public function setUserId($userId)
+    {
         $this->userId = $userId;
     }
 
-    /** @return string */
-    public function getUserId(){
+    /** 
+     * @return string
+     */
+    public function getUserId()
+    {
         return $this->userId;
     }
 
-    public function hasUserId(){
-        if(!empty($this->userId)){
-            return true;
-        }
-
-        return false;
+    public function hasUserId()
+    {
+        return !empty($this->userId);
     }
 }
