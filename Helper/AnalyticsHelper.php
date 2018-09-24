@@ -159,11 +159,13 @@ class AnalyticsHelper extends Helper
         return 'google_analytics';
     }
     
-    public function getUserId(){
+    public function getUserId()
+    {
         return $this->analytics->getUserId();
     }
 
-    public function hasUserId(){
+    public function hasUserId()
+    {
         return $this->analytics->hasUserId();
     }
 }
