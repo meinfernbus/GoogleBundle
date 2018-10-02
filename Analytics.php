@@ -24,6 +24,12 @@ class Analytics
     private $api_key;
     private $client_id;
     private $table_id;
+    
+    /**
+     * @see https://support.google.com/analytics/topic/6009743?hl=de&ref_topic=1007027
+     * @var string
+     */
+    private $userId;
 
     public function __construct(ContainerInterface $container,
             array $trackers = array(), array $whitelist = array(), array $dashboard = array())
@@ -555,5 +561,23 @@ class Analytics
     public function getTableId()
     {
         return $this->table_id;
+    }
+    
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /** 
+     * @return string
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    public function hasUserId()
+    {
+        return !empty($this->userId);
     }
 }
