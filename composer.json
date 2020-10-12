@@ -41,6 +41,7 @@
         "symfony/framework-bundle": "^2.8 || ^3.4 || ^4.4 || ^5.0",
         "symfony/twig-bundle": "^2.8 || ^3.4 || ^4.4 || ^5.0",
         "symfony/yaml": "^2.8 || ^3.4 || ^4.4 || ^5.0",
+        "symfony/browser-kit": "^2.8 || ^3.4 || ^4.4 || ^5.0",
         "phpunit/phpunit": "^9.4",
         "irstea/php-cs-fixer-shim": "^2.16"
     }

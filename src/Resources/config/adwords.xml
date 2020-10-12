@@ -8,7 +8,7 @@
 
 	<services>
 		<service id="google.adwords" class="AntiMattr\GoogleBundle\Adwords" >
-			<argument type="service" id="service_container" />
+			<argument type="service" id="session" />
 			<argument>%google.adwords.conversions%</argument>
 		</service>
 

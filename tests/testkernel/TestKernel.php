@@ -4,6 +4,7 @@ namespace AntiMattr\GoogleBundle\Tests\testkernel;
 
 use AntiMattr\GoogleBundle\GoogleBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -18,8 +19,7 @@ class TestKernel extends Kernel
     {
         return [
             new FrameworkBundle(),
-            new TemplatingBundle(),
-
+            new TwigBundle(),
             new GoogleBundle(),
         ];
     }

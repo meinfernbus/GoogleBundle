@@ -13,7 +13,7 @@ class AdwordsWebTest extends WebTestCase
     {
         parent::setUp();
         $this->client = static::createClient();
-        $this->adwords = static::$kernel->getContainer()->get('google.adwords');
+        $this->adwords = static::$container->get('google.adwords');
     }
 
     public function testConstructor()

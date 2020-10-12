@@ -16,7 +16,7 @@ class AnalyticsWebTest extends WebTestCase
     {
         parent::setUp();
         $this->client = static::createClient();
-        $this->analytics = static::$kernel->getContainer()->get('google.analytics');
+        $this->analytics = static::$container->get('google.analytics');
     }
 
     protected function tearDown(): void

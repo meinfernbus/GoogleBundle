@@ -3,21 +3,27 @@
 namespace AntiMattr\GoogleBundle;
 
 use AntiMattr\GoogleBundle\Adwords\Conversion;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class Adwords
 {
     const CONVERSION_KEY = 'google_adwords/conversion';
     const CONVERSION_VALUE = 'google_adwords/conversion_value';
 
+    /**
+     * @var Conversion|null
+     */
     private $activeConversion;
-    private $container;
     private $conversions;
+    /**
+     * @var SessionInterface
+     */
+    private $session;
 
-    public function __construct(ContainerInterface $container, array $conversions = [])
+    public function __construct(SessionInterface $session, array $conversions = [])
     {
-        $this->container = $container;
         $this->conversions = $conversions;
+        $this->session = $session;
     }
 
     /**
@@ -26,31 +32,24 @@ class Adwords
      */
     public function activateConversionByKey($key, $value = null)
     {
-        /** @var $session \Symfony\Component\HttpFoundation\Session */
-        $session = $this->container->get('session');
         if (array_key_exists($key, $this->conversions)) {
-            $session->set(self::CONVERSION_KEY, $key);
+            $this->session->set(self::CONVERSION_KEY, $key);
             if (!is_null($value)) {
-                $session->set(self::CONVERSION_VALUE, $value);
+                $this->session->set(self::CONVERSION_VALUE, $value);
             } else {
-                $session->remove(self::CONVERSION_VALUE);
+                $this->session->remove(self::CONVERSION_VALUE);
             }
         }
     }
 
-    /**
-     * @return Conversion $conversion
-     */
-    public function getActiveConversion()
+    public function getActiveConversion(): ?Conversion
     {
-        /** @var $session \Symfony\Component\HttpFoundation\Session */
-        $session = $this->container->get('session');
         if ($this->hasActiveConversion()) {
-            $key = $session->get(self::CONVERSION_KEY);
-            $session->remove(self::CONVERSION_KEY);
+            $key = $this->session->get(self::CONVERSION_KEY);
+            $this->session->remove(self::CONVERSION_KEY);
             $config = $this->conversions[$key];
-            if ($session->has(self::CONVERSION_VALUE)) {
-                $config['value'] = $session->get(self::CONVERSION_VALUE);
+            if ($this->session->has(self::CONVERSION_VALUE)) {
+                $config['value'] = $this->session->get(self::CONVERSION_VALUE);
             }
             $this->activeConversion = new Conversion(
                 $config['id'],
@@ -63,11 +62,8 @@ class Adwords
         return $this->activeConversion;
     }
 
-    /**
-     * @param bool $hasActiveConversion
-     */
-    public function hasActiveConversion()
+    public function hasActiveConversion(): bool
     {
-        return $this->container->get('session')->has(self::CONVERSION_KEY);
+        return $this->session->has(self::CONVERSION_KEY);
     }
 }
