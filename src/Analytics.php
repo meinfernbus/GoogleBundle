@@ -43,7 +43,7 @@ class Analytics
 
     public function __construct(
         RequestStack $requestStack,
-        SessionInterface  $session,
+        SessionInterface $session,
         array $trackers = [],
         array $whitelist = [],
         array $dashboard = []

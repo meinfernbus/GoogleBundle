@@ -3,3 +3,4 @@ phpunit.xml
 vendor
 composer.lock
 *.cache
+var/cache
