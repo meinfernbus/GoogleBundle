@@ -14,7 +14,7 @@ class MapsManager
     /**
      * @var MapInterface[]
      */
-    private $maps;
+    private $maps = [];
     /**
      * @var string
      */
