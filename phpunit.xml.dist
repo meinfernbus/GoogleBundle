@@ -11,25 +11,23 @@
         convertWarningsToExceptions="true"
         processIsolation="false"
         stopOnFailure="false"
-        bootstrap="Tests/testkernel/autoload.php"
+        bootstrap="tests/testkernel/autoload.php"
 >
     <php>
-        <server name="KERNEL_DIR" value="Tests/testkernel"/>
-        <env name="KERNEL_CLASS" value="\AntiMattr\GoogleBundle\Tests\testkernel\TestKernel" />
-        <!-- <server name="VENDOR_LIB" value="/path/to/symfony/vendors/dir" /> -->
+        <server name="KERNEL_DIR" value="tests/testkernel"/>
+        <env name="KERNEL_CLASS" value="\AntiMattr\GoogleBundle\tests\testkernel\TestKernel" />
     </php>
     <testsuites>
         <testsuite name="AntiMattr GoogleBundle Test Suite">
-            <directory>./Tests/</directory>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>./</directory>
+            <directory>./src</directory>
             <exclude>
                 <directory>./Resources</directory>
-                <directory>./Tests</directory>
             </exclude>
         </whitelist>
     </filter>
