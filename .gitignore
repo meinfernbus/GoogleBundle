@@ -2,3 +2,5 @@ Tests/testkernel/cache/*
 phpunit.xml
 vendor
 composer.lock
+*.cache
+var/cache

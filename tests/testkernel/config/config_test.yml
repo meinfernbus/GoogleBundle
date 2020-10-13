@@ -1,0 +1,31 @@
+parameters:
+    env(GOOGLE_MAPS_API_KEY): default
+
+framework:
+    secret:        notasecret
+    test: ~
+    session:
+        enabled: true
+        storage_id: session.storage.mock_file
+
+google:
+    analytics:
+        trackers:
+            default:
+                name: MyJavaScriptCompatibleVariableNameWithNoSpaces
+                accountId: xxxxxx
+                domain: .example.com
+                allowHash: false
+                allowLinker: true
+                trackPageLoadTime: false
+    adwords:
+        conversions:
+            account_create:
+                id:    111111
+                label: accountCreateLabel
+                value: 0
+
+    maps:
+        config:
+            key: '%env(GOOGLE_MAPS_API_KEY)%'
+            host: 'example.com'
