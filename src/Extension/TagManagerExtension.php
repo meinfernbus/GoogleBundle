@@ -3,11 +3,12 @@
 namespace AntiMattr\GoogleBundle\Extension;
 
 use AntiMattr\GoogleBundle\Helper\TagManagerHelper;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Tag Manager Extension
  */
-class TagManagerExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class TagManagerExtension extends AbstractExtension implements \Twig_Extension_GlobalsInterface
 {
     private $tagManagerHelper;
 

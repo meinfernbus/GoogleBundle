@@ -3,8 +3,9 @@
 namespace AntiMattr\GoogleBundle\Extension;
 
 use AntiMattr\GoogleBundle\Helper\MapsHelper;
+use Twig\Extension\AbstractExtension;
 
-class MapsExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class MapsExtension extends AbstractExtension implements \Twig_Extension_GlobalsInterface
 {
     private $mapsHelper;
 

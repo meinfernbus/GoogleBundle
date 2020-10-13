@@ -165,6 +165,9 @@ google:
             key: YOUR-API-KEY-FROM-GOOGLE
             host: YOUR-HOST // Host where the gmap image is served.
             (Optional, only needed if script is running from CLI. If not set $_SERVER is used)
+            uploadDir: '%kernel.project_dir%/web/maps' // absolute path to directory where map files
+            publicDir: '/maps' //http path where map files supposed to be publicly available
+           
 ```
 
 Get your key at https://code.google.com/apis/console/

@@ -7,12 +7,23 @@ use Doctrine\Common\Collections\Collection;
 
 class MapsManager
 {
-    private $config = [];
-    private $maps = [];
+    /**
+     * @var array
+     */
+    private $config;
+    /**
+     * @var MapInterface[]
+     */
+    private $maps;
+    /**
+     * @var string
+     */
+    private $uploadDir;
 
     public function __construct(array $config = [])
     {
         $this->config = $config;
+        $this->uploadDir = $config['uploadDir'];
     }
 
     public function setKey($key)
@@ -53,6 +64,8 @@ class MapsManager
     public function createStaticMap()
     {
         $map = new Maps\StaticMap();
+        $map->setUploadDir($this->config['uploadDir']);
+        $map->setPublicDir($this->config['publicDir']);
 
         if (isset($this->config['key'])) {
             $map->setKey($this->config['key']);

@@ -9,9 +9,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class GoogleExtension extends Extension
 {
-    /**
-     * @see Symfony\Component\DependencyInjection\Extension.ExtensionInterface::load()
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $modules = [
@@ -24,7 +21,7 @@ class GoogleExtension extends Extension
         foreach ($configs as $config) {
             foreach (array_keys($modules) as $module) {
                 if (array_key_exists($module, $config)) {
-                    $modules[$module][] = isset($config[$module]) ? $config[$module] : [];
+                    $modules[$module][] = $config[$module] ?? [];
                 }
             }
         }
@@ -82,6 +79,10 @@ class GoogleExtension extends Extension
 
         foreach ($configs as $config) {
             if (isset($config['config'])) {
+                //creepy backwards-compatibility
+                $config['config']['uploadDir'] = $config['config']['uploadDir'] ?? $container->getParameter('kernel.project_dir') . '/web/maps';
+                $config['config']['publicDir'] = $config['config']['publicDir'] ?? '/maps';
+
                 $container->setParameter('google.maps.config', $config['config']);
             }
         }

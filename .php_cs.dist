@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 $finder = PhpCsFixer\Finder::create()
     ->in('src')
-    ->in('tests');
+    ->in('tests')
+    ->exclude('tests/testkernel/cache');
 
 return PhpCsFixer\Config::create()
     ->setRules([
@@ -18,6 +19,4 @@ return PhpCsFixer\Config::create()
         'yoda_style' => null,
         'phpdoc_types_order' => false,
     ])
-    ->setFinder($finder)
-    ->setUsingCache(false)
-;
+    ->setFinder($finder);

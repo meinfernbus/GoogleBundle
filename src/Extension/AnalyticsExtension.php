@@ -3,8 +3,9 @@
 namespace AntiMattr\GoogleBundle\Extension;
 
 use AntiMattr\GoogleBundle\Helper\AnalyticsHelper;
+use Twig\Extension\AbstractExtension;
 
-class AnalyticsExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class AnalyticsExtension extends AbstractExtension implements \Twig_Extension_GlobalsInterface
 {
     private $analyticsHelper;
 

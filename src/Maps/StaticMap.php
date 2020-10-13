@@ -6,13 +6,28 @@ class StaticMap extends AbstractMap
 {
     const API_ENDPOINT = 'http://maps.google.com/maps/api/staticmap?';
     const TYPE_ROADMAP = 'roadmap';
-    const CACHE_DIR = 'maps/';
+    const CACHE_DIR = '/maps';
     const SUFFIX = '.png';
 
     protected $height;
     protected $width;
     protected $imgAlt = '';
     protected $sensor = false;
+    /**
+     * @var string
+     */
+    protected $uploadDir = __DIR__ . '/../../../../web/' . self::CACHE_DIR;
+    /**
+     * @var string
+     */
+    protected $publicDir = self::CACHE_DIR;
+
+    /**
+     * Once file is generated, this will contain absolute path
+     *
+     * @var string|null
+     */
+    private $targetPath;
 
     protected static $typeChoices = [
         self::TYPE_ROADMAP => 'Road Map',
@@ -193,14 +208,13 @@ class StaticMap extends AbstractMap
             $request .= '&key' . '=' . $apiKey;
         }
 
-        //var_dump('rootDir: ', $this->getUploadRootDir());die;
         if (!is_dir($this->getUploadRootDir())) {
             mkdir($this->getUploadRootDir());
         }
         if (is_dir($this->getUploadRootDir())) {
-            $targetFilePath = $this->getAbsolutePath($targetFile);
-            if (!file_exists($targetFilePath) || (filemtime($targetFilePath) + 86400) < time()) {
-                file_put_contents($targetFilePath, file_get_contents($prefix . $request));
+            $this->targetPath = $this->getAbsolutePath($targetFile);
+            if (!file_exists($this->targetPath) || (filemtime($this->targetPath) + 86400) < time()) {
+                file_put_contents($this->targetPath, file_get_contents($prefix . $request));
                 $request = $cachePrefix . $this->getWebPath($targetFile);
             } else {
                 $request = $cachePrefix . $this->getWebPath($targetFile);
@@ -224,18 +238,36 @@ class StaticMap extends AbstractMap
         return $this->getUploadRootDir() . $filename . self::SUFFIX;
     }
 
-    protected function getWebPath($filename)
+    protected function getWebPath($filename): string
     {
-        return '/' . self::CACHE_DIR . $filename . self::SUFFIX;
+        return $this->publicDir . '/' . $filename . self::SUFFIX;
     }
 
-    protected function getUploadRootDir()
+    protected function getUploadRootDir(): string
     {
-        return __DIR__ . '/../../../../web/' . self::CACHE_DIR;
+        return $this->uploadDir;
     }
 
     public function setHost($host)
     {
         $this->meta['host'] = $host;
+    }
+
+    public function setUploadDir(string $uploadDir): void
+    {
+        $this->uploadDir = $uploadDir;
+    }
+
+    public function setPublicDir(string $publicDir): void
+    {
+        $this->publicDir = $publicDir;
+    }
+
+    /**
+     * @return string|null absolute path to generated map file or null if it wasn't yet generated
+     */
+    public function getTargetPath(): ?string
+    {
+        return $this->targetPath;
     }
 }

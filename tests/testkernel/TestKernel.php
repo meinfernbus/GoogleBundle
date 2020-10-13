@@ -32,4 +32,9 @@ class TestKernel extends Kernel
             $loader->load(__DIR__ . '/config/parameters.yml');
         }
     }
+
+    public function getProjectDir()
+    {
+        return __DIR__ . '/../';
+    }
 }
