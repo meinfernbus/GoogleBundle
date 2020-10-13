@@ -50,4 +50,27 @@ class MapsManagerTest extends IntegrationTestCase
         //Assert
         $this->assertFileIsReadable($map->getTargetPath());
     }
+
+    public function testGetMapByIdReturnsNullOnNotFound(): void
+    {
+        //Act
+        $map = $this->mapsManager->getMapById('42');
+
+        //Assert
+        $this->assertNull($map);
+    }
+
+    public function testGetMapByIdReturnsMapWhenFound(): void
+    {
+        //Arrange
+        $map = $this->mapsManager->createStaticMap();
+        $map->setId('42');
+        $this->mapsManager->addMap($map);
+
+        //Act
+        $map = $this->mapsManager->getMapById('42');
+
+        //Assert
+        $this->assertNotNull($map);
+    }
 }
