@@ -5,9 +5,8 @@ namespace AntiMattr\GoogleBundle\Tests;
 use AntiMattr\GoogleBundle\Analytics\Event;
 use AntiMattr\GoogleBundle\Analytics\Item;
 use AntiMattr\GoogleBundle\Analytics\Transaction;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class AnalyticsWebTest extends WebTestCase
+class AnalyticsWebTest extends IntegrationTestCase
 {
     private $analytics;
     private $client;
@@ -16,7 +15,7 @@ class AnalyticsWebTest extends WebTestCase
     {
         parent::setUp();
         $this->client = static::createClient();
-        $this->analytics = static::$container->get('google.analytics');
+        $this->analytics = $this->getContainer()->get('google.analytics');
     }
 
     protected function tearDown(): void

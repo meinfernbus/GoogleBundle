@@ -2,9 +2,7 @@
 
 namespace AntiMattr\GoogleBundle\Tests;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class AdwordsWebTest extends WebTestCase
+class AdwordsWebTest extends IntegrationTestCase
 {
     private $adwords;
     private $client;
@@ -13,7 +11,7 @@ class AdwordsWebTest extends WebTestCase
     {
         parent::setUp();
         $this->client = static::createClient();
-        $this->adwords = static::$container->get('google.adwords');
+        $this->adwords = $this->getContainer()->get('google.adwords');
     }
 
     public function testConstructor()
