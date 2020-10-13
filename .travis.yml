@@ -11,13 +11,14 @@ php:
     - 7.3
     - 7.4
 env:
-    - deps=high
-    - deps=low
+    - deps=^3.4
+    - deps=^4.4
+    - deps=^5.0
 
 install:
-    - if [ "$deps" = "high" ]; then composer --prefer-dist -n --no-progress update; fi;
-    - if [ "$deps" = "low" ]; then composer --prefer-dist -n --no-progress --prefer-lowest update; fi;
-    - composer show
+    - sed -i.bak "s/\^3.4 || ^4.4 || ^5.0/${deps}/" composer.json
+    - cat composer.json
+    - composer --prefer-dist -n --no-progress update
 
 script:
     - composer test
