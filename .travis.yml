@@ -17,6 +17,7 @@ env:
 install:
     - if [ "$deps" = "high" ]; then composer --prefer-dist -n --no-progress update; fi;
     - if [ "$deps" = "low" ]; then composer --prefer-dist -n --no-progress --prefer-lowest update; fi;
+    - composer show
 
 script:
     - composer test
