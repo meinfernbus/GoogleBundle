@@ -91,4 +91,33 @@ class StaticMapTest extends \PHPUnit\Framework\TestCase
         $this->map->setZoom($val);
         $this->assertEquals($val, $this->map->getZoom());
     }
+
+    public function testRender()
+    {
+        $mapsDir = __DIR__ . '/maps';
+        $marker = new Marker();
+        $marker->setMeta(['color' => 'green']);
+        $marker->setLatitude(52.476050612437);
+        $marker->setLongitude(13.364356141862);
+
+        $this->map->setMeta([
+            'key' => 'AIzaSyDdagXxC6br-y_Ih4nlxj3gxaiFKvObA_c',
+            'host' => 'https://api.flix-tech.test',
+            'size' => '640x350',
+            'zoom' => 15,
+            'maptype' => 'road',
+                            ]);
+        $this->map->setId('481');
+        $this->map->setMarkers([$marker]);
+        $this->map->setUploadDir($mapsDir);
+        $this->map->setPublicDir('/maps');
+
+        $out = '<img id="481" src="https://api.flix-tech.test/maps/size_640x350_zoom_15_maptype_road_sensor_false_markers_color_green_52_476050612437_13_364356141862.png"  />';
+
+        $this->assertEquals($out, $this->map->render());
+        $this->assertEquals(__DIR__ . '/maps/size_640x350_zoom_15_maptype_road_sensor_false_markers_color_green_52_476050612437_13_364356141862.png', $this->map->getTargetPath());
+
+        unlink($this->map->getTargetPath());
+        rmdir($mapsDir);
+    }
 }
