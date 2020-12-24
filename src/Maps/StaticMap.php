@@ -235,7 +235,7 @@ class StaticMap extends AbstractMap
 
     protected function getAbsolutePath($filename)
     {
-        return $this->getUploadRootDir() . $filename . self::SUFFIX;
+        return $this->getUploadRootDir() . '/' . $filename . self::SUFFIX;
     }
 
     protected function getWebPath($filename): string
