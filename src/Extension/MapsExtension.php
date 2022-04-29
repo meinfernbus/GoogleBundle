@@ -4,8 +4,9 @@ namespace AntiMattr\GoogleBundle\Extension;
 
 use AntiMattr\GoogleBundle\Helper\MapsHelper;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
 
-class MapsExtension extends AbstractExtension implements \Twig_Extension_GlobalsInterface
+class MapsExtension extends AbstractExtension implements GlobalsInterface
 {
     private $mapsHelper;
 
@@ -14,7 +15,7 @@ class MapsExtension extends AbstractExtension implements \Twig_Extension_Globals
         $this->mapsHelper = $mapsHelper;
     }
 
-    public function getGlobals()
+    public function getGlobals(): array
     {
         return [
             'google_maps' => $this->mapsHelper,
@@ -26,7 +27,7 @@ class MapsExtension extends AbstractExtension implements \Twig_Extension_Globals
      *
      * @return string The extension name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'google_maps';
     }

@@ -4,8 +4,9 @@ namespace AntiMattr\GoogleBundle\Extension;
 
 use AntiMattr\GoogleBundle\Helper\AdwordsHelper;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
 
-class AdwordsExtension extends AbstractExtension implements \Twig_Extension_GlobalsInterface
+class AdwordsExtension extends AbstractExtension implements GlobalsInterface
 {
     private $adwordsHelper;
 
@@ -14,7 +15,7 @@ class AdwordsExtension extends AbstractExtension implements \Twig_Extension_Glob
         $this->adwordsHelper = $adwordsHelper;
     }
 
-    public function getGlobals()
+    public function getGlobals(): array
     {
         return [
             'google_adwords' => $this->adwordsHelper,
@@ -26,7 +27,7 @@ class AdwordsExtension extends AbstractExtension implements \Twig_Extension_Glob
      *
      * @return string The extension name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'google_adwords';
     }
