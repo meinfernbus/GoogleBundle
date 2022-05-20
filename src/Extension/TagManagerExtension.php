@@ -4,11 +4,12 @@ namespace AntiMattr\GoogleBundle\Extension;
 
 use AntiMattr\GoogleBundle\Helper\TagManagerHelper;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
 
 /**
  * Tag Manager Extension
  */
-class TagManagerExtension extends AbstractExtension implements \Twig_Extension_GlobalsInterface
+class TagManagerExtension extends AbstractExtension implements GlobalsInterface
 {
     private $tagManagerHelper;
 
@@ -23,7 +24,7 @@ class TagManagerExtension extends AbstractExtension implements \Twig_Extension_G
     /**
      * @return array
      */
-    public function getGlobals()
+    public function getGlobals(): array
     {
         return [
             'google_tag_manager' => $this->tagManagerHelper,
@@ -35,7 +36,7 @@ class TagManagerExtension extends AbstractExtension implements \Twig_Extension_G
      *
      * @return string The extension name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'google_tag_manager';
     }
